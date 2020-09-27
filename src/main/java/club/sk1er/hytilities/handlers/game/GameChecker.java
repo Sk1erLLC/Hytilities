@@ -37,9 +37,6 @@ public class GameChecker {
                     case "SKYWARS":
                         gameType = GameType.SKY_WARS;
                         break;
-                    default:
-                        gameType = GameType.UNKNOWN;
-                        break;
                 }
             }
         }, 3, TimeUnit.SECONDS);
