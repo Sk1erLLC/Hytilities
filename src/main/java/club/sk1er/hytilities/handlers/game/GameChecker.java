@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handles checking for the current location of the player using many different techniques.
  *
- * @version 1.0
  */
 
 public class GameChecker {
