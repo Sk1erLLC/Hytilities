@@ -33,8 +33,13 @@ public class GameChecker {
                 switch(scoreboardTitle) {
                     case "BED WARS":
                         gameType = GameType.BED_WARS;
+                        break;
                     case "SKYWARS":
                         gameType = GameType.SKY_WARS;
+                        break;
+                    default:
+                        gameType = GameType.UNKNOWN;
+                        break;
                 }
             }
         }, 3, TimeUnit.SECONDS);
