@@ -26,14 +26,6 @@ public class LayerArmorBaseTweaker implements HytilitiesTransformer {
             String methodName = mapMethodName(classNode, method);
 
             if (methodName.equals("renderLayer") || methodName.equals("func_177182_a")) {
-                int variableIndex = -1;
-                for (LocalVariableNode localVariable : method.localVariables) {
-                    if (localVariable.name.equals("itemstack")) {
-                        variableIndex = localVariable.index;
-                        break;
-                    }
-                }
-
                 ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
                 while (iterator.hasNext()) {
@@ -42,7 +34,7 @@ public class LayerArmorBaseTweaker implements HytilitiesTransformer {
                     if (next instanceof MethodInsnNode) {
                         String methodName2 = mapMethodNameFromNode((MethodInsnNode) next);
                         if (methodName2.equals("getCurrentArmor") || methodName2.equals("func_177176_a")) {
-                            method.instructions.insert(next.getNext(), checkRender(variableIndex));
+                            method.instructions.insert(next.getNext(), checkRender());
                             break;
                         }
                     }
@@ -52,10 +44,10 @@ public class LayerArmorBaseTweaker implements HytilitiesTransformer {
         }
     }
 
-    private InsnList checkRender(int variableIndex) {
+    private InsnList checkRender() {
         InsnList list = new InsnList();
 
-        list.add(new VarInsnNode(Opcodes.ALOAD, variableIndex));
+        list.add(new VarInsnNode(Opcodes.ALOAD, 10));
         list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "club/sk1er/hytilities/tweaker/asm/LayerArmorBaseTweaker", "shouldRenderArmour", "(Lnet/minecraft/item/ItemStack;)Z", false));
 
         final LabelNode ifeq = new LabelNode();
