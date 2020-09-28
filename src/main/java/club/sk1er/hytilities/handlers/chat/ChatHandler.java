@@ -22,7 +22,6 @@ public class ChatHandler {
     private final List<ChatModule> moduleList = new ArrayList<>();
 
     public ChatHandler() {
-        AutoQueue autoQueue = new AutoQueue();
         this.registerModule(new AdBlocker());
         this.registerModule(new ChatCleaner());
         this.registerModule(new ChatRestyler());
@@ -31,8 +30,8 @@ public class ChatHandler {
         this.registerModule(Hytilities.INSTANCE.getLocrawUtil());
         this.registerModule(new AchievementEvent());
         this.registerModule(new AutoChatSwapper());
-        this.registerModule(autoQueue);
-        MinecraftForge.EVENT_BUS.register(autoQueue);
+        this.registerModule(Hytilities.INSTANCE.getAutoQueue());
+        MinecraftForge.EVENT_BUS.register(Hytilities.INSTANCE.getAutoQueue());
     }
 
     private void registerModule(ChatModule chatModule) {
