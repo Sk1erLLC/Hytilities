@@ -20,7 +20,25 @@ public class GameChecker {
         // this will fire 3 times just bc of how the game works
         // may have a workaround, but for now this doesn't cause
         // any true issues and can be ignored.
-        Multithreading.schedule(() -> {
+        if (event.world.provider.getDimensionId() == 0) {
+            Multithreading.runAsync(new GameCheckerRunnable(event));
+        }
+    }
+
+    public static GameType getGameType() {
+        return gameType;
+    }
+
+    private static class GameCheckerRunnable implements Runnable {
+
+        private final WorldEvent.Load event;
+
+        public GameCheckerRunnable(WorldEvent.Load event) {
+            this.event = event;
+        }
+
+        @Override
+        public void run() {
             String scoreboardTitle = "";
             try {
                 scoreboardTitle = ChatColor.stripColor(event.world.getScoreboard().getObjectiveInDisplaySlot(1).getDisplayName());
@@ -81,11 +99,8 @@ public class GameChecker {
                         gameType = GameType.UNKNOWN;
                         break;
                 }
+                System.out.println(gameType);
             }
-        }, 3, TimeUnit.SECONDS);
-    }
-
-    public static GameType getGameType() {
-        return gameType;
+        }
     }
 }
