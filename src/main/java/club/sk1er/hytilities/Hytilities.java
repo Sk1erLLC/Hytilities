@@ -26,9 +26,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 
 @Mod(
-        modid = Hytilities.MOD_ID,
-        name = Hytilities.MOD_NAME,
-        version = Hytilities.VERSION
+    modid = Hytilities.MOD_ID,
+    name = Hytilities.MOD_NAME,
+    version = Hytilities.VERSION
 )
 public class Hytilities {
 
