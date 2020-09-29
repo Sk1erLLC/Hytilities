@@ -29,18 +29,18 @@ public class AutoChatSwapper implements ChatModule {
 
         final Matcher statusMatcher = this.partyStatusRegex.matcher(event.message.getUnformattedText());
         if (statusMatcher.matches()) {
-            MinecraftForge.EVENT_BUS.register(new ChatChannelSwitchMessageMakerNotter());
+            MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/chat a");
         }
     }
 
-    public static class ChatChannelSwitchMessageMakerNotter {
+    public static class ChatChannelMessagePreventer {
 
         private boolean hasDetected;
-        private final ScheduledFuture<?> f;
+        private final ScheduledFuture<?> unregisterTimer;
 
-        ChatChannelSwitchMessageMakerNotter() { // if the message somehow doesn't send, we unregister after 20 seconds
-            f = Multithreading.schedule(() -> { // to prevent blocking the next time it's used
+        ChatChannelMessagePreventer() { // if the message somehow doesn't send, we unregister after 20 seconds
+            unregisterTimer = Multithreading.schedule(() -> { // to prevent blocking the next time it's used
                 if (!hasDetected) {
                     MinecraftForge.EVENT_BUS.unregister(this);
                 }
@@ -51,10 +51,10 @@ public class AutoChatSwapper implements ChatModule {
         @SubscribeEvent
         public void checkForAlreadyInThisChannelThing(ClientChatReceivedEvent event) {
             if ("You're already in this channel!".equals(event.message.getUnformattedText())
-                    || (HytilitiesConfig.hytilitiesHideLeAllChatMessage &&
+                    || (HytilitiesConfig.hytilitiesHideAllChatMessage &&
                     "You are now in the ALL channel".equals(event.message.getUnformattedText()))
             ) {
-                f.cancel(false);
+                unregisterTimer.cancel(false);
                 hasDetected = true;
                 event.setCanceled(true);
                 MinecraftForge.EVENT_BUS.unregister(this);
