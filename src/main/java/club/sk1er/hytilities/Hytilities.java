@@ -7,7 +7,6 @@ import club.sk1er.hytilities.handlers.chat.ChatHandler;
 import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
 import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
-import club.sk1er.hytilities.handlers.chat.connected.ConnectedMessage;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
@@ -27,9 +26,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 
 @Mod(
-    modid = Hytilities.MOD_ID,
-    name = Hytilities.MOD_NAME,
-    version = Hytilities.VERSION
+        modid = Hytilities.MOD_ID,
+        name = Hytilities.MOD_NAME,
+        version = Hytilities.VERSION
 )
 public class Hytilities {
 
@@ -78,7 +77,6 @@ public class Hytilities {
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
         MinecraftForge.EVENT_BUS.register(new AchievementEvent());
         MinecraftForge.EVENT_BUS.register(new LevelupEvent());
-        MinecraftForge.EVENT_BUS.register(new ConnectedMessage());
 
         // lobby
         MinecraftForge.EVENT_BUS.register(lobbyChecker = new LobbyChecker());
