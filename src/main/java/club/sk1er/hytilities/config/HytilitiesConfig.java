@@ -79,9 +79,9 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean mvpEmotes;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Remove Server Connected Messages",
-            description = "Remove server Connected messages.\n§eExample: §bYou are currently connected to server §6mini104H",
-            category = "Chat", subcategory = "Toggles"
+        type = PropertyType.SWITCH, name = "Remove Server Connected Messages",
+        description = "Remove server Connected messages.\n§eExample: §bYou are currently connected to server §6mini104H",
+        category = "Chat", subcategory = "Toggles"
     )
     public static boolean serverConnectedMessages;
 
