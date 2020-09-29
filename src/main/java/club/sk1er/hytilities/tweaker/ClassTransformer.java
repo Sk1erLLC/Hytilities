@@ -1,6 +1,8 @@
 package club.sk1er.hytilities.tweaker;
 
+import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import club.sk1er.hytilities.tweaker.asm.GuiPlayerTabOverlayTransformer;
+import club.sk1er.hytilities.tweaker.asm.LayerArmorBaseTweaker;
 import club.sk1er.hytilities.tweaker.asm.MinecraftTransformer;
 import club.sk1er.hytilities.tweaker.transformer.HytilitiesTransformer;
 import com.google.common.collect.ArrayListMultimap;
@@ -23,6 +25,8 @@ public class ClassTransformer implements IClassTransformer {
     public ClassTransformer() {
         registerTransformer(new MinecraftTransformer());
         registerTransformer(new GuiPlayerTabOverlayTransformer());
+        registerTransformer(new LayerArmorBaseTweaker());
+        registerTransformer(new GuiIngameForgeTransformer());
     }
 
     private void registerTransformer(HytilitiesTransformer transformer) {

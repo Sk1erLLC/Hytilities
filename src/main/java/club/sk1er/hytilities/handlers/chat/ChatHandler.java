@@ -1,5 +1,6 @@
 package club.sk1er.hytilities.handlers.chat;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.adblock.AdBlocker;
 import club.sk1er.hytilities.handlers.chat.cleaner.ChatCleaner;
 import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
@@ -26,6 +27,10 @@ public class ChatHandler {
         this.registerModule(new LevelupEvent());
         this.registerModule(new AchievementEvent());
         this.registerModule(new AutoChatSwapper());
+
+        // reinitializing these seems to break them
+        this.registerModule(Hytilities.INSTANCE.getAutoQueue());
+        this.registerModule(Hytilities.INSTANCE.getLocrawUtil());
     }
 
     private void registerModule(ChatModule chatModule) {
