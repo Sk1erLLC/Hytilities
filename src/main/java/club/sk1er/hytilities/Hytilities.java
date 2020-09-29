@@ -7,6 +7,7 @@ import club.sk1er.hytilities.handlers.chat.ChatHandler;
 import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
 import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.connected.ConnectedMessage;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
@@ -77,6 +78,7 @@ public class Hytilities {
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
         MinecraftForge.EVENT_BUS.register(new AchievementEvent());
         MinecraftForge.EVENT_BUS.register(new LevelupEvent());
+        MinecraftForge.EVENT_BUS.register(new ConnectedMessage());
 
         // lobby
         MinecraftForge.EVENT_BUS.register(lobbyChecker = new LobbyChecker());
