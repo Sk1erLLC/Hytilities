@@ -37,11 +37,11 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hytilitiesMysteryBoxAnnouncer;
 
     @Property(
-        type = PropertyType.SWITCH, name = "Remove Soul Box Announcements",
-        description = "Remove soul box announcements from chat.\n§eExample: §bSteve §7has found a §6Bulldozer Perk I (Insane) §7in the §bSoul Well§7!",
+        type = PropertyType.SWITCH, name = "Remove Soul Well Announcements",
+        description = "Remove soul well announcements from chat.\n§eExample: §bSteve §7has found a §6Bulldozer Perk I (Insane) §7in the §bSoul Well§7!",
         category = "Chat", subcategory = "Toggles"
     )
-    public static boolean hytilitiesSoulBoxAnnouncer;
+    public static boolean hytilitiesSoulWellAnnouncer;
 
     @Property(
         type = PropertyType.SWITCH, name = "Remove Game Announcements",

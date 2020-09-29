@@ -21,7 +21,9 @@ public class WhiteChat implements ChatModule {
 
         Matcher matcher = nonMessage.matcher(event.message.getFormattedText());
 
-        if (matcher.find()) {
+        System.out.println(event.message.getFormattedText());
+
+        if (matcher.find(0)) {
             event.message = new ChatComponentText(matcher.group("prefix") + ": " + matcher.group("message"));
         }
     }
