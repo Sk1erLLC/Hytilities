@@ -32,7 +32,7 @@ public class AutoChatSwapper implements ChatModule {
     }
 
     @Override
-    public boolean condition() {
+    public boolean isEnabled() {
         return HytilitiesConfig.chatSwapper;
     }
 
