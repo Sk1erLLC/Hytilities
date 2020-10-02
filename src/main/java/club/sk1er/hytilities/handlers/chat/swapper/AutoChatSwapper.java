@@ -36,6 +36,7 @@ public class AutoChatSwapper implements ChatModule {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat o");
                     break;
                 default:
+                case 0:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
                     break;
             }
