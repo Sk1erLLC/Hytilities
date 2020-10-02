@@ -122,7 +122,7 @@ public class HytilitiesConfig extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH, name = "Short Channel Names",
-            description = "Shortens channel names; Guild -> G , Party -> P",
+            description = "Shortens channel names. \n§eExample:  Guild -> G, Party -> P, Friend -> F",
             category = "Chat", subcategory = "Restyler"
     )
     public static boolean shortChannelNames;
