@@ -31,7 +31,6 @@ public class AutoChatSwapper implements ChatModule {
             switch (HytilitiesConfig.chatSwapperReturnChannel) {
                 case 0:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
-                    HytilitiesConfig.chatSwapperReturnChannel = 0;
                     break;
                 case 1:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat g");
@@ -41,6 +40,7 @@ public class AutoChatSwapper implements ChatModule {
                     break;
                 default:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
+                    HytilitiesConfig.chatSwapperReturnChannel = 0;
                     break;
             }
 
