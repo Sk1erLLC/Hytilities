@@ -29,9 +29,6 @@ public class AutoChatSwapper implements ChatModule {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
 
             switch (HytilitiesConfig.chatSwapperReturnChannel) {
-                case 0:
-                    Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
-                    break;
                 case 1:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat g");
                     break;
@@ -40,7 +37,6 @@ public class AutoChatSwapper implements ChatModule {
                     break;
                 default:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
-                    HytilitiesConfig.chatSwapperReturnChannel = 0;
                     break;
             }
 
