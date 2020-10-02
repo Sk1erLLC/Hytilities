@@ -28,9 +28,7 @@ public class AutoStart {
             // we need to delay for a second as gl context needs to be created first,
             // otherwise everything is blocky & untextured for a few seconds
             // when joining a world.
-            if (ticks != 20) {
-                ++ticks;
-            } else {
+            if (ticks++ == 20) {
                 GuiMultiplayer guiMultiplayer = new GuiMultiplayer(this.gui);
                 guiMultiplayer.setWorldAndResolution(Minecraft.getMinecraft(), this.gui.width, this.gui.height);
                 guiMultiplayer.directConnect = true;
