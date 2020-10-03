@@ -26,6 +26,7 @@ public class LanguageHandler {
     private final LanguageData fallback = readData("en");
     private final Map<String, String> languageMappings = new HashMap<String, String>() {{
         put("ENGLISH", "en");
+        put("FRENCH", "fr");
     }};
 
     private LanguageData current = fallback;
@@ -39,6 +40,7 @@ public class LanguageHandler {
         final JsonHolder json = WebUtil.fetchJSON("https://api.sk1er.club/player/" + username);
         final String language = json.optJSONObject("player").defaultOptString("userLanguage", "ENGLISH");
         current = loadData(languageMappings.getOrDefault(language, "en"));
+        current = loadData(languageMappings.getOrDefault(language, "fr"));
     }
 
     private LanguageData loadData(String language) {
