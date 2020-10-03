@@ -228,9 +228,9 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hideAllChatMessage;
 
     @Property(
-        type = PropertyType.SWITCH, name = "",
+        type = PropertyType.SWITCH, name = "Thank Watchdog",
         description = "Thanks Watchdog when someone is banned or a Watchdog announcement is sent.",
-        category = "", subcategory = "Watchdog"
+        category = "Chat", subcategory = "Watchdog"
     )
     public static boolean thankWatchdog;
 
