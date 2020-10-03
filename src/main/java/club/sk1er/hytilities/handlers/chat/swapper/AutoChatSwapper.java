@@ -19,20 +19,18 @@ public class AutoChatSwapper implements ChatModule {
         final Matcher statusMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoChatSwapperPartyStatusRegex.matcher(event.message.getUnformattedText());
         if (statusMatcher.matches()) {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
-
             switch (HytilitiesConfig.chatSwapperReturnChannel) {
+                case 0:
+                default:
+                    Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
+                    break;
                 case 1:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat g");
                     break;
                 case 2:
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat o");
                     break;
-                default:
-                case 0:
-                    Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
-                    break;
             }
-
         }
     }
 
@@ -47,8 +45,8 @@ public class AutoChatSwapper implements ChatModule {
         private final ScheduledFuture<?> unregisterTimer;
 
         ChatChannelMessagePreventer() { // if the message somehow doesn't send, we unregister after 20 seconds
-            unregisterTimer = Multithreading.schedule(() -> { // to prevent blocking the next time it's used
-                if (!hasDetected) {
+            this.unregisterTimer = Multithreading.schedule(() -> { // to prevent blocking the next time it's used
+                if (!this.hasDetected) {
                     MinecraftForge.EVENT_BUS.unregister(this);
                 }
             }, 20, TimeUnit.SECONDS);

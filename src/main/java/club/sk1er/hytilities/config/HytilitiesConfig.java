@@ -80,7 +80,7 @@ public class HytilitiesConfig extends Vigilant {
 
     @Property(
         type = PropertyType.SWITCH, name = "Remove Server Connected Messages",
-        description = "Remove server Connected messages.\n§eExample: §bYou are currently connected to server §6mini104H",
+        description = "Remove server connection messages.\n§eExample: §bYou are currently connected to server §6mini104Hb.",
         category = "Chat", subcategory = "Toggles"
     )
     public static boolean serverConnectedMessages;
@@ -121,9 +121,9 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean padPlayerCount;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Short Channel Names",
-            description = "Shortens channel names. \n§eExample:  Guild -> G, Party -> P, Friend -> F",
-            category = "Chat", subcategory = "Restyler"
+        type = PropertyType.SWITCH, name = "Short Channel Names",
+        description = "Shortens channel names. \n§eExample:  Guild -> G, Party -> P, Friend -> F",
+        category = "Chat", subcategory = "Restyler"
     )
     public static boolean shortChannelNames;
 

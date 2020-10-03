@@ -16,6 +16,7 @@ import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
 import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
 import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.modcore.ModCoreInstaller;
 import club.sk1er.mods.core.universal.ChatColor;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import org.objectweb.asm.tree.ClassNode;
 
 @Mod(
         modid = Hytilities.MOD_ID,
@@ -49,7 +51,7 @@ public class Hytilities {
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
     private CommandQueue commandQueue;
-    private LanguageHandler languageHandler;
+
     private boolean loadedCall;
 
     @Mod.EventHandler
@@ -113,6 +115,10 @@ public class Hytilities {
         return lobbyChecker;
     }
 
+    /**
+     * Used in {@link GuiIngameForgeTransformer#transform(ClassNode, String)}
+     */
+    @SuppressWarnings("unused")
     public HardcoreStatus getHardcoreStatus() {
         return hardcoreStatus;
     }
