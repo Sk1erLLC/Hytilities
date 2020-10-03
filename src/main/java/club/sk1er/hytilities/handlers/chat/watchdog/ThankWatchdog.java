@@ -6,8 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 public class ThankWatchdog implements ChatModule {
-    private static final String WATCHDOG_ANNOUNCEMENT_TRIGGER = "[WATCHDOG ANNOUNCEMENT]";
-    private static final String THANK_WATCHDOG_MESSAGE = "/achat Thanks Watchdog!";
+    private final String WATCHDOG_ANNOUNCEMENT_TRIGGER = "[WATCHDOG ANNOUNCEMENT]";
+    private final String THANK_WATCHDOG_MESSAGE = "/achat Thanks Watchdog!";
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
