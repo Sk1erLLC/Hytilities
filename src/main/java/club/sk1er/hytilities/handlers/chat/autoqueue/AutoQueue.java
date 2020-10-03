@@ -24,10 +24,10 @@ public class AutoQueue implements ChatModule {
         }
 
         String message = ChatColor.stripColor(event.message.getUnformattedText());
-        if (message.startsWith("You died! Want to play again?")) {
+        if (message.startsWith(Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoQueuePrefix)) {
             for (IChatComponent component : event.message.getSiblings()) {
                 String compMsg = ChatColor.stripColor(component.getUnformattedText().trim());
-                if (compMsg.equals("Click here!")) {
+                if (compMsg.equals(Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoQueueClick)) {
                     this.command = component.getChatStyle().getChatClickEvent().getValue();
                 }
             }

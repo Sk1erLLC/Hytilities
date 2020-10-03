@@ -18,7 +18,7 @@ public class LimboLimiter {
     public void onChat(ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
 
-        if (message.equals("You were spawned in Limbo.") || message.equals("You are AFK. Move around to return from AFK.")) {
+        if (message.equals(Hytilities.INSTANCE.getLanguageHandler().getCurrent().limboLimiterSpawned) || message.equals(Hytilities.INSTANCE.getLanguageHandler().getCurrent().limboLimiterAfk)) {
             limboStatus = true;
         }
     }

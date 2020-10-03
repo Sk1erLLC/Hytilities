@@ -1,5 +1,6 @@
 package club.sk1er.hytilities.handlers.chat.restyler;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatModule;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
@@ -9,23 +10,12 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class ChatRestyler implements ChatModule {
 
     private static int playerCount = -1;
     private static int maxPlayerCount = -1;
-    private final Pattern gameJoinStyle = Pattern.compile("^§r§(?<color>[\\da-f])(?<player>\\w{1,16})§r§e has joined (?<amount>.+)!§r$");
-    private final Pattern gameLeaveStyle = Pattern.compile("^§r§(?<color>[\\da-f])(?<player>\\w{1,16})§r§e has quit!§r$");
-    //    private final Pattern unformattedPaddingPattern = Pattern.compile("\\((\\d{1,2})/(\\d{1,3})\\)");
-    private final Pattern gameStartCounterStyle = Pattern.compile("^The game starts in (?<time>\\d{1,3}) seconds?!§r$");
-    private final Pattern formattedPaddingPattern = Pattern.compile("\\(§r§b(\\d{1,2})§r§e/§r§b(\\d{1,3})§r§e\\)");
-    // (?:\u00a7r)? is optional capture group as not all the messages contain §r at the start (e.g leave join messages)
-    private final Pattern partyPattern = Pattern.compile("^((?:\\u00a7r)?\\u00a7\\w)(Party )(\\u00a7\\w>)");
-    private final Pattern guildPattern =  Pattern.compile("^((?:\\u00a7r)?\\u00a7\\w)(Guild >)");
-    private final Pattern friendPattern =  Pattern.compile("^((?:\\u00a7r)?\\u00a7\\w)(Friend >)");
-
 
     /**
      * Normally this wouldn't be static but it has to be called from a static method so it has to be static.
@@ -50,7 +40,7 @@ public class ChatRestyler implements ChatModule {
         String message = event.message.getFormattedText().trim();
         String unformattedMessage = event.message.getUnformattedText().trim();
 
-        Matcher joinMatcher = gameJoinStyle.matcher(message);
+        Matcher joinMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGameJoinStyleRegex.matcher(message);
 
         if (joinMatcher.matches()) {
             String amount = joinMatcher.group("amount").replaceAll("(?i)\u00a7[\\da-fk-or]", "");
@@ -60,17 +50,17 @@ public class ChatRestyler implements ChatModule {
         }
 
         if (HytilitiesConfig.shortChannelNames) {
-            Matcher partyMatcher = partyPattern.matcher(message);
-            Matcher guildMatcher = guildPattern.matcher(message);
-            Matcher friendMatcher = friendPattern.matcher(message);
+            Matcher partyMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerPartyPatternRegex.matcher(message);
+            Matcher guildMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGuildPatternRegex.matcher(message);
+            Matcher friendMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerFriendPatternRegex.matcher(message);
             if (partyMatcher.find()) {
-                event.message = colorMessage(message.replaceAll(partyPattern.pattern(),
+                event.message = colorMessage(message.replaceAll(Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerPartyPatternRegex.pattern(),
                         partyMatcher.group(1) + "P " + partyMatcher.group(3)));
-            }else if(guildMatcher.find()){
-                event.message = colorMessage(message.replaceAll(guildPattern.pattern(),
+            } else if (guildMatcher.find()) {
+                event.message = colorMessage(message.replaceAll(Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGuildPatternRegex.pattern(),
                         guildMatcher.group(1) + "G >"));
-            }else if(friendMatcher.find()){
-                event.message = colorMessage(message.replaceAll(friendPattern.pattern(),
+            } else if (friendMatcher.find()) {
+                event.message = colorMessage(message.replaceAll(Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerFriendPatternRegex.pattern(),
                         friendMatcher.group(1) + "F >"));
             }
         }
@@ -78,13 +68,13 @@ public class ChatRestyler implements ChatModule {
         // Currently unformattedMessage doesn't need to be changed but I'm leaving these in, commented, in case it's
         // changed in the future and they need to be padded.
         if (HytilitiesConfig.padPlayerCount) {
-            Matcher mf = formattedPaddingPattern.matcher(message);
+            Matcher mf = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerFormattedPaddingPatternRegex.matcher(message);
 //            Matcher mu = unformattedPaddingPattern.matcher(unformattedMessage);
             if (mf.find(0)) { // this only matches a small part so we need find()
                 mf.replaceAll("(§r§b" + pad(mf.group(1)) + "§r§e/§r§b" + mf.group(2) + "§r§e)");
 //                uf.replaceAll("(" + pad(mu.group(1)) + "/" + mu.group(2) + ")");
 
-                joinMatcher = gameJoinStyle.matcher(message); // recalculate since we padded
+                joinMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGameJoinStyleRegex.matcher(message); // recalculate since we padded
                 event.message = new ChatComponentText(message);
             }
         }
@@ -99,7 +89,7 @@ public class ChatRestyler implements ChatModule {
                             joinMatcher.group("amount"));
                 }
             } else {
-                Matcher leaveMatcher = gameLeaveStyle.matcher(message);
+                Matcher leaveMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGameLeaveStyleRegex.matcher(message);
                 if (leaveMatcher.matches()) {
                     if (HytilitiesConfig.playerCountOnPlayerLeave) {
                         if (HytilitiesConfig.playerCountBeforePlayerName) {
@@ -113,7 +103,7 @@ public class ChatRestyler implements ChatModule {
                         event.message = colorMessage("&c&l- &" + leaveMatcher.group("color") + leaveMatcher.group("player"));
                     }
                 } else {
-                    Matcher startCounterMatcher = gameStartCounterStyle.matcher(unformattedMessage);
+                    Matcher startCounterMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGameStartCounterStyleRegex.matcher(unformattedMessage);
                     if (startCounterMatcher.matches()) {
                         String time = startCounterMatcher.group("time");
                         boolean secondMessage = unformattedMessage.contains("seconds");
@@ -131,7 +121,7 @@ public class ChatRestyler implements ChatModule {
             }
         } else {
             if (HytilitiesConfig.playerCountOnPlayerLeave) {
-                Matcher leaveMater = gameLeaveStyle.matcher(message);
+                Matcher leaveMater = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatRestylerGameLeaveStyleRegex.matcher(message);
                 if (leaveMater.matches()) {
                     if (HytilitiesConfig.playerCountBeforePlayerName) {
                         event.message = colorMessage("&e(&b" + pad(String.valueOf(--playerCount)) + "&e/&b" + maxPlayerCount + "&e) " + message);

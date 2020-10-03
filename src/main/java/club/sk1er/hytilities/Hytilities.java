@@ -10,6 +10,7 @@ import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
+import club.sk1er.hytilities.handlers.language.LanguageHandler;
 import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
 import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
@@ -27,9 +28,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 
 @Mod(
-    modid = Hytilities.MOD_ID,
-    name = Hytilities.MOD_NAME,
-    version = Hytilities.VERSION
+        modid = Hytilities.MOD_ID,
+        name = Hytilities.MOD_NAME,
+        version = Hytilities.VERSION
 )
 public class Hytilities {
 
@@ -48,6 +49,7 @@ public class Hytilities {
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
     private CommandQueue commandQueue;
+    private LanguageHandler languageHandler;
     private boolean loadedCall;
 
     @Mod.EventHandler
@@ -86,6 +88,9 @@ public class Hytilities {
         MinecraftForge.EVENT_BUS.register(new NPCHider());
         MinecraftForge.EVENT_BUS.register(new LobbyBossbar());
         MinecraftForge.EVENT_BUS.register(new LimboLimiter());
+
+        // language
+        MinecraftForge.EVENT_BUS.register(languageHandler = new LanguageHandler());
     }
 
     public void sendMessage(String message) {
@@ -108,7 +113,6 @@ public class Hytilities {
         return lobbyChecker;
     }
 
-    @SuppressWarnings("unused")
     public HardcoreStatus getHardcoreStatus() {
         return hardcoreStatus;
     }
@@ -127,5 +131,9 @@ public class Hytilities {
 
     public CommandQueue getCommandQueue() {
         return commandQueue;
+    }
+
+    public LanguageHandler getLanguageHandler() {
+        return languageHandler;
     }
 }
