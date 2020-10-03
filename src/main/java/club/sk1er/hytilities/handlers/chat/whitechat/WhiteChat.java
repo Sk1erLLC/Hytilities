@@ -15,7 +15,6 @@ public class WhiteChat implements ChatModule {
         if (HytilitiesConfig.whitePrivateMessages) {
             Matcher matcher = getLanguage().privateMessageWhiteChatRegex.matcher(event.message.getFormattedText());
 
-            System.out.println(event.message.getFormattedText());
             if (matcher.find(0)) {
                 event.message = new ChatComponentText(matcher.group("type") + " " + matcher.group("prefix") + ": " + matcher.group("message").replace("§7", "§f"));
             }
@@ -35,6 +34,6 @@ public class WhiteChat implements ChatModule {
 
     @Override
     public boolean isEnabled() {
-        return HytilitiesConfig.whiteChat || HytilitiesConfig.whitePrivateMessages;
+        return true;
     }
 }
