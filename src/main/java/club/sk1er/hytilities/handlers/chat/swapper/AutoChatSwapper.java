@@ -56,8 +56,8 @@ public class AutoChatSwapper implements ChatModule {
         @SubscribeEvent
         public void checkForAlreadyInThisChannelThing(ClientChatReceivedEvent event) {
             if (Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoChatSwapperAlreadyInChannel.equals(event.message.getUnformattedText())
-                    || (HytilitiesConfig.hideAllChatMessage &&
-                    Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoChatSwapperChannelSwapRegex.matcher(event.message.getUnformattedText()).matches())
+                || (HytilitiesConfig.hideAllChatMessage &&
+                Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoChatSwapperChannelSwapRegex.matcher(event.message.getUnformattedText()).matches())
             ) {
                 unregisterTimer.cancel(false);
                 hasDetected = true;

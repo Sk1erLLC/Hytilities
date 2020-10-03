@@ -11,19 +11,12 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 
 /**
  * todo: split up this class into separate modules
  */
 public class ChatCleaner implements ChatModule {
-
-    private final List<String> joinMessageTypes = Arrays.asList(
-            "joined the lobby", // normal
-            "spooked in the lobby" // halloween
-    );
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
