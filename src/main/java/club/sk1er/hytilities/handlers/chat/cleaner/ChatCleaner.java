@@ -4,6 +4,7 @@ import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatModule;
 import club.sk1er.hytilities.handlers.game.GameType;
+import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.hytilities.util.locraw.LocrawInformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
@@ -30,10 +31,11 @@ public class ChatCleaner implements ChatModule {
             return;
         }
 
+        final LanguageData language = getLanguage();
         String message = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         if (HytilitiesConfig.lobbyStatus) {
-            for (String messages : Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerJoinMessageTypes) {
+            for (String messages : language.chatCleanerJoinMessageTypes) {
                 if (message.contains(messages)) {
                     event.setCanceled(true);
                     return;
@@ -42,10 +44,10 @@ public class ChatCleaner implements ChatModule {
         }
 
         if (HytilitiesConfig.mvpEmotes) {
-            Matcher matcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerMvpEmotesRegex.matcher(event.message.getFormattedText());
+            Matcher matcher = language.chatCleanerMvpEmotesRegex.matcher(event.message.getFormattedText());
 
             if (matcher.find(0)) {
-                event.message = new ChatComponentText(event.message.getFormattedText().replaceAll(Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerMvpEmotesRegex.pattern(), ""));
+                event.message = new ChatComponentText(event.message.getFormattedText().replaceAll(language.chatCleanerMvpEmotesRegex.pattern(), ""));
                 return;
             }
         }
@@ -62,7 +64,7 @@ public class ChatCleaner implements ChatModule {
         }*/
 
         if (HytilitiesConfig.mysteryBoxAnnouncer) {
-            Matcher matcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerMysteryBoxFindRegex.matcher(message);
+            Matcher matcher = language.chatCleanerMysteryBoxFindRegex.matcher(message);
 
             if (matcher.matches()) {
                 String player = matcher.group("player");
@@ -79,19 +81,19 @@ public class ChatCleaner implements ChatModule {
         }
 
         if (HytilitiesConfig.gameAnnouncements) {
-            if (Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerGameAnnouncementRegex.matcher(message).matches()) {
+            if (language.chatCleanerGameAnnouncementRegex.matcher(message).matches()) {
                 event.setCanceled(true);
                 return;
             }
         }
 
-        if (HytilitiesConfig.hypeLimitReminder && message.startsWith(Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerHypeLimit)) {
+        if (HytilitiesConfig.hypeLimitReminder && message.startsWith(language.chatCleanerHypeLimit)) {
             event.setCanceled(true);
             return;
         }
 
         if (HytilitiesConfig.soulWellAnnouncer) {
-            if (Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerSoulWellFindRegex.matcher(message).matches()) {
+            if (language.chatCleanerSoulWellFindRegex.matcher(message).matches()) {
                 event.setCanceled(true);
                 return;
             }
@@ -100,14 +102,14 @@ public class ChatCleaner implements ChatModule {
         LocrawInformation locrawInformation = Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
         if (locrawInformation != null) {
             if (HytilitiesConfig.bedwarsAdvertisements && locrawInformation.getGameType() == GameType.BED_WARS) {
-                if (Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerBedwarsPartyAdvertisementRegex.matcher(message).find()) {
+                if (language.chatCleanerBedwarsPartyAdvertisementRegex.matcher(message).find()) {
                     event.setCanceled(true);
                     return;
                 }
             }
         }
 
-        if (HytilitiesConfig.connectionStatus && Hytilities.INSTANCE.getLanguageHandler().getCurrent().chatCleanerConnectionStatusRegex.matcher(message).matches()) {
+        if (HytilitiesConfig.connectionStatus && language.chatCleanerConnectionStatusRegex.matcher(message).matches()) {
             event.setCanceled(true);
         }
     }

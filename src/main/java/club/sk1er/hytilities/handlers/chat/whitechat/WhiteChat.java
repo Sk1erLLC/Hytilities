@@ -12,7 +12,7 @@ public class WhiteChat implements ChatModule {
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
-        Matcher matcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().whiteChatNonMessageRegex.matcher(event.message.getFormattedText());
+        Matcher matcher = getLanguage().whiteChatNonMessageRegex.matcher(event.message.getFormattedText());
 
         if (matcher.find(0)) {
             event.message = new ChatComponentText(matcher.group("prefix") + ": " + matcher.group("message"));

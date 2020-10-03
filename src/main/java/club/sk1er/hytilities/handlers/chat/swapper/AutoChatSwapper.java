@@ -16,7 +16,7 @@ public class AutoChatSwapper implements ChatModule {
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
-        final Matcher statusMatcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().autoChatSwapperPartyStatusRegex.matcher(event.message.getUnformattedText());
+        final Matcher statusMatcher = getLanguage().autoChatSwapperPartyStatusRegex.matcher(event.message.getUnformattedText());
         if (statusMatcher.matches()) {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
             switch (HytilitiesConfig.chatSwapperReturnChannel) {

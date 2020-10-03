@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.client.Minecraft;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -46,12 +47,14 @@ public class LanguageHandler {
     }
 
     private LanguageData readData(String language) {
-        final InputStream stream = LanguageHandler.class.getResourceAsStream("/languages/" + language + ".json");
-        if (stream == null) return null;
-
-        final LanguageData data = gson.fromJson(new InputStreamReader(stream), LanguageData.class);
-        data.initialize();
-        return data;
+        try (InputStream stream = LanguageHandler.class.getResourceAsStream("/languages/" + language + ".json")) {
+            if (stream == null) return null;
+            final LanguageData data = gson.fromJson(new InputStreamReader(stream), LanguageData.class);
+            data.initialize();
+            return data;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public LanguageData getCurrent() {

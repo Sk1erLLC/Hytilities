@@ -21,7 +21,7 @@ public class AchievementEvent implements ChatModule {
     public void onChatEvent(ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
-        Matcher matcher = Hytilities.INSTANCE.getLanguageHandler().getCurrent().achievementRegex.matcher(unformattedText);
+        Matcher matcher = getLanguage().achievementRegex.matcher(unformattedText);
         if (matcher.matches()) {
             String achievement = matcher.group("achievement");
 

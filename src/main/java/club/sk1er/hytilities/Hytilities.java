@@ -30,9 +30,9 @@ import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import org.objectweb.asm.tree.ClassNode;
 
 @Mod(
-        modid = Hytilities.MOD_ID,
-        name = Hytilities.MOD_NAME,
-        version = Hytilities.VERSION
+    modid = Hytilities.MOD_ID,
+    name = Hytilities.MOD_NAME,
+    version = Hytilities.VERSION
 )
 public class Hytilities {
 
@@ -51,6 +51,7 @@ public class Hytilities {
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
     private CommandQueue commandQueue;
+    private LanguageHandler languageHandler;
 
     private boolean loadedCall;
 
