@@ -48,12 +48,12 @@ public class ShoutBlocker implements ChatSendModule, ChatReceiveModule {
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
         LocrawInformation locraw = Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
-        if (
+        if (locraw != null && (
             (locraw.getGameType() == GameType.SKY_WARS && event.message.getFormattedText().equals(getLanguage().cannotShoutBeforeSkywars)) || // fun fact: there is no message when you shout after a skywars game
             event.message.getFormattedText().equals(getLanguage().cannotShoutAfterGame) ||
             event.message.getFormattedText().equals(getLanguage().cannotShoutBeforeGame) ||
             event.message.getFormattedText().equals(getLanguage().noSpectatorCommands)
-        ) {
+        )) {
             shoutCooldown = 0L;
         }
     }
