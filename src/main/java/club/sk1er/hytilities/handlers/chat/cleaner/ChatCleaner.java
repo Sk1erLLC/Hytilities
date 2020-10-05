@@ -2,7 +2,7 @@ package club.sk1er.hytilities.handlers.chat.cleaner;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.game.GameType;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.hytilities.util.locraw.LocrawInformation;
@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 /**
  * todo: split up this class into separate modules
  */
-public class ChatCleaner implements ChatModule {
+public class ChatCleaner implements ChatReceiveModule {
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
@@ -108,7 +108,7 @@ public class ChatCleaner implements ChatModule {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isReceiveModuleEnabled() {
         return true;
     }
 

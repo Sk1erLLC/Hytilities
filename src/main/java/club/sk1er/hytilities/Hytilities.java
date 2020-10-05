@@ -52,6 +52,7 @@ public class Hytilities {
     private AutoQueue autoQueue;
     private CommandQueue commandQueue;
     private LanguageHandler languageHandler;
+    private ChatHandler chatHandler;
 
     private boolean loadedCall;
 
@@ -82,7 +83,7 @@ public class Hytilities {
         // chat
         MinecraftForge.EVENT_BUS.register(silentRemoval = new SilentRemoval());
         MinecraftForge.EVENT_BUS.register(hardcoreStatus = new HardcoreStatus());
-        MinecraftForge.EVENT_BUS.register(new ChatHandler());
+        MinecraftForge.EVENT_BUS.register(chatHandler = new ChatHandler());
         MinecraftForge.EVENT_BUS.register(new AchievementEvent());
         MinecraftForge.EVENT_BUS.register(new LevelupEvent());
 
@@ -142,5 +143,9 @@ public class Hytilities {
 
     public LanguageHandler getLanguageHandler() {
         return languageHandler;
+    }
+
+    public ChatHandler getChatHandler() {
+        return chatHandler;
     }
 }
