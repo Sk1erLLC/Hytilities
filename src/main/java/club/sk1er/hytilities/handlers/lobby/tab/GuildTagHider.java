@@ -16,19 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.events;
+package club.sk1er.hytilities.handlers.lobby.tab;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
+import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.tweaker.asm.GuiPlayerTabOverlayTransformer;
+import club.sk1er.mods.core.util.MinecraftUtils;
+import org.objectweb.asm.tree.ClassNode;
 
-public class HypixelAchievementEvent extends Event {
+/**
+ * Used in {@link GuiPlayerTabOverlayTransformer#transform(ClassNode, String)}
+ */
+@SuppressWarnings("unused")
+public class GuildTagHider {
 
-    private final String achievement;
-
-    public HypixelAchievementEvent(String achievement) {
-        this.achievement = achievement;
-    }
-
-    public String getAchievement() {
-        return achievement;
+    public static String hideTabGuildTags(String name) {
+        if (MinecraftUtils.isHypixel() && HytilitiesConfig.hideGuildTagsInTab && name.endsWith("]")) {
+            // e.g. §b[MVP+] Steve §6[GUILD]
+            return name.substring(0, name.lastIndexOf("[") - 3);
+        } else {
+            return name;
+        }
     }
 }

@@ -1,3 +1,21 @@
+/*
+ * Hytilities - Hypixel focused Quality of Life mod.
+ * Copyright (C) 2020  Sk1er LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package club.sk1er.hytilities.handlers.chat.restyler;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -56,13 +74,13 @@ public class ChatRestyler implements ChatReceiveModule {
             Matcher friendMatcher = language.chatRestylerFriendPatternRegex.matcher(message);
             if (partyMatcher.find()) {
                 event.message = colorMessage(message.replaceAll(language.chatRestylerPartyPatternRegex.pattern(),
-                        partyMatcher.group(1) + "P " + partyMatcher.group(3)));
+                    partyMatcher.group(1) + "P " + partyMatcher.group(3)));
             } else if (guildMatcher.find()) {
                 event.message = colorMessage(message.replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
-                        guildMatcher.group(1) + "G >"));
+                    guildMatcher.group(1) + "G >"));
             } else if (friendMatcher.find()) {
                 event.message = colorMessage(message.replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
-                        friendMatcher.group(1) + "F >"));
+                    friendMatcher.group(1) + "F >"));
             }
         }
 
@@ -84,10 +102,10 @@ public class ChatRestyler implements ChatReceiveModule {
             if (joinMatcher.matches()) {
                 if (HytilitiesConfig.playerCountBeforePlayerName) {
                     event.message = colorMessage("&a&l+ &e" + joinMatcher.group("amount")
-                            + " &" + joinMatcher.group("color") + joinMatcher.group("player"));
+                        + " &" + joinMatcher.group("color") + joinMatcher.group("player"));
                 } else {
                     event.message = colorMessage("&a&l+ &" + joinMatcher.group("color") + joinMatcher.group("player") + " &e" +
-                            joinMatcher.group("amount"));
+                        joinMatcher.group("amount"));
                 }
             } else {
                 Matcher leaveMatcher = language.chatRestylerGameLeaveStyleRegex.matcher(message);
@@ -95,10 +113,10 @@ public class ChatRestyler implements ChatReceiveModule {
                     if (HytilitiesConfig.playerCountOnPlayerLeave) {
                         if (HytilitiesConfig.playerCountBeforePlayerName) {
                             event.message = colorMessage("&c&l- &e(&b" + pad(String.valueOf(--playerCount)) + "&e/&b" + maxPlayerCount +
-                                    "&e) &" + leaveMatcher.group("color") + leaveMatcher.group("player"));
+                                "&e) &" + leaveMatcher.group("color") + leaveMatcher.group("player"));
                         } else {
                             event.message = colorMessage("&c&l- &" + leaveMatcher.group("color") +
-                                    leaveMatcher.group("player") + " &e(&b" + pad(String.valueOf(--playerCount)) + "&e/&b" + maxPlayerCount + "&e)");
+                                leaveMatcher.group("player") + " &e(&b" + pad(String.valueOf(--playerCount)) + "&e/&b" + maxPlayerCount + "&e)");
                         }
                     } else {
                         event.message = colorMessage("&c&l- &" + leaveMatcher.group("color") + leaveMatcher.group("player"));
@@ -110,9 +128,9 @@ public class ChatRestyler implements ChatReceiveModule {
                         boolean secondMessage = unformattedMessage.contains("seconds");
 
                         event.message = colorMessage("&e&l* &aGame starts in &b&l" + time
-                                // for some bizarre reason, seconds is captured in the time group (though we explicitly tell
-                                // it to only capture numbers (\d)), so get around that by just replacing seconds with nothing
-                                .replaceAll(" seconds", "") + (secondMessage ? " &aseconds." : " &asecond."));
+                            // for some bizarre reason, seconds is captured in the time group (though we explicitly tell
+                            // it to only capture numbers (\d)), so get around that by just replacing seconds with nothing
+                            .replaceAll(" seconds", "") + (secondMessage ? " &aseconds." : " &asecond."));
                     } else {
                         if ("We don't have enough players! Start cancelled.".equals(unformattedMessage)) {
                             event.message = colorMessage("&e&l* &cStart cancelled.");
