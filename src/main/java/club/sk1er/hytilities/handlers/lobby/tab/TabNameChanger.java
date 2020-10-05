@@ -34,17 +34,8 @@ public class TabNameChanger {
         if (MinecraftUtils.isHypixel()) {
             if (HytilitiesConfig.hidePlayerRanksInTab && name.startsWith("[", 2)) {
                 // keep the name color if player rank is removed
-                String color = "\u00a7";
-
-                if (name.charAt(name.indexOf("]") - 2) == '\u00a7') {
-                    // get the color inside the rank brackets
-                    // e.g. §b[MVP§c+§b] Steve
-                    color += name.charAt(name.indexOf("]") - 1);
-                } else if (name.startsWith("\u00a7")) {
-                    // get the color outside the rank brackets
-                    // e.g. §b[MVP] Steve
-                    color += name.charAt(1);
-                }
+                // §b[MVP§c+§b] Steve
+                String color = "\u00a7" + name.charAt(1);
 
                 // add the rank color, and trim off the player rank
                 name = color + name.substring(name.indexOf("]") + 2);
