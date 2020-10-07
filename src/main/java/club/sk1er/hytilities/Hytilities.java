@@ -1,3 +1,4 @@
+
 /*
  * Hytilities - Hypixel focused Quality of Life mod.
  * Copyright (C) 2020  Sk1er LLC
@@ -18,34 +19,35 @@
 
 package club.sk1er.hytilities;
 
-import club.sk1er.hytilities.command.HytilitiesCommand;
-import club.sk1er.hytilities.command.SilentRemoveCommand;
-import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
-import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
-import club.sk1er.hytilities.handlers.general.AutoStart;
-import club.sk1er.hytilities.handlers.general.CommandQueue;
-import club.sk1er.hytilities.handlers.language.LanguageHandler;
-import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
-import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
-import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
-import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
-import club.sk1er.hytilities.handlers.silent.SilentRemoval;
-import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
-import club.sk1er.hytilities.util.locraw.LocrawUtil;
+import org.objectweb.asm.tree.ClassNode;
+
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+
 import club.sk1er.modcore.ModCoreInstaller;
 import club.sk1er.mods.core.universal.ChatColor;
 import club.sk1er.mods.core.util.MinecraftUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import org.objectweb.asm.tree.ClassNode;
+import club.sk1er.hytilities.util.locraw.LocrawUtil;
+import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.handlers.chat.ChatHandler;
+import club.sk1er.hytilities.command.HytilitiesCommand;
+import club.sk1er.hytilities.handlers.general.AutoStart;
+import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
+import club.sk1er.hytilities.command.SilentRemoveCommand;
+import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
+import club.sk1er.hytilities.handlers.general.CommandQueue;
+import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
+import club.sk1er.hytilities.handlers.language.LanguageHandler;
+import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
+import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
+import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 
 @Mod(
     modid = Hytilities.MOD_ID,
@@ -68,9 +70,9 @@ public class Hytilities {
     private SilentRemoval silentRemoval;
     private CommandQueue commandQueue;
     private LobbyChecker lobbyChecker;
+    private ChatHandler chatHandler;
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
-    private ChatHandler chatHandler;
 
     private boolean loadedCall;
 
@@ -93,8 +95,8 @@ public class Hytilities {
 
     private void registerHandlers() {
         // general stuff
-        MinecraftForge.EVENT_BUS.register(locrawUtil = new LocrawUtil());
         MinecraftForge.EVENT_BUS.register(autoQueue = new AutoQueue());
+        MinecraftForge.EVENT_BUS.register(locrawUtil = new LocrawUtil());
         MinecraftForge.EVENT_BUS.register(commandQueue = new CommandQueue());
         MinecraftForge.EVENT_BUS.register(new AutoStart());
 
@@ -106,10 +108,10 @@ public class Hytilities {
         MinecraftForge.EVENT_BUS.register(new LevelupEvent());
 
         // lobby
-        MinecraftForge.EVENT_BUS.register(lobbyChecker = new LobbyChecker());
         MinecraftForge.EVENT_BUS.register(new NPCHider());
         MinecraftForge.EVENT_BUS.register(new LobbyBossbar());
         MinecraftForge.EVENT_BUS.register(new LimboLimiter());
+        MinecraftForge.EVENT_BUS.register(lobbyChecker = new LobbyChecker());
 
         // language
         MinecraftForge.EVENT_BUS.register(languageHandler = new LanguageHandler());

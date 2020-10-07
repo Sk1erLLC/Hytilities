@@ -27,6 +27,7 @@ import java.io.File;
 @SuppressWarnings("unused")
 public class HytilitiesConfig extends Vigilant {
 
+    // Chat
     @Property(
         type = PropertyType.SWITCH, name = "Player AdBlocker",
         description = "Remove spam messages from players, usually advertising something.",
@@ -152,114 +153,6 @@ public class HytilitiesConfig extends Vigilant {
         category = "Chat", subcategory = "Restyler"
     )
     public static boolean shortChannelNames;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide Lobby NPCs",
-        description = "Hide NPCs in the lobby.",
-        category = "Lobby", subcategory = "Entities"
-    )
-    public static boolean npcHider;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide NPCs In Tab",
-        description = "Prevent NPCs from showing up in tab.",
-        category = "General", subcategory = "Entities"
-    )
-    public static boolean hideNpcsInTab;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide Guild Tags In Tab",
-        description = "Prevent Guild tags from showing up in tab.",
-        category = "General", subcategory = "Guilds"
-    )
-    public static boolean hideGuildTagsInTab;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide Player Ranks In Tab",
-        description = "Prevent player ranks from showing up in tab.",
-        category = "General", subcategory = "General"
-    )
-    public static boolean hidePlayerRanksInTab;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Limbo Limiter",
-        description = "While in Limbo, limit your framerate to 15 to reduce the load of the game on your computer.",
-        category = "Lobby", subcategory = "General"
-    )
-    public static boolean limboLimiter;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide Lobby Bossbars",
-        description = "Hide the bossbar in the lobby.",
-        category = "Lobby", subcategory = "GUI"
-    )
-    public static boolean lobbyBossbar;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Broadcast Achievements",
-        description = "Announce in Guild chat when you get an achievement.",
-        category = "General", subcategory = "Guilds"
-    )
-    public static boolean broadcastAchievements;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Broadcast Levelup",
-        description = "Announce in Guild chat when you level up.",
-        category = "General", subcategory = "Guilds"
-    )
-    public static boolean broadcastLevelup;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Auto Start",
-        description = "Join Hypixel immediately once the client has loaded to the main menu.",
-        category = "General", subcategory = "General"
-    )
-    public static boolean autoStart;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Chat Swapper",
-        description = "Automatically change back to a selected channel when leaving a party.",
-        category = "Chat", subcategory = "Parties"
-    )
-    public static boolean chatSwapper;
-
-    @Property(
-        type = PropertyType.SELECTOR, name = "Chat Swapper Channel",
-        description = "The channel to return to when leaving a party.\n§eRequires Chat Swapper.",
-        category = "Chat", subcategory = "Parties",
-        options = {"ALL", "GUILD", "OFFICER"}
-    )
-    public static int chatSwapperReturnChannel;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Auto Queue",
-        description = "Automatically queues for another game once you die.\n§eThis will require you to interact with the game in a way to prevent abuse.",
-        category = "General", subcategory = "Queue"
-    )
-    public static boolean autoQueue;
-
-    @Property(
-        type = PropertyType.SLIDER, name = "Auto Queue Delay",
-        description = "Delays the execution of Auto Queue. (The measurement is in seconds)",
-        category = "General", subcategory = "Queue",
-        max = 100
-    )
-    public static int autoQueueDelay;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hide Armour",
-        description = "Hide armour in games where armour is always the same.",
-        category = "Game", subcategory = "Visual"
-    )
-    public static boolean hideArmour;
-
-    @Property(
-        type = PropertyType.SWITCH, name = "Hardcore Hearts",
-        description = "When your bed is broken/wither is killed in Bedwars/The Walls, set the heart style to Hardcore.",
-        category = "Game", subcategory = "Visual"
-    )
-    public static boolean hardcoreHearts;
-
     @Property(
         type = PropertyType.SWITCH, name = "Remove All Chat Message",
         description = "Hide the \"§aYou are now in the §6ALL§a channel§r\" message when auto-switching.",
@@ -287,6 +180,116 @@ public class HytilitiesConfig extends Vigilant {
         category = "Chat", subcategory = "Shout"
     )
     public static boolean preventShoutingOnCooldown;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Chat Swapper",
+        description = "Automatically change back to a selected channel when leaving a party.",
+        category = "Chat", subcategory = "Parties"
+    )
+    public static boolean chatSwapper;
+
+    @Property(
+        type = PropertyType.SELECTOR, name = "Chat Swapper Channel",
+        description = "The channel to return to when leaving a party.\n§eRequires Chat Swapper.",
+        category = "Chat", subcategory = "Parties",
+        options = {"ALL", "GUILD", "OFFICER"}
+    )
+    public static int chatSwapperReturnChannel;
+
+    // General
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide NPCs In Tab",
+        description = "Prevent NPCs from showing up in tab.",
+        category = "General", subcategory = "Entities"
+    )
+    public static boolean hideNpcsInTab;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Guild Tags In Tab",
+        description = "Prevent Guild tags from showing up in tab.",
+        category = "General", subcategory = "Guilds"
+    )
+    public static boolean hideGuildTagsInTab;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Player Ranks In Tab",
+        description = "Prevent player ranks from showing up in tab.",
+        category = "General", subcategory = "General"
+    )
+    public static boolean hidePlayerRanksInTab;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Broadcast Achievements",
+        description = "Announce in Guild chat when you get an achievement.",
+        category = "General", subcategory = "Guilds"
+    )
+    public static boolean broadcastAchievements;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Broadcast Levelup",
+        description = "Announce in Guild chat when you level up.",
+        category = "General", subcategory = "Guilds"
+    )
+    public static boolean broadcastLevelup;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Auto Start",
+        description = "Join Hypixel immediately once the client has loaded to the main menu.",
+        category = "General", subcategory = "General"
+    )
+    public static boolean autoStart;
+@Property(
+        type = PropertyType.SWITCH, name = "Auto Queue",
+        description = "Automatically queues for another game once you die.\n§eThis will require you to interact with the game in a way to prevent abuse.",
+        category = "General", subcategory = "Queue"
+    )
+    public static boolean autoQueue;
+
+    @Property(
+        type = PropertyType.SLIDER, name = "Auto Queue Delay",
+        description = "Delays the execution of Auto Queue. (The measurement is in seconds)",
+        category = "General", subcategory = "Queue",
+        max = 100
+    )
+    public static int autoQueueDelay;
+
+   // Lobby
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Lobby NPCs",
+        description = "Hide NPCs in the lobby.",
+        category = "Lobby", subcategory = "Entities"
+    )
+    public static boolean npcHider;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Limbo Limiter",
+        description = "While in Limbo, limit your framerate to 15 to reduce the load of the game on your computer.",
+        category = "Lobby", subcategory = "General"
+    )
+    public static boolean limboLimiter;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Lobby Bossbars",
+        description = "Hide the bossbar in the lobby.",
+        category = "Lobby", subcategory = "GUI"
+    )
+    public static boolean lobbyBossbar;
+
+    //Game
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Armour",
+        description = "Hide armour in games where armour is always the same.",
+        category = "Game", subcategory = "Visual"
+    )
+    public static boolean hideArmour;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Hardcore Hearts",
+        description = "When your bed is broken/wither is killed in Bedwars/The Walls, set the heart style to Hardcore.",
+        category = "Game", subcategory = "Visual"
+    )
+    public static boolean hardcoreHearts;
+
 
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
