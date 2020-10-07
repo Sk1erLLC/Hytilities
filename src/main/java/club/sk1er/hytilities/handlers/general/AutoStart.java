@@ -19,16 +19,16 @@
 package club.sk1er.hytilities.handlers.general;
 
 import club.sk1er.hytilities.Hytilities;
-import club.sk1er.hytilities.config.HytilitiesConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.multiplayer.ServerData;
+import club.sk1er.hytilities.config.HytilitiesConfig;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AutoStart {
 
