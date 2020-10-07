@@ -93,7 +93,7 @@ public class ModCoreInstaller {
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        System.out.println("Did NOT ModCore Successfully");
+        System.out.println("Did NOT Load ModCore Successfully");
     }
 
     public static int initialize(File gameDir, String minecraftVersion) {
