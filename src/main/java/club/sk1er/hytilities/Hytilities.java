@@ -19,35 +19,34 @@
 
 package club.sk1er.hytilities;
 
-import org.objectweb.asm.tree.ClassNode;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-
-import club.sk1er.modcore.ModCoreInstaller;
-import club.sk1er.mods.core.universal.ChatColor;
-import club.sk1er.mods.core.util.MinecraftUtils;
-import club.sk1er.hytilities.util.locraw.LocrawUtil;
-import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.command.HytilitiesCommand;
-import club.sk1er.hytilities.handlers.general.AutoStart;
-import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
-import club.sk1er.hytilities.command.SilentRemoveCommand;
-import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
-import club.sk1er.hytilities.handlers.general.CommandQueue;
-import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import org.objectweb.asm.tree.ClassNode;
+import net.minecraft.client.Minecraft;
+import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
+import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
 import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
 import club.sk1er.hytilities.handlers.language.LanguageHandler;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
-import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
+import club.sk1er.hytilities.handlers.general.CommandQueue;
+import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
+import club.sk1er.hytilities.command.SilentRemoveCommand;
+import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
+import club.sk1er.hytilities.handlers.general.AutoStart;
+import club.sk1er.hytilities.handlers.chat.ChatHandler;
+import club.sk1er.hytilities.command.HytilitiesCommand;
+import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.util.locraw.LocrawUtil;
+import club.sk1er.mods.core.util.MinecraftUtils;
+import club.sk1er.mods.core.universal.ChatColor;
+import club.sk1er.modcore.ModCoreInstaller;
 
 @Mod(
     modid = Hytilities.MOD_ID,

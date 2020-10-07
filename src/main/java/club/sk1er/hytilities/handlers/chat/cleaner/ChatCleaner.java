@@ -32,7 +32,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import java.util.regex.Matcher;
 
 /**
- * todo: split up this class into separate modules
+ * TODO: split up this class into separate modules
  */
 public class ChatCleaner implements ChatReceiveModule {
 
