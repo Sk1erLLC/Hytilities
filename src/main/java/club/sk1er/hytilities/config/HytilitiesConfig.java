@@ -141,7 +141,7 @@ public class HytilitiesConfig extends Vigilant {
 
     @Property(
         type = PropertyType.SWITCH, name = "Player Count Padding",
-        description = "Place zeros at the beginning of the player count to align with the max player count.\n§eExample: §e(§b001§e/§b111§e) §bSteve §ehas joined!",
+        description = "Place zeros at the beginning of the player count to align with the max player count.\n§eExample: §bSteve §ehas joined §e(§b001§e/§b111§e)!",
         category = "Chat", subcategory = "Restyler"
     )
     public static boolean padPlayerCount;
