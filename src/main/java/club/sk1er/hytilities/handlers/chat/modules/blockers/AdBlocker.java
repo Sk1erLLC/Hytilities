@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package club.sk1er.hytilities.handlers.chat.adblock;
+package club.sk1er.hytilities.handlers.chat.modules.blockers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
@@ -41,14 +40,19 @@ public class AdBlocker implements ChatReceiveModule {
             Pattern.CASE_INSENSITIVE);
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public int getPriority() {
+        return -2;
+    }
+
+    @Override
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         if (commonAdvertisements.matcher(event.message.getUnformattedText()).find(0)) {
             event.setCanceled(true);
         }
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.playerAdBlock;
     }
 }

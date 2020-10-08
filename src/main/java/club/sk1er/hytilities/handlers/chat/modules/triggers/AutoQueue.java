@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.autoqueue;
+package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -33,14 +33,12 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import java.util.concurrent.TimeUnit;
 
 public class AutoQueue implements ChatReceiveModule {
+
     private String command = null;
     private boolean sentCommand;
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
-        if (!HytilitiesConfig.autoQueue) {
-            return;
-        }
+    public void onMessageReceived(ClientChatReceivedEvent event) {
 
         final LanguageData language = getLanguage();
         String message = ChatColor.stripColor(event.message.getUnformattedText());
@@ -55,7 +53,7 @@ public class AutoQueue implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.autoQueue;
     }
 

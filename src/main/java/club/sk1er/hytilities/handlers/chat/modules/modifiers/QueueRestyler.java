@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package club.sk1er.hytilities.handlers.chat.restyler;
+package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
@@ -28,9 +27,21 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
-public class ChatRestyler implements ChatReceiveModule {
+public class QueueRestyler implements ChatReceiveModule {
+
+    public int getPriority() {
+        return 2;
+    }
+
+    private final Pattern gameJoinStyle = Pattern.compile("^§r§(?<color>[\\da-f])(?<player>\\w{1,16})§r§e has joined (?<amount>.+)!§r$");
+    private final Pattern gameLeaveStyle = Pattern.compile("^§r§(?<color>[\\da-f])(?<player>\\w{1,16})§r§e has quit!§r$");
+    private final Pattern gameStartCounterStyle = Pattern.compile("^The game starts in (?<time>\\d{1,3}) seconds?!§r$");
+
+    private final Pattern formattedPaddingPattern = Pattern.compile("\\(§r§b(\\d{1,2})§r§e/§r§b(\\d{1,3})§r§e\\)");
+//    private final Pattern unformattedPaddingPattern = Pattern.compile("\\((\\d{1,2})/(\\d{1,3})\\)");
 
     private static int playerCount = -1;
     private static int maxPlayerCount = -1;
@@ -54,7 +65,7 @@ public class ChatRestyler implements ChatReceiveModule {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String message = event.message.getFormattedText().trim();
         String unformattedMessage = event.message.getUnformattedText().trim();
 
@@ -159,7 +170,7 @@ public class ChatRestyler implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return true;
     }
 

@@ -49,7 +49,7 @@ public class NPCHider {
     /**
      * Used in {@link GuiPlayerTabOverlayTransformer#transform(ClassNode, String)}
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     public static Collection<NetworkPlayerInfo> hideTabNpcs(Collection<NetworkPlayerInfo> playerInfoCollection) {
         if (!MinecraftUtils.isHypixel() || !HytilitiesConfig.hideNpcsInTab) {
             return playerInfoCollection;

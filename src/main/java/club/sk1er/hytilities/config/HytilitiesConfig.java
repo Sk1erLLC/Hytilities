@@ -27,6 +27,8 @@ import java.io.File;
 @SuppressWarnings("unused")
 public class HytilitiesConfig extends Vigilant {
 
+    // ==== CHAT ====
+
     @Property(
         type = PropertyType.SWITCH, name = "Player AdBlocker",
         description = "Remove spam messages from players, usually advertising something.",
@@ -40,6 +42,13 @@ public class HytilitiesConfig extends Vigilant {
         category = "Chat", subcategory = "Toggles"
     )
     public static boolean lineBreakerTrim;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Remove \"Game Starting In\" Message",
+        description = "Removes the \"§eThe game is starting in §b12§e seconds!§r\" message when you join games.",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean removeInitialGameStartingInMsg;
 
     @Property(
         type = PropertyType.SWITCH, name = "Remove Lobby Statuses",
@@ -112,6 +121,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean whiteChat;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Use Custom Restyler",
+        description = "Use custom restyling. Configure with /hytilities restyle",
+        category = "Chat", subcategory = "Restyler"
+    )
+    public static boolean useCustomRestyler;
+
+    @Property(
         type = PropertyType.SWITCH, name = "White Private Messages",
         description = "Make private messages appear as the normal chat message color.\n§eExample: §dFrom §b[MVP§c+§b] Steve: §7hey! §e-> §dFrom §b[MVP§c+§b] Steve: §fhey!",
         category = "Chat", subcategory = "Toggles"
@@ -154,6 +170,15 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean shortChannelNames;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Remove All Chat Message",
+        description = "Hide the \"§aYou are now in the §6ALL§a channel§r\" message when auto-switching.",
+        category = "Chat", subcategory = "Parties"
+    )
+    public static boolean hytilitiesHideAllChatMessage;
+
+    // ==== LOBBY ====
+
+    @Property(
         type = PropertyType.SWITCH, name = "Hide Lobby NPCs",
         description = "Hide NPCs in the lobby.",
         category = "Lobby", subcategory = "Entities"
@@ -194,6 +219,8 @@ public class HytilitiesConfig extends Vigilant {
         category = "Lobby", subcategory = "GUI"
     )
     public static boolean lobbyBossbar;
+
+    // === GENERAL ===
 
     @Property(
         type = PropertyType.SWITCH, name = "Broadcast Achievements",
@@ -245,6 +272,8 @@ public class HytilitiesConfig extends Vigilant {
         max = 100
     )
     public static int autoQueueDelay;
+
+    // ==== GAME ====
 
     @Property(
         type = PropertyType.SWITCH, name = "Hide Armour",

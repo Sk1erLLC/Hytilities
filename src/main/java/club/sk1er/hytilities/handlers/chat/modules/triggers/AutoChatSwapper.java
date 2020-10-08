@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.swapper;
+package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -33,27 +33,35 @@ import java.util.regex.Matcher;
 public class AutoChatSwapper implements ChatReceiveModule {
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public int getPriority() {
+        return -2;
+    }
+
+    @Override
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         final Matcher statusMatcher = getLanguage().autoChatSwapperPartyStatusRegex.matcher(event.message.getUnformattedText());
         if (statusMatcher.matches()) {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
             switch (HytilitiesConfig.chatSwapperReturnChannel) {
                 case 0:
-                default:
+                default: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
                     break;
-                case 1:
+                }
+                case 1: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat g");
                     break;
-                case 2:
+                }
+                case 2: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat o");
                     break;
+                }
             }
         }
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.chatSwapper;
     }
 

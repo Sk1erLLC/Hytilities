@@ -38,7 +38,7 @@ public class HardcoreStatus {
     /**
      * Used in {@link GuiIngameForgeTransformer#transform(ClassNode, String)}
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     public boolean shouldChangeStyle() {
         return this.danger && HytilitiesConfig.hardcoreHearts;
     }

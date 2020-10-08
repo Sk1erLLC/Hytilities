@@ -1,0 +1,14 @@
+{
+	"config_version": "1",
+	"meta": {
+		"version": "0.1",
+		"upload_date": "2020-10-07",
+		"note": "Initial Tests"
+	},
+	"restyles": {
+		"INCOMING_FRIEND_REQUEST": "^Friend request from (?<player>(?:\\[\\w+] )?\\w{1,16})$",
+		"HOUSING_WORLD_ENTER": "^(?<player>(?:\\[\\w+] )?\\w{1,16}) entered the world.$",
+		"SEPARATOR": "^-----------------------------------------------------$",
+		"SENDINGYOUTO": "^Sending you to (?<mm>mega|mini)(?<num>\\d+[A-Z])...$"
+	}
+}

@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.cleaner;
+package club.sk1er.hytilities.handlers.chat.modules.blockers;
 
-import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.game.GameType;
@@ -37,12 +36,15 @@ import java.util.regex.Matcher;
 public class ChatCleaner implements ChatReceiveModule {
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
+    public int getPriority() {
+        return -4;
+    }
+
+    @Override
+    public void onMessageReceived(ClientChatReceivedEvent event) {
 
         final LanguageData language = getLanguage();
+
         String message = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         if (HytilitiesConfig.lobbyStatus) {
@@ -64,7 +66,8 @@ public class ChatCleaner implements ChatReceiveModule {
         }
 
         if (HytilitiesConfig.lineBreakerTrim) {
-            if ((message.contains("-----------") || message.contains("▬▬▬▬▬▬▬▬▬▬▬")) && !message.contains("\n")) {
+            if ((message.contains("-----------") || message.contains(
+                "\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC")) && !message.contains("\n")) {
                 message = event.message.getFormattedText();
                 int lineWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(message);
                 int chatWidth = Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth();
@@ -112,7 +115,7 @@ public class ChatCleaner implements ChatReceiveModule {
             }
         }
 
-        LocrawInformation locrawInformation = Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
+        LocrawInformation locrawInformation = getLowcraw();
         if (locrawInformation != null) {
             if (HytilitiesConfig.bedwarsAdvertisements && locrawInformation.getGameType() == GameType.BED_WARS) {
                 if (language.chatCleanerBedwarsPartyAdvertisementRegex.matcher(message).find()) {
@@ -128,7 +131,23 @@ public class ChatCleaner implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
-        return true;
+    public boolean isEnabled() {
+        return true; // always execute since there are a ton of different conditions
+    }
+
+    // taken from ToggleChat
+    private String reformatMessage(String formattedText) {
+        if (formattedText.contains("\u25AC\u25AC")) { // the character is "▬" - used in some separators
+            formattedText = formattedText
+                .replace("\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC\u25AC", "")
+                .replace("\u25AC\u25AC", "");
+            return formattedText;
+        } else if (formattedText.contains("---")) {
+            formattedText = formattedText
+                .replace("----------------------------------------------------\n", "");
+            return formattedText.replace("--\n", "").replace("\n--", "").replace("-", "");
+        }
+
+        return formattedText;
     }
 }

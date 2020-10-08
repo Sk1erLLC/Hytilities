@@ -16,7 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.events;
+package club.sk1er.hytilities.handlers.chat.modules.events;
+
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -33,10 +34,15 @@ import java.util.regex.Matcher;
 
 public class AchievementEvent implements ChatReceiveModule {
 
+    @Override
+    public int getPriority() {
+        return -3;
+    }
+
     private final List<String> achievementsGotten = new ArrayList<>();
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         Matcher matcher = getLanguage().achievementRegex.matcher(unformattedText);
@@ -53,8 +59,8 @@ public class AchievementEvent implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
-        return true;
+    public boolean isEnabled() {
+        return HytilitiesConfig.broadcastAchievements;
     }
 
     @SubscribeEvent
