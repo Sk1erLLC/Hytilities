@@ -39,10 +39,10 @@ public class SilentRemoveCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length != 1) {
-            Hytilities.INSTANCE.sendMessage("&cInvalid usage: " + getCommandUsage(sender));
+            Hytilities.sendMessage("&cInvalid usage: " + getCommandUsage(sender));
         } else if (args[0].equalsIgnoreCase("clear")) {
             if (Hytilities.INSTANCE.getSilentRemoval().getSilentUsers().isEmpty()) {
-                Hytilities.INSTANCE.sendMessage("&cSilent Removal list is already empty.");
+                Hytilities.sendMessage("&cSilent Removal list is already empty.");
                 return;
             }
 
@@ -52,12 +52,12 @@ public class SilentRemoveCommand extends CommandBase {
 
             if (Hytilities.INSTANCE.getSilentRemoval().getSilentUsers().contains(player)) {
                 Hytilities.INSTANCE.getSilentRemoval().getSilentUsers().remove(player);
-                Hytilities.INSTANCE.sendMessage("&aRemoved &e" + player + " &afrom the removal queue.");
+                Hytilities.sendMessage("&aRemoved &e" + player + " &afrom the removal queue.");
                 return;
             }
 
             Hytilities.INSTANCE.getSilentRemoval().getSilentUsers().add(player);
-            Hytilities.INSTANCE.sendMessage("&aAdded &e" + player + " &ato the removal queue.");
+            Hytilities.sendMessage("&aAdded &e" + player + " &ato the removal queue.");
         }
     }
 

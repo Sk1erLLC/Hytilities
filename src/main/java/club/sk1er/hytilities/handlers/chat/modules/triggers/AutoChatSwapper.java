@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.swapper;
+package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
+import club.sk1er.hytilities.handlers.chat.ChatModule;
 import club.sk1er.mods.core.util.Multithreading;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +30,12 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
-public class AutoChatSwapper implements ChatReceiveModule {
+public class AutoChatSwapper extends ChatModule {
+
+    @Override
+    public int getPriority() {
+        return -2;
+    }
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
@@ -39,21 +44,24 @@ public class AutoChatSwapper implements ChatReceiveModule {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
             switch (HytilitiesConfig.chatSwapperReturnChannel) {
                 case 0:
-                default:
+                default: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat a");
                     break;
-                case 1:
+                }
+                case 1: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat g");
                     break;
-                case 2:
+                }
+                case 2: {
                     Hytilities.INSTANCE.getCommandQueue().queue("/chat o");
                     break;
+                }
             }
         }
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.chatSwapper;
     }
 

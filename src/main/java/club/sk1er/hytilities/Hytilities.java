@@ -22,9 +22,9 @@ import club.sk1er.hytilities.command.HytilitiesCommand;
 import club.sk1er.hytilities.command.SilentRemoveCommand;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
+import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
@@ -37,14 +37,32 @@ import club.sk1er.hytilities.handlers.silent.SilentRemoval;
 import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.modcore.ModCoreInstaller;
+import club.sk1er.mods.core.gui.notification.Notifications;
 import club.sk1er.mods.core.universal.ChatColor;
 import club.sk1er.mods.core.util.MinecraftUtils;
+import club.sk1er.mods.core.util.Multithreading;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.objectweb.asm.tree.ClassNode;
 
 @Mod(
@@ -58,19 +76,28 @@ public class Hytilities {
     public static final String MOD_NAME = "Hytilities";
     public static final String VERSION = "0.1";
 
+    private Map<String, String> restyleMeta;
+    private boolean validConfigVersion;
+
+    private static final String[] ACCEPTED_CONFIG_VERSIONS = {"1"};
+
     @Mod.Instance(MOD_ID)
     public static Hytilities INSTANCE;
 
+    private final Logger logger = LogManager.getLogger("Hytilities");
+
     private final HytilitiesConfig config = new HytilitiesConfig();
+
+    private HytilitiesCommand hytilitiesCommand;
 
     private LanguageHandler languageHandler;
     private HardcoreStatus hardcoreStatus;
     private SilentRemoval silentRemoval;
     private CommandQueue commandQueue;
     private LobbyChecker lobbyChecker;
+    private ChatHandler chatHandler;
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
-    private ChatHandler chatHandler;
 
     private boolean loadedCall;
 
@@ -79,15 +106,22 @@ public class Hytilities {
         ModCoreInstaller.initializeModCore(Minecraft.getMinecraft().mcDataDir);
         config.preload();
 
-        ClientCommandHandler.instance.registerCommand(new HytilitiesCommand());
+        ClientCommandHandler.instance.registerCommand(hytilitiesCommand = new HytilitiesCommand());
         ClientCommandHandler.instance.registerCommand(new SilentRemoveCommand());
 
         registerHandlers();
+
+        getAvailableRestyles(false, true);
     }
 
     @Mod.EventHandler
     public void finishedStarting(FMLLoadCompleteEvent event) {
         this.loadedCall = true;
+        if (!validConfigVersion) {
+            Notifications.INSTANCE.pushNotification("Outdated Version!",
+                "Your Hytilities version is outdated. Please update it in order to use custom restyling. " +
+                    "Check your log for more details.");
+        }
     }
 
 
@@ -115,8 +149,112 @@ public class Hytilities {
         MinecraftForge.EVENT_BUS.register(languageHandler = new LanguageHandler());
     }
 
-    public void sendMessage(String message) {
+    // Adapted from AutoGG
+    // https://github.com/Sk1erLLC/AutoGG/blob/master/src/main/java/club/sk1er/autogg/AutoGG.java#L84
+    public void getAvailableRestyles(boolean sendChatMsg, boolean load) {
+        Multithreading.runAsync(() -> {
+            try {
+                validConfigVersion = true;
+
+                evaluateJson(new JsonParser().parse(
+                    fetchString("https://static.sk1er.club/hytilities/available_restyles.json")
+                ).getAsJsonObject(), load);
+
+                restyleMeta.put("type", "REMOTE");
+
+            } catch (IOException e) {
+                if (sendChatMsg) {
+                    sendMessage(ChatColor.RED + "Unable to fetch remote restyle list! Do you have an internet connection?");
+                    sendMessage(ChatColor.YELLOW + "Using fallback local restyle list.");
+                }
+
+                if (e instanceof FileNotFoundException) {
+                    logger.warn("No internet connection - using fallback local restyle list.");
+                } else {
+                    logger.error("Failed to fetch remote restyle list.", e);
+                }
+
+                try {
+                    evaluateJson(new JsonParser().parse(new BufferedReader(
+                        new InputStreamReader(getClass().getResourceAsStream("/available_restyles.json")) // inside da jar
+                    ).lines().collect(Collectors.joining("\n"))).getAsJsonObject(), load);
+                    restyleMeta.put("type", "LOCAL");
+                } catch (JsonSyntaxException ee) {
+                    if (sendChatMsg) {
+                        sendMessage(ChatColor.RED + ChatColor.BOLD.toString() +
+                            "Local JSON Syntax Error! Contact the mod authors if you see this message! https://sk1er.club/support-discord");
+                    }
+                    logger.error("Local JSON Syntax Error! Contact us in the support channel at https://sk1er.club/support-discord.", e);
+                    validConfigVersion = false;
+                } catch (NullPointerException ee) {
+                    if (sendChatMsg) {
+                        sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Unsupported local restyle list version! A developer screwed up!");
+                    }
+
+                    logger.error("Unsupported local restyle list version! A developer screwed up!");
+                    validConfigVersion = false;
+                }
+
+
+            } catch (JsonSyntaxException e) {
+                if (sendChatMsg) {
+                    sendMessage(ChatColor.RED + ChatColor.BOLD.toString() +
+                        "JSON Syntax Error! Contact the mod authors if you see this message! https://sk1er.club/support-discord");
+                }
+                logger.error("JSON Syntax Error! Contact us in the support channel at https://sk1er.club/support-discord.", e);
+                validConfigVersion = false;
+            } catch (NullPointerException e) { // catch NPE because it can happen in multiple locations
+                if (sendChatMsg) {
+                    sendMessage(ChatColor.RED + "Unsupported remote restyle list version! Please update Hytilities!");
+                }
+
+
+                logger.error("Unsupported remote restyle list version! Please update Hytilities!");
+                validConfigVersion = false;
+            }
+        });
+    }
+
+    private void evaluateJson(JsonObject json, boolean load) {
+        if (!Arrays.asList(ACCEPTED_CONFIG_VERSIONS).contains(json.get("config_version").getAsString())) {
+            throw new NullPointerException("This will be handled internally.");
+        }
+
+        restyleMeta = jsonToMap(json.get("meta"));
+
+        hytilitiesCommand.updateFormats(jsonToMap(json.get("restyles")));
+
+        if (load) {
+            try {
+                chatHandler.getCustomChatFormat().load();
+            } catch (IOException e) {
+                if (!(e instanceof FileNotFoundException)) {
+                    Hytilities.INSTANCE.getLogger().error("Failed loading style file.", e);
+                }
+            } catch (JsonParseException e) {
+                Hytilities.INSTANCE.getLogger().error("Invalid JSON in style file. Did you modify it?", e);
+            }
+        }
+
+    }
+
+    public static IChatComponent colorMessage(String message) {
+        return new ChatComponentText(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    /** {@link Hytilities#colorMessage(String)} is faster, but this is better for user input. */
+    public static IChatComponent colorMessageWithBackslash(String message) {
+        return new ChatComponentText(message.replaceAll("(?i)(?<!\\\\)&(\\da-fk-or)", "\u00a7$1"));
+    }
+
+    public static void sendMessage(String message) {
         MinecraftUtils.sendMessage(ChatColor.GOLD + "[Hytilities] ", ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    // black magic; https://stackoverflow.com/a/21720953
+    @NotNull
+    public static <M extends Map<?, ?>> M jsonToMap(@NotNull JsonElement json) {
+        return new Gson().fromJson(json, new TypeToken<M>() {}.getType());
     }
 
     public HytilitiesConfig getConfig() {
@@ -135,6 +273,7 @@ public class Hytilities {
         return lobbyChecker;
     }
 
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     /**
      * Used in {@link GuiIngameForgeTransformer#transform(ClassNode, String)}
      */
@@ -154,6 +293,52 @@ public class Hytilities {
     public void setLoadedCall(boolean loadedCall) {
         this.loadedCall = loadedCall;
     }
+
+    public boolean isValidConfigVersion() {
+        return validConfigVersion;
+    }
+
+    public Map<String, String> getRestyleMeta() {
+        return restyleMeta;
+    }
+
+    public static String fetchString(String url) throws IOException {
+        HttpURLConnection connection = null;
+        String s;
+
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setUseCaches(false);
+            connection.addRequestProperty("User-Agent", "Mozilla/4.76 (Sk1er Hytilities)");
+            connection.setReadTimeout(15000);
+            connection.setConnectTimeout(15000);
+            connection.setDoOutput(true);
+
+            try (InputStream setup = connection.getInputStream()) {
+                s = IOUtils.toString(setup, Charset.defaultCharset());
+            }
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+
+        return s;
+    }
+
+    public ChatHandler getChatHandler() {
+        return chatHandler;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public HytilitiesCommand getHytilitiesCommand() {
+        return hytilitiesCommand;
+    }
+
 
     public CommandQueue getCommandQueue() {
         return commandQueue;

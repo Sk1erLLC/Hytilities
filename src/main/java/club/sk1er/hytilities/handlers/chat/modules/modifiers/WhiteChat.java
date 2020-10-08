@@ -16,16 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.whitechat;
+package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
+import club.sk1er.hytilities.handlers.chat.ChatModule;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import java.util.regex.Matcher;
 
-public class WhiteChat implements ChatReceiveModule {
+public class WhiteChat extends ChatModule {
+
+    @Override
+    public int getPriority() {
+        return 2;
+    }
 
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
@@ -50,7 +55,7 @@ public class WhiteChat implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return true;
     }
 }

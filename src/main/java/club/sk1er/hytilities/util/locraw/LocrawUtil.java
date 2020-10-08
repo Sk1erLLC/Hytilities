@@ -29,7 +29,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class LocrawUtil implements ChatReceiveModule {
+public class LocrawUtil extends ChatModule {
+
+    private LocrawInformation locrawInformation;
 
     private final Gson gson = new Gson();
     private LocrawInformation locrawInformation;
@@ -79,7 +81,7 @@ public class LocrawUtil implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return true;
     }
 

@@ -16,13 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.connected;
+package club.sk1er.hytilities.handlers.chat.modules.blockers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
+import club.sk1er.hytilities.handlers.chat.ChatModule;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
-public class ConnectedMessage implements ChatReceiveModule {
+import java.util.regex.Pattern;
+
+public class ConnectedMessage extends ChatModule {
+
+    @Override
+    public int getPriority() {
+        return -2;
+    }
+
+    private static final Pattern serverConnectMessage = Pattern.compile("You are currently connected to server \\S+|Sending to server \\S+\\.{3}");
+
     @Override
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (getLanguage().connectedServerConnectMessageRegex.matcher(event.message.getUnformattedText()).matches()) {
@@ -31,7 +41,7 @@ public class ConnectedMessage implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.serverConnectedMessages;
     }
 }

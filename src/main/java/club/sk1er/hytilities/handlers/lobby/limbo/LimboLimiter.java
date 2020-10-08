@@ -18,8 +18,8 @@
 
 package club.sk1er.hytilities.handlers.lobby.limbo;
 
-import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.handlers.chat.modules.modifiers.QueueRestyler;
 import club.sk1er.hytilities.handlers.chat.restyler.ChatRestyler;
 import club.sk1er.hytilities.tweaker.asm.MinecraftTransformer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -55,7 +55,7 @@ public class LimboLimiter {
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Unload event) {
         limboStatus = false;
-        ChatRestyler.reset(); // putting this here so we don't have to make a new event class just to do this
+        QueueRestyler.reset(); // putting this here so we don't have to make a new event class just to do this
     }
 
     /**
