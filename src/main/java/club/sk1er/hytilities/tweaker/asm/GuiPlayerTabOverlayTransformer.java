@@ -42,49 +42,53 @@ public class GuiPlayerTabOverlayTransformer implements HytilitiesTransformer {
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
             String methodName = mapMethodName(classNode, method);
+            ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
-            if (methodName.equals("renderPlayerlist") || methodName.equals("func_175249_a")) {
-                ListIterator<org.objectweb.asm.tree.AbstractInsnNode> iterator = method.instructions.iterator();
+            switch (methodName) {
+                case "renderPlayerlist":
+                case "func_175249_a":
+                    while (iterator.hasNext()) {
+                        AbstractInsnNode next = iterator.next();
 
-                while (iterator.hasNext()) {
-                    AbstractInsnNode next = iterator.next();
+                        if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+                            String methodInsnName = mapMethodNameFromNode(next);
 
-                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKEVIRTUAL) {
-                        String methodInsnName = mapMethodNameFromNode(next);
-
-                        // sort the player map and filter any entity with a uuid version of 2
-                        if (methodInsnName.equals("getPlayerInfoMap") || methodInsnName.equals("func_175106_d")) {
-                            method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                "club/sk1er/hytilities/handlers/lobby/npc/NPCHider",
-                                "hideTabNpcs",
-                                "(Ljava/util/Collection;)Ljava/util/Collection;",
-                                false));
-                            break;
+                            // sort the player map and filter any entity with a uuid version of 2
+                            if (methodInsnName.equals("getPlayerInfoMap") || methodInsnName.equals("func_175106_d")) {
+                                method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                    "club/sk1er/hytilities/handlers/lobby/npc/NPCHider",
+                                    "hideTabNpcs",
+                                    "(Ljava/util/Collection;)Ljava/util/Collection;",
+                                    false));
+                                break;
+                            }
                         }
                     }
-                }
-            } else if (methodName.equals("getPlayerName") || methodName.equals("func_175243_a")) {
-                ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                    break;
+                case "getPlayerName":
+                case "func_175243_a":
+                    while (iterator.hasNext()) {
+                        AbstractInsnNode next = iterator.next();
 
-                while (iterator.hasNext()) {
-                    AbstractInsnNode next = iterator.next();
+                        if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESTATIC) {
+                            String methodInsnName = mapMethodNameFromNode(next);
 
-                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESTATIC) {
-                        String methodInsnName = mapMethodNameFromNode(next);
-
-                        // trim the player name to remove player ranks and guild tags
-                        if (methodInsnName.equals("formatPlayerName") || methodInsnName.equals("func_96667_a")) {
-                            method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                "club/sk1er/hytilities/handlers/lobby/tab/TabChanger",
-                                "modifyName",
-                                "(Ljava/lang/String;)Ljava/lang/String;",
-                                false));
-                            break;
+                            // trim the player name to remove player ranks and guild tags
+                            if (methodInsnName.equals("formatPlayerName") || methodInsnName.equals("func_96667_a")) {
+                                method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                    "club/sk1er/hytilities/handlers/lobby/tab/TabChanger",
+                                    "modifyName",
+                                    "(Ljava/lang/String;)Ljava/lang/String;",
+                                    false));
+                                break;
+                            }
                         }
                     }
-                }
-            } else if (methodName.equals("drawPing") || methodName.equals("func_175245_a")) {
-                method.instructions.insert(hidePing());
+                    break;
+                case "drawPing":
+                case "func_175245_a":
+                    method.instructions.insert(hidePing());
+                    break;
             }
         }
     }
