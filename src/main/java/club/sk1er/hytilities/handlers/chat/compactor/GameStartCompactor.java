@@ -54,11 +54,6 @@ public class GameStartCompactor implements ChatReceiveModule {
                         }
                     }
                 }
-                if (oldTimerLines.size() > 0) { // just prints an error, can be removed if no issues are found
-                    StringBuilder leftLines = new StringBuilder("Could not remove all lines from last game start message. Ignore this error if the chat was recently cleared. Lines, that couldn't be found: ");
-                    for (IChatComponent oldTimerLine : oldTimerLines) leftLines.append(oldTimerLine.getUnformattedText()).append(", ");
-                    System.out.println(leftLines.substring(0, leftLines.toString().length()-2));
-                }
             }
             lastMessage = event.message.createCopy();
         }
