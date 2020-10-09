@@ -20,10 +20,7 @@ package club.sk1er.hytilities.tweaker.asm;
 
 import club.sk1er.hytilities.tweaker.transformer.HytilitiesTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.ListIterator;
 
@@ -71,7 +68,7 @@ public class GuiPlayerTabOverlayTransformer implements HytilitiesTransformer {
                         // trim the player name to remove player ranks and guild tags
                         if (methodInsnName.equals("formatPlayerName") || methodInsnName.equals("func_96667_a")) {
                             method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                "club/sk1er/hytilities/handlers/lobby/tab/TabNameChanger",
+                                "club/sk1er/hytilities/handlers/lobby/tab/TabChanger",
                                 "modifyName",
                                 "(Ljava/lang/String;)Ljava/lang/String;",
                                 false));
@@ -79,7 +76,19 @@ public class GuiPlayerTabOverlayTransformer implements HytilitiesTransformer {
                         }
                     }
                 }
+            } else if (methodName.equals("drawPing") || methodName.equals("func_175245_a")) {
+                method.instructions.insert(hidePing());
             }
         }
+    }
+
+    private InsnList hidePing() {
+        InsnList list = new InsnList();
+        LabelNode label = new LabelNode();
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "club/sk1er/hytilities/handlers/lobby/tab/TabChanger", "hidePing", "()Z", false));
+        list.add(new JumpInsnNode(Opcodes.IFEQ, label));
+        list.add(new InsnNode(Opcodes.RETURN));
+        list.add(label);
+        return list;
     }
 }
