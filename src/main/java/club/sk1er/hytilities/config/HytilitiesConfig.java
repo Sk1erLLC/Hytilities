@@ -290,7 +290,7 @@ public class HytilitiesConfig extends Vigilant {
 
     @Property(
         type = PropertyType.SWITCH, name = "Mystery Box Star",
-        description = "Shows what star a mystery box is in the Mystery Box Vault.",
+        description = "Shows what star a mystery box is in the Mystery Box Vault, Orange stars are special boxes.\n§eExample: §e5✰\n§6✰",
         category = "Lobby", subcategory = "GUI"
     )
     public static boolean mysteryBoxStar;
