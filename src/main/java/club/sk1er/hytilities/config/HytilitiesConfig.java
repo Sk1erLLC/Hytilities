@@ -119,6 +119,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean whitePrivateMessages;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Cleaner game start announcements",
+        description = "Makes game announcements not take multiple lines in chat.\n§eExample: Game starts in 10 seconds!",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean cleanerGameStartAnnouncements;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Game Status Restyle",
         description = "Replace common game status messages with a new style.\n§eExamples:\n§a§l+ §bSteve §e(§b1§e/§b12§e)\n§c§l- §bSteve §e(§b1§e/§b12§e)\n§e§l* §aGame starts in §b§l5 §aseconds.",
         category = "Chat", subcategory = "Restyler"
