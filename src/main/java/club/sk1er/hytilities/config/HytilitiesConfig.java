@@ -288,6 +288,13 @@ public class HytilitiesConfig extends Vigilant {
     )
     public static boolean preventShoutingOnCooldown;
 
+    @Property(
+        type = PropertyType.SWITCH, name = "Mystery Box Star",
+        description = "Shows what star a mystery box is in the Mystery Box Vault.",
+        category = "Lobby", subcategory = "GUI"
+    )
+    public static boolean mysteryBoxStar;
+
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
         initialize();
