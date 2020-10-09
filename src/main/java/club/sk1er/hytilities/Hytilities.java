@@ -22,9 +22,9 @@ import club.sk1er.hytilities.command.HytilitiesCommand;
 import club.sk1er.hytilities.command.SilentRemoveCommand;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
+import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
@@ -69,9 +69,9 @@ public class Hytilities {
     private SilentRemoval silentRemoval;
     private CommandQueue commandQueue;
     private LobbyChecker lobbyChecker;
+    private ChatHandler chatHandler;
     private LocrawUtil locrawUtil;
     private AutoQueue autoQueue;
-    private ChatHandler chatHandler;
 
     private boolean loadedCall;
 
