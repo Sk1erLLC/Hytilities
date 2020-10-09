@@ -18,9 +18,9 @@
 
 package club.sk1er.hytilities.handlers.lobby.limbo;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.QueueRestyler;
-import club.sk1er.hytilities.handlers.chat.restyler.ChatRestyler;
 import club.sk1er.hytilities.tweaker.asm.MinecraftTransformer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;

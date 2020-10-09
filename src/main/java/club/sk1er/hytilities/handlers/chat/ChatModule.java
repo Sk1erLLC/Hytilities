@@ -1,45 +1,86 @@
+/*
+ * Hytilities - Hypixel focused Quality of Life mod.
+ * Copyright (C) 2020  Sk1er LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package club.sk1er.hytilities.handlers.chat;
 
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.common.MinecraftForge;
+import club.sk1er.hytilities.Hytilities;
+import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.handlers.language.LanguageData;
+import club.sk1er.hytilities.util.locraw.LocrawInformation;
+import net.minecraft.util.IChatComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * This interface is used to handle many different {@link ClientChatReceivedEvent}s without
- * having to add them all to the {@link MinecraftForge#EVENT_BUS}. ChatModules essentially behave
- * like small listener classes, except instead of going directly to Forge, the {@link ChatHandler}
- * handles them and passes them to Forge, taking account of things like priority and cancelled
- * events.
+ * This interface handles shared methods between {@link ChatReceiveModule} and {@link ChatSendModule}.
+ * It has things like priority and enabled checks, as well as default utility methods for classes
+ * to use.
  *
- * @author asbyth
- * @since 1.0b1
+ * It is not intended to be directly implemented, but rather for classes to implement one of it's
+ * subinterfaces, for example {@link ChatReceiveModule} and {@link ChatSendModule}.
+ *
+ * @see ChatHandler
  */
-public abstract class ChatModule {
+public interface ChatModule {
 
     /**
-     * This determines the order in which the modules are executed. The lower, the earlier.
+     * This determines the order in which the {@link ChatModule}s are executed. The lower, the earlier.
      *
-     * If your class removes messages then it is recommended to have a lower number.
+     * If your {@link ChatModule} removes messages then it is recommended to have a lower number.
      *
-     * @return the class's priority
+     * Note that {@link club.sk1er.hytilities.util.locraw.LocrawUtil} and
+     * {@link club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue} are always executed before
+     * any other {@link ChatModule}, regardless of priority.
+     *
+     * @return the class's priority (lower goes first)
      */
-    public int getPriority() {
+    default int getPriority() {
         return 0;
     }
 
     /**
-     * This is the actual code of the ChatModule. This function behaves similarly
-     * to a {@code @SubscribeEvent} annotated function.
+     * This function allows you to determine if your ChatModule will be executed.
+     * For example, one might return a {@link HytilitiesConfig} value.
      *
-     * @param event a {@link ClientChatReceivedEvent}
+     * @return a {@code boolean} that determines whether or not the code should be executed
      */
-    public abstract void onChatEvent(ClientChatReceivedEvent event);
+    boolean isEnabled();
+
 
     /**
-     * This function allows you to determine if your ChatModule will be executed.
-     * For example, one might return the a {@link club.sk1er.hytilities.config.HytilitiesConfig} value.
-     *
-     * @return a {@link boolean} that determines whether or not the code should be executed
+     * Default pedantically static utility method to allow {@link ChatModule}s to reference it without
+     * a static import of {@link Hytilities#colorMessage(String)}.
      */
-    public abstract boolean isEnabled();
+    @NotNull
+    default IChatComponent colorMessage(@NotNull String message) {
+        return Hytilities.colorMessage(message);
+    }
+
+    /** Get the user's Hypixel language setting. */
+    @NotNull
+    default LanguageData getLanguage() {
+        return Hytilities.INSTANCE.getLanguageHandler().getCurrent();
+    }
+
+    /** Get the player's server location. */
+    @Nullable
+    default LocrawInformation getLowcraw() {
+        return Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
+    }
 
 }

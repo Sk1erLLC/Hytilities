@@ -19,24 +19,17 @@
 package club.sk1er.hytilities.handlers.chat;
 
 import club.sk1er.hytilities.Hytilities;
-import club.sk1er.hytilities.handlers.chat.adblock.AdBlocker;
-import club.sk1er.hytilities.handlers.chat.cleaner.ChatCleaner;
-import club.sk1er.hytilities.handlers.chat.connected.ConnectedMessage;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.guild.GuildWelcomer;
-import club.sk1er.hytilities.handlers.chat.restyler.ChatRestyler;
-import club.sk1er.hytilities.handlers.chat.shoutblocker.ShoutBlocker;
-import club.sk1er.hytilities.handlers.chat.swapper.AutoChatSwapper;
-import club.sk1er.hytilities.handlers.chat.watchdog.ThankWatchdog;
-import club.sk1er.hytilities.handlers.chat.whitechat.WhiteChat;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.*;
 import club.sk1er.hytilities.handlers.chat.modules.events.*;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.*;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatSwapper;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.*;
+import club.sk1er.hytilities.tweaker.asm.GuiScreenTransformer;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -52,35 +45,23 @@ public class ChatHandler {
         // Please sort by length increasing, in case of a tie use case-ignored alphabetical order
         // The actual sorting is done later I just want this to look nice
 
-        this.registerModule(new AdBlocker());
-        this.registerModule(new WhiteChat());
-        this.registerModule(new ChatCleaner());
-        this.registerModule(new QueueRestyler());
-        this.registerModule(new LevelupEvent());
-        this.registerModule(new AutoChatSwapper());
-        this.registerModule(new AchievementEvent());
-        this.registerModule(new ConnectedMessage());
-        this.registerModule(customChatFormat = new CustomRestyleHandler());
-        this.registerModule(new GameIsStartingInBlocker());
-
-        this.moduleList.sort(Comparator.comparingInt(ChatModule::getPriority));
         this.registerReceiveModule(new AdBlocker());
-        this.registerReceiveModule(new ChatCleaner());
-        this.registerReceiveModule(new ChatRestyler());
         this.registerReceiveModule(new WhiteChat());
+        this.registerReceiveModule(new ChatCleaner());
         this.registerReceiveModule(new LevelupEvent());
-        this.registerReceiveModule(new AchievementEvent());
-        this.registerReceiveModule(new AutoChatSwapper());
-        this.registerReceiveModule(new ConnectedMessage());
-        this.registerReceiveModule(new ThankWatchdog());
         this.registerReceiveModule(new GuildWelcomer());
+        this.registerReceiveModule(new QueueRestyler());
+        this.registerReceiveModule(new ThankWatchdog());
+        this.registerReceiveModule(new AutoChatSwapper());
+        this.registerReceiveModule(new AchievementEvent());
+        this.registerReceiveModule(new ConnectedMessage());
+        this.registerReceiveModule(new GameIsStartingInBlocker());
+        this.registerReceiveModule(customChatFormat = new CustomRestyleHandler());
+
         this.registerSendAndReceiveModule(new ShoutBlocker());
 
-//        this.moduleList.sort(Comparator.comparingInt(ChatModule::getPriority));
 
-        // reinitializing these seems to break them
-        this.moduleList.add(0, Hytilities.INSTANCE.getLocrawUtil());
-        this.moduleList.add(0, Hytilities.INSTANCE.getAutoQueue());
+        this.sendModules.sort(Comparator.comparingInt(ChatModule::getPriority));
     }
 
     private void registerReceiveModule(ChatReceiveModule chatModule) {
@@ -89,12 +70,9 @@ public class ChatHandler {
 
     private void registerSendModule(ChatSendModule chatModule) {
         this.sendModules.add(chatModule);
-        // inserted after the sort at the beginning so that they *always* run first, ignoring priority
-
-
     }
 
-    private <T extends ChatSendModule & ChatReceiveModule> void registerSendAndReceiveModule(T chatModule) {
+    private <T extends ChatReceiveModule & ChatSendModule> void registerSendAndReceiveModule(T chatModule) {
         this.registerReceiveModule(chatModule);
         this.registerSendModule(chatModule);
     }
@@ -105,9 +83,15 @@ public class ChatHandler {
             return;
         }
 
+        // These don't cast to ChatSendModule for god knows why, so we can't include them in receiveModules.
+        // Therefore, we manually trigger them here. Pain.
+        Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
+        Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
+
+
         for (ChatReceiveModule module : this.receiveModules) {
-            if (module.isReceiveModuleEnabled()) {
-                module.onChatEvent(event);
+            if (module.isEnabled()) {
+                module.onMessageReceived(event);
                 if (event.isCanceled()) {
                     return;
                 }
@@ -115,18 +99,34 @@ public class ChatHandler {
         }
     }
 
+    /**
+     * Allow modifying sent messages, or cancelling them altogether.
+     *
+     * Is not unused - is used in ASM ({@link GuiScreenTransformer}).
+     *
+     * @param message a message that the user has sent
+     * @return the modified message, or {@code null} if the message should be cancelled
+     */
+    @SuppressWarnings({"unused", "RedundantSuppression"})
+    @Nullable
+    public String handleSentMessage(@NotNull String message) {
+        if (!MinecraftUtils.isHypixel()) {
+            return message;
+        }
+
+        for (ChatSendModule module : this.sendModules) {
+            if (module.isEnabled()) {
+                message = module.onMessageSend(message);
+                if (message == null) {
+                    return null;
+                }
+            }
+        }
+        return message;
+    }
+
     public CustomRestyleHandler getCustomChatFormat() {
         return customChatFormat;
     }
 
-    public boolean shouldSendMessage(String message) {
-        if (!MinecraftUtils.isHypixel()) {
-            return true;
-        }
-
-        for (ChatSendModule module : this.sendModules) {
-            if (module.isSendModuleEnabled() && !module.shouldSendMessage(message)) return false;
-        }
-        return true;
-    }
 }

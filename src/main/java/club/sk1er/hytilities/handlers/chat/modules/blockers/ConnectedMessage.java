@@ -19,12 +19,12 @@
 package club.sk1er.hytilities.handlers.chat.modules.blockers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import java.util.regex.Pattern;
 
-public class ConnectedMessage extends ChatModule {
+public class ConnectedMessage implements ChatReceiveModule {
 
     @Override
     public int getPriority() {
@@ -34,7 +34,7 @@ public class ConnectedMessage extends ChatModule {
     private static final Pattern serverConnectMessage = Pattern.compile("You are currently connected to server \\S+|Sending to server \\S+\\.{3}");
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         if (getLanguage().connectedServerConnectMessageRegex.matcher(event.message.getUnformattedText()).matches()) {
             event.setCanceled(true);
         }

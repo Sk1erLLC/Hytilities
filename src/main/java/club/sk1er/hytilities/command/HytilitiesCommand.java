@@ -20,7 +20,7 @@ package club.sk1er.hytilities.command;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.customrestyle.CustomRestyle;
-import club.sk1er.hytilities.handlers.chat.customrestyle.RecievedMessageFormat;
+import club.sk1er.hytilities.handlers.chat.customrestyle.ReceivedMessageFormat;
 import club.sk1er.mods.core.ModCore;
 import com.google.gson.JsonParseException;
 import net.minecraft.command.CommandBase;
@@ -38,7 +38,7 @@ import static club.sk1er.hytilities.Hytilities.sendMessage;
 
 public class HytilitiesCommand extends CommandBase {
 
-    private final Map<String, RecievedMessageFormat> formats = new HashMap<>();
+    private final Map<String, ReceivedMessageFormat> formats = new HashMap<>();
 
     @Override
     public String getCommandName() {
@@ -74,11 +74,11 @@ public class HytilitiesCommand extends CommandBase {
                                         getCommandName() + " restyle set <name> <replacement>");
                                 } else {
                                     if (formats.containsKey(args[2])) {
-                                        for (CustomRestyle f : Hytilities.INSTANCE.getChatHandler()
+                                        for (CustomRestyle restyle : Hytilities.INSTANCE.getChatHandler()
                                             .getCustomChatFormat().getReplacements()) {
-                                            if (f.getRecievedMessageFormat().getId().equals(args[2])) {
+                                            if (restyle.getReceivedMessageFormat().getId().equals(args[2])) {
                                                 Hytilities.INSTANCE.getChatHandler().getCustomChatFormat()
-                                                    .getReplacements().remove(f);
+                                                    .getReplacements().remove(restyle);
                                                 Hytilities.INSTANCE.getChatHandler().getCustomChatFormat()
                                                     .getReplacements().add(new CustomRestyle(formats.get(args[2]),
                                                     String.join(" ",
@@ -103,11 +103,11 @@ public class HytilitiesCommand extends CommandBase {
                                         getCommandName() + " restyle remove <name>");
                                 } else {
                                     if (formats.containsKey(args[2])) {
-                                        for (CustomRestyle f : Hytilities.INSTANCE.getChatHandler()
+                                        for (CustomRestyle restyle : Hytilities.INSTANCE.getChatHandler()
                                             .getCustomChatFormat().getReplacements()) {
-                                            if (f.getRecievedMessageFormat().getId().equals(args[2])) {
+                                            if (restyle.getReceivedMessageFormat().getId().equals(args[2])) {
                                                 Hytilities.INSTANCE.getChatHandler().getCustomChatFormat()
-                                                    .getReplacements().remove(f);
+                                                    .getReplacements().remove(restyle);
 
                                                 sendMessage("&aRemoved restyle for &r" + args[2] + "&a.");
                                                 Hytilities.INSTANCE.getChatHandler().getCustomChatFormat().save();
@@ -128,7 +128,7 @@ public class HytilitiesCommand extends CommandBase {
                                     if (formats.containsKey(args[2])) {
                                         for (CustomRestyle restyle : Hytilities.INSTANCE.getChatHandler()
                                             .getCustomChatFormat().getReplacements()) {
-                                            if (restyle.getRecievedMessageFormat().getId().equals(args[2])) {
+                                            if (restyle.getReceivedMessageFormat().getId().equals(args[2])) {
                                                 sendMessage(restyle.getReplacement());
                                                 return;
                                             }
@@ -156,8 +156,8 @@ public class HytilitiesCommand extends CommandBase {
                                             CustomRestyle[] customRestyles = Hytilities.INSTANCE.getChatHandler()
                                                 .getCustomChatFormat().getReplacements().toArray(new CustomRestyle[0]);
                                             List<String> restyleNames = new ArrayList<>();
-                                            for (CustomRestyle f : customRestyles) {
-                                                restyleNames.add(f.getRecievedMessageFormat().getId());
+                                            for (CustomRestyle restyle : customRestyles) {
+                                                restyleNames.add(restyle.getReceivedMessageFormat().getId());
                                             }
                                             sendMessage(String.join(", ",
                                                 restyleNames.toArray(new String[0])));
@@ -203,8 +203,8 @@ public class HytilitiesCommand extends CommandBase {
                                     break;
                                 } else {
                                     if (formats.containsKey(args[2])) {
-                                        RecievedMessageFormat r = formats.get(args[2]);
-                                        sendMessage("RecievedMessageFormat " + args[2] + ":");
+                                        ReceivedMessageFormat r = formats.get(args[2]);
+                                        sendMessage("ReceivedMessageFormat " + args[2] + ":");
                                         sendMessage("    Regex: " + r.getRegex());
                                         if (r.getAvailableGroups().length != 0) {
                                             sendMessage("    Groups: " + String.join(", ",
@@ -266,7 +266,7 @@ public class HytilitiesCommand extends CommandBase {
                         List<String> list = new ArrayList<>();
                         for (CustomRestyle restyle : Hytilities.INSTANCE.getChatHandler().getCustomChatFormat()
                             .getReplacements()) {
-                            list.add(restyle.getRecievedMessageFormat().getId());
+                            list.add(restyle.getReceivedMessageFormat().getId());
                         }
                         return getListOfStringsMatchingLastWord(args, (String[]) list.toArray());
                     }
@@ -277,15 +277,15 @@ public class HytilitiesCommand extends CommandBase {
         return null;
     }
 
-    public void updateFormats(@NotNull Map<String, String> l) {
+    public void updateFormats(@NotNull Map<String, String> newMap) {
         formats.clear();
-        for (String s : l.keySet()) {
-            formats.put(s, new RecievedMessageFormat(s, Pattern.compile(l.get(s)
+        for (String id : newMap.keySet()) {
+            formats.put(id, new ReceivedMessageFormat(id, Pattern.compile(newMap.get(id)
                 .replaceAll("\\\\{2}", "\\\\"))));
         }
     }
 
-    public Map<String, RecievedMessageFormat> getFormats() {
+    public Map<String, ReceivedMessageFormat> getFormats() {
         return formats;
     }
 

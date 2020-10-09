@@ -22,7 +22,7 @@ package club.sk1er.hytilities.handlers.chat.modules.events;
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.events.HypixelAchievementEvent;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class AchievementEvent extends ChatModule {
+public class AchievementEvent implements ChatReceiveModule {
 
     @Override
     public int getPriority() {
@@ -42,7 +42,7 @@ public class AchievementEvent extends ChatModule {
     private final List<String> achievementsGotten = new ArrayList<>();
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         Matcher matcher = getLanguage().achievementRegex.matcher(unformattedText);

@@ -18,7 +18,7 @@
 package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
 import net.minecraft.util.ChatComponentText;
@@ -29,10 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static club.sk1er.hytilities.Hytilities.colorMessage;
 
-
-public class QueueRestyler extends ChatModule {
+public class QueueRestyler implements ChatReceiveModule {
 
     public int getPriority() {
         return 2;
@@ -67,7 +65,7 @@ public class QueueRestyler extends ChatModule {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String message = event.message.getFormattedText().trim();
         String unformattedMessage = event.message.getUnformattedText().trim();
 

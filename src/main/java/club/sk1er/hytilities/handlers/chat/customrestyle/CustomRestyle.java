@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * A class that simplifies the storage of custom chat restyles.
  *
  * @author SirNapkin1334
- * @see RecievedMessageFormat
+ * @see ReceivedMessageFormat
  * @see CustomRestyleHandler
  * @since 1.0b4
  */
@@ -31,10 +31,10 @@ public class CustomRestyle {
 
 
     /**
-     * The {@link RecievedMessageFormat} that this {@link CustomRestyle} is assigned to.
+     * The {@link ReceivedMessageFormat} that this {@link CustomRestyle} is assigned to.
      */
     @NotNull
-    private final RecievedMessageFormat recievedMessageFormat;
+    private final ReceivedMessageFormat receivedMessageFormat;
 
     /**
      * The user-customizable String that replaces the incoming message.
@@ -47,21 +47,21 @@ public class CustomRestyle {
     /**
      * Since {@link CustomRestyle#equals(Object)} ignores {@link CustomRestyle#replacement}, it can be useful to have a
      * {@link CustomRestyle} object with no {@link CustomRestyle#replacement} value (for example for comparisons).
-     * This is really just a wrapper for {@link CustomRestyle#CustomRestyle(RecievedMessageFormat, String)} that passes
+     * This is really just a wrapper for {@link CustomRestyle#CustomRestyle(ReceivedMessageFormat, String)} that passes
      * null to the latter.
      */
-    public CustomRestyle(@NotNull RecievedMessageFormat recievedMessageFormat) {
-        this(recievedMessageFormat, null);
+    public CustomRestyle(@NotNull ReceivedMessageFormat receivedMessageFormat) {
+        this(receivedMessageFormat, null);
     }
 
-    public CustomRestyle(@NotNull RecievedMessageFormat recievedMessageFormat, @Nullable String replacement) {
-        this.recievedMessageFormat = recievedMessageFormat;
+    public CustomRestyle(@NotNull ReceivedMessageFormat receivedMessageFormat, @Nullable String replacement) {
+        this.receivedMessageFormat = receivedMessageFormat;
         this.setReplacement(replacement);
     }
 
     /**
      * Takes a string, extracts the parts that will be carried over (as commanded in this object's
-     * {@link RecievedMessageFormat}), and returns the user-customizable string with those parts inserted.
+     * {@link ReceivedMessageFormat}), and returns the user-customizable string with those parts inserted.
      *
      * @param string the string for which to extract placeholders
      * @return the user's string, with all valid placeholders filled in
@@ -71,13 +71,13 @@ public class CustomRestyle {
         if (this.replacement == null) {
             return string;
         } else {
-            final Matcher replacementMatcher = this.recievedMessageFormat.getRegex().matcher(string);
+            final Matcher replacementMatcher = this.receivedMessageFormat.getRegex().matcher(string);
             if (replacementMatcher.matches()) {
                 String _replacement = this.replacement;
 
-                for (String s : this.recievedMessageFormat.getAvailableGroups()) {
-                    System.out.println(s);
-                    _replacement = _replacement.replaceAll("(?<!\\\\)\\$\\{" + s + "}", replacementMatcher.group(s));
+                for (String dollarReplacement : this.receivedMessageFormat.getAvailableGroups()) {
+                    _replacement = _replacement.replaceAll("(?<!\\\\)\\$\\{" + dollarReplacement + "}",
+                        replacementMatcher.group(dollarReplacement));
                 }
 
                 return _replacement;
@@ -91,22 +91,22 @@ public class CustomRestyle {
      * @param event the {@link ClientChatReceivedEvent} that shall be updated
      */
     public void replace(@NotNull ClientChatReceivedEvent event) {
-        if (this.recievedMessageFormat.getRegex().matcher(event.message.getUnformattedText()).matches()) {
+        if (this.receivedMessageFormat.getRegex().matcher(event.message.getUnformattedText()).matches()) {
             event.message = Hytilities.colorMessageWithBackslash(this.replace(event.message.getUnformattedText()));
         }
     }
 
     /**
-     * Checks if two {@link CustomRestyle}s are equal, by comparing their {@link RecievedMessageFormat}s.
+     * Checks if two {@link CustomRestyle}s are equal, by comparing their {@link ReceivedMessageFormat}s.
      *
      * @param o any {@link Object}
-     * @return {@link boolean} determining whether or not their {@link RecievedMessageFormat}s match
+     * @return {@link boolean} determining whether or not their {@link ReceivedMessageFormat}s match
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return recievedMessageFormat.equals(((CustomRestyle) o).recievedMessageFormat);
+        return receivedMessageFormat.equals(((CustomRestyle) o).receivedMessageFormat);
     }
 
     @Nullable
@@ -119,8 +119,8 @@ public class CustomRestyle {
     }
 
     @NotNull
-    public RecievedMessageFormat getRecievedMessageFormat() {
-        return recievedMessageFormat;
+    public ReceivedMessageFormat getReceivedMessageFormat() {
+        return receivedMessageFormat;
     }
 
 
@@ -144,7 +144,9 @@ public class CustomRestyle {
         public static Set<CustomRestyle> bulkFromJsonObject(@NotNull JsonObject jsonObject) {
             final Set<CustomRestyle> customRestyles = new HashSet<>();
             for (String id : jsonObject.keySet()) {
-                customRestyles.add(new CustomRestyle(RecievedMessageFormat.Serialization.fromId(id), jsonObject.get(id).getAsString()));
+                customRestyles.add(
+                    new CustomRestyle(ReceivedMessageFormat.Serialization.fromId(id),jsonObject.get(id).getAsString())
+                );
             }
             return customRestyles;
         }
@@ -161,7 +163,7 @@ public class CustomRestyle {
         public static JsonObject bulkToJsonObject(@NotNull Set<CustomRestyle> customRestyles) {
             JsonObject jsonObject = new JsonObject();
             for (CustomRestyle restyle : customRestyles) {
-                jsonObject.addProperty(restyle.getRecievedMessageFormat().getId(), restyle.getReplacement());
+                jsonObject.addProperty(restyle.getReceivedMessageFormat().getId(), restyle.getReplacement());
             }
             return jsonObject;
         }

@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 public class GuildWelcomer implements ChatReceiveModule {
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String text = event.message.getUnformattedText();
 
         Matcher matcher = getLanguage().guildPlayerJoinRegex.matcher(text);
@@ -39,7 +39,7 @@ public class GuildWelcomer implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.guildWelcomer;
     }
 }

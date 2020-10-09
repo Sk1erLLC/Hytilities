@@ -80,6 +80,9 @@ public class LanguageData {
 
     private String hypixelLevelUp = "You are now Hypixel Level (?<level>\\d+)!";
 
+    // it's always seconds, even with 1 second
+    private String gameStartingIn = "^The game is starting in \\d+ seconds!$"; // todo add to french translation
+
     /**
      * Cached values which use the messages read from the config file.
      * Particularly Regexes.
@@ -116,6 +119,8 @@ public class LanguageData {
 
     public Pattern hypixelLevelUpRegex;
 
+    public Pattern gameStartingInRegex;
+
     /**
      * Compiles all the required patterns and caches them for later use.
      */
@@ -151,6 +156,8 @@ public class LanguageData {
         silentRemovalLeaveMessageRegex = Pattern.compile(silentRemovalLeaveMessage);
 
         hypixelLevelUpRegex = Pattern.compile(hypixelLevelUp);
+
+        gameStartingInRegex = Pattern.compile(gameStartingIn);
     }
 
 }

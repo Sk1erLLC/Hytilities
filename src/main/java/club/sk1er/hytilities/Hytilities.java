@@ -61,6 +61,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.objectweb.asm.tree.ClassNode;
@@ -76,7 +77,7 @@ public class Hytilities {
     public static final String MOD_NAME = "Hytilities";
     public static final String VERSION = "0.1";
 
-    private Map<String, String> restyleMeta;
+    private Map<String, String> restyleMeta = new HashMap<>();
     private boolean validConfigVersion;
 
     private static final String[] ACCEPTED_CONFIG_VERSIONS = {"1"};
@@ -84,7 +85,7 @@ public class Hytilities {
     @Mod.Instance(MOD_ID)
     public static Hytilities INSTANCE;
 
-    private final Logger logger = LogManager.getLogger("Hytilities");
+    private static final Logger logger = LogManager.getLogger("Hytilities");
 
     private final HytilitiesConfig config = new HytilitiesConfig();
 
@@ -156,11 +157,11 @@ public class Hytilities {
             try {
                 validConfigVersion = true;
 
+                restyleMeta.put("type", "REMOTE");
+
                 evaluateJson(new JsonParser().parse(
                     fetchString("https://static.sk1er.club/hytilities/available_restyles.json")
                 ).getAsJsonObject(), load);
-
-                restyleMeta.put("type", "REMOTE");
 
             } catch (IOException e) {
                 if (sendChatMsg) {
@@ -175,10 +176,19 @@ public class Hytilities {
                 }
 
                 try {
-                    evaluateJson(new JsonParser().parse(new BufferedReader(
-                        new InputStreamReader(getClass().getResourceAsStream("/available_restyles.json")) // inside da jar
-                    ).lines().collect(Collectors.joining("\n"))).getAsJsonObject(), load);
                     restyleMeta.put("type", "LOCAL");
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/available_restyles.json")))) {
+                        evaluateJson(new JsonParser().parse(reader.lines().collect(Collectors.joining("\n"))).getAsJsonObject(), load);
+                    }
+                } catch (IOException ee) {
+                    if (sendChatMsg) {
+                        sendMessage(ChatColor.RED + ChatColor.BOLD.toString() +
+                            "FAILED LOADING RESTYLES FROM INSIDE JAR! SOMETHING HAS GONE TERRIBLY, TERRIBLY WRONG!");
+                    }
+                    logger.error(
+                        "FAILED LOADING RESTYLES FROM INSIDE JAR! SOMETHING HAS GONE TERRIBLY, TERRIBLY WRONG!",
+                        ee);
+                    validConfigVersion = false;
                 } catch (JsonSyntaxException ee) {
                     if (sendChatMsg) {
                         sendMessage(ChatColor.RED + ChatColor.BOLD.toString() +
@@ -207,7 +217,6 @@ public class Hytilities {
                 if (sendChatMsg) {
                     sendMessage(ChatColor.RED + "Unsupported remote restyle list version! Please update Hytilities!");
                 }
-
 
                 logger.error("Unsupported remote restyle list version! Please update Hytilities!");
                 validConfigVersion = false;
@@ -251,7 +260,7 @@ public class Hytilities {
         MinecraftUtils.sendMessage(ChatColor.GOLD + "[Hytilities] ", ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    // black magic; https://stackoverflow.com/a/21720953
+    // https://stackoverflow.com/a/21720953
     @NotNull
     public static <M extends Map<?, ?>> M jsonToMap(@NotNull JsonElement json) {
         return new Gson().fromJson(json, new TypeToken<M>() {}.getType());
@@ -273,11 +282,10 @@ public class Hytilities {
         return lobbyChecker;
     }
 
-    @SuppressWarnings({"unused", "RedundantSuppression"})
     /**
      * Used in {@link GuiIngameForgeTransformer#transform(ClassNode, String)}
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     public HardcoreStatus getHardcoreStatus() {
         return hardcoreStatus;
     }
@@ -302,12 +310,12 @@ public class Hytilities {
         return restyleMeta;
     }
 
+    @NotNull
     public static String fetchString(String url) throws IOException {
-        HttpURLConnection connection = null;
-        String s;
+        String content;
 
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
+            final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setUseCaches(false);
             connection.addRequestProperty("User-Agent", "Mozilla/4.76 (Sk1er Hytilities)");
@@ -316,19 +324,14 @@ public class Hytilities {
             connection.setDoOutput(true);
 
             try (InputStream setup = connection.getInputStream()) {
-                s = IOUtils.toString(setup, Charset.defaultCharset());
+                content = IOUtils.toString(setup, Charset.defaultCharset());
             }
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+        } catch (Exception e) {
+            logger.error("Failed to fetch string.", e);
+            throw new IOException("Failed to fetch string.", e);
         }
 
-        return s;
-    }
-
-    public ChatHandler getChatHandler() {
-        return chatHandler;
+        return content;
     }
 
     public Logger getLogger() {
@@ -338,7 +341,6 @@ public class Hytilities {
     public HytilitiesCommand getHytilitiesCommand() {
         return hytilitiesCommand;
     }
-
 
     public CommandQueue getCommandQueue() {
         return commandQueue;

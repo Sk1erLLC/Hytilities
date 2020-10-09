@@ -19,13 +19,13 @@
 package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import java.util.regex.Matcher;
 
-public class WhiteChat extends ChatModule {
+public class WhiteChat implements ChatReceiveModule {
 
     @Override
     public int getPriority() {
@@ -33,7 +33,7 @@ public class WhiteChat extends ChatModule {
     }
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         if (HytilitiesConfig.whitePrivateMessages) {
             Matcher matcher = getLanguage().privateMessageWhiteChatRegex.matcher(event.message.getFormattedText());
 

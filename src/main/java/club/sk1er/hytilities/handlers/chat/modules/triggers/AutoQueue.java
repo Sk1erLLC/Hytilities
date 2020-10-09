@@ -20,7 +20,7 @@ package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.mods.core.universal.ChatColor;
 import club.sk1er.mods.core.util.Multithreading;
@@ -32,13 +32,13 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 import java.util.concurrent.TimeUnit;
 
-public class AutoQueue extends ChatModule {
+public class AutoQueue implements ChatReceiveModule {
 
     private String command = null;
     private boolean sentCommand;
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
 
         final LanguageData language = getLanguage();
         String message = ChatColor.stripColor(event.message.getUnformattedText());

@@ -223,13 +223,6 @@ public class HytilitiesConfig extends Vigilant {
     // === GENERAL ===
 
     @Property(
-        type = PropertyType.SWITCH, name = "Hide NPCs in tab",
-        description = "Remove NPCs from ever showing up in tab.",
-        category = "General", subcategory = "Entities"
-    )
-    public static boolean hideNpcsInTab;
-
-    @Property(
         type = PropertyType.SWITCH, name = "Broadcast Achievements",
         description = "Announce in Guild chat when you get an achievement.",
         category = "General", subcategory = "Guilds"

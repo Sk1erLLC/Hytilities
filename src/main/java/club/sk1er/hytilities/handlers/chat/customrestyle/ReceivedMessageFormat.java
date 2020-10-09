@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @see CustomRestyleHandler
  * @since 1.0b4
  */
-public class RecievedMessageFormat {
+public class ReceivedMessageFormat {
 
     /**
      * A regex used to find named capture groups in other regexes and extract their names.
@@ -25,14 +25,14 @@ public class RecievedMessageFormat {
 
 
     /**
-     * The ID of the recieved message, for example <code>INCOMING_FRIEND_MESSAGE</code>.
+     * The ID of the received message, for example <code>INCOMING_FRIEND_MESSAGE</code>.
      * This string may only contain capital characters and underscores.
      */
     @NotNull
     private final String id;
 
     /**
-     * The regex used to determine whether or not this format matches a recieved message.
+     * The regex used to determine whether or not this format matches a received message.
      */
     @NotNull
     private final Pattern regex;
@@ -44,13 +44,13 @@ public class RecievedMessageFormat {
     private final String[] availableGroups;
 
     /**
-     * Create a new {@link RecievedMessageFormat}.
+     * Create a new {@link ReceivedMessageFormat}.
      *
      * @param id    the ID, must contain only uppercase letters and underscores
-     * @param regex the regex that matches any message that this {@link RecievedMessageFormat} represents
+     * @param regex the regex that matches any message that this {@link ReceivedMessageFormat} represents
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public RecievedMessageFormat(@NotNull String id, @NotNull Pattern regex) {
+    public ReceivedMessageFormat(@NotNull String id, @NotNull Pattern regex) {
         if (!id.replaceAll("[^A-Z_]", "").equals(id)) {
             throw new IllegalArgumentException("Invalid ID \"" + id + "\"");
         }
@@ -87,7 +87,7 @@ public class RecievedMessageFormat {
 
 
     /**
-     * Collection of static methods for the deserialization of {@link RecievedMessageFormat} objects.
+     * Collection of static methods for the deserialization of {@link ReceivedMessageFormat} objects.
      * <p>
      * We never actually write these objects to disk, we only fetch the serialized forms from <code>format.json</code>
      * so there is no need for bulk serialization functions.
@@ -97,29 +97,29 @@ public class RecievedMessageFormat {
     public static class Serialization {
 
         /**
-         * Bulk deserialize a {@link Map}<{@link String}, {@link String}> of ID : REGEX into a {@link Set}<{@link RecievedMessageFormat}>.
+         * Bulk deserialize a {@link Map}<{@link String}, {@link String}> of ID : REGEX into a {@link Set}<{@link ReceivedMessageFormat}>.
          *
          * @param map a {@link Map}<{@link String}, {@link String}> of data in the format of ID : REGEX
-         * @return a {@link Set}<{@link RecievedMessageFormat}> containing the data converted
+         * @return a {@link Set}<{@link ReceivedMessageFormat}> containing the data converted
          */
         @NotNull
-        public static Set<RecievedMessageFormat> createBulkFromMap(@NotNull Map<String, String> map) {
-            final Set<RecievedMessageFormat> list = new HashSet<>();
+        public static Set<ReceivedMessageFormat> createBulkFromMap(@NotNull Map<String, String> map) {
+            final Set<ReceivedMessageFormat> list = new HashSet<>();
             for (String string : map.keySet()) {
-                list.add(new RecievedMessageFormat(string, Pattern.compile(map.get(string))));
+                list.add(new ReceivedMessageFormat(string, Pattern.compile(map.get(string))));
             }
             return list;
         }
 
         /**
-         * Create a {@link RecievedMessageFormat} from its ID.
+         * Create a {@link ReceivedMessageFormat} from its ID.
          * <strong>Requires that <code>available_restyles.json</code> has already been parsed.</strong>
          *
-         * @param id the {@link RecievedMessageFormat}'s ID
-         * @return a {@link RecievedMessageFormat} created from the ID
+         * @param id the {@link ReceivedMessageFormat}'s ID
+         * @return a {@link ReceivedMessageFormat} created from the ID
          */
         @NotNull
-        public static RecievedMessageFormat fromId(@NotNull String id) {
+        public static ReceivedMessageFormat fromId(@NotNull String id) {
             return Hytilities.INSTANCE.getHytilitiesCommand().getFormats().get(id);
         }
 

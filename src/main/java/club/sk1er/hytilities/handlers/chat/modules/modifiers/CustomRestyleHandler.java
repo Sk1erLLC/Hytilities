@@ -2,7 +2,7 @@ package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.chat.customrestyle.CustomRestyle;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
-public class CustomRestyleHandler extends ChatModule {
+public class CustomRestyleHandler implements ChatReceiveModule {
 
     private Set<CustomRestyle> replacements;
 
@@ -24,7 +24,7 @@ public class CustomRestyleHandler extends ChatModule {
     }
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         for (CustomRestyle restyle : replacements) {
             restyle.replace(event);
         }

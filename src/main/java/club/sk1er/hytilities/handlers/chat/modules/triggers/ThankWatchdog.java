@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.watchdog;
+package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
@@ -26,14 +26,15 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 public class ThankWatchdog implements ChatReceiveModule {
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         if (event.message.getUnformattedText().equals("[WATCHDOG ANNOUNCEMENT]")) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/achat Thanks Watchdog!");
         }
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
+    public boolean isEnabled() {
         return HytilitiesConfig.thankWatchdog;
     }
+
 }

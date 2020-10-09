@@ -21,7 +21,7 @@ package club.sk1er.hytilities.handlers.chat.modules.events;
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.events.HypixelLevelupEvent;
-import club.sk1er.hytilities.handlers.chat.ChatModule;
+import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 
-public class LevelupEvent extends ChatModule {
+public class LevelupEvent implements ChatReceiveModule {
 
     @Override
     public int getPriority() {
@@ -38,7 +38,7 @@ public class LevelupEvent extends ChatModule {
     }
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         Matcher matcher = getLanguage().hypixelLevelUpRegex.matcher(unformattedText.trim());
