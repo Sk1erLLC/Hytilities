@@ -25,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -76,6 +77,10 @@ public class MysteryBoxStar {
     public void drawStars(ItemStack item, int x, int y) {
         // avoid rendering star when no mystery boxes are present
         if (item.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)) {
+            return;
+        }
+        // avoid rendering star on bags of experience
+        if (item.getItem() == Items.dye) {
             return;
         }
         List<String> tooltip = item.getTooltip(Minecraft.getMinecraft().thePlayer, false);
