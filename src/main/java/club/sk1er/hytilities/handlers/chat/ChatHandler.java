@@ -97,6 +97,7 @@ public class ChatHandler {
 
     /**
      * Allow modifying sent messages, or cancelling them altogether.
+     * <b>Note: currently modifying messages is not supported. This will be implemented in the future when needed.</b>
      *
      * Is not unused - is used in ASM ({@link EntityPlayerSPTransformer}).
      *

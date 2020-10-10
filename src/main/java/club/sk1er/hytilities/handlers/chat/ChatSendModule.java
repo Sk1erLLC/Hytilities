@@ -14,11 +14,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ChatSendModule extends ChatModule {
 
+    // Todo: Implement sent message modification
     /**
      * Place your code here. Called when the user sends a chat message.
      *
      * @param message message that the user sent
-     * @return the optionally modified message, or {@code null} if the message is to be cancelled
+     * @return a {@code @Nullable} {@link String} - if {@code null}, then the sending will be cancelled
      */
     @Nullable
     String onMessageSend(@NotNull String message);
