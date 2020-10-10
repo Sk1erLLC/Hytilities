@@ -23,7 +23,7 @@ import club.sk1er.hytilities.handlers.chat.modules.blockers.*;
 import club.sk1er.hytilities.handlers.chat.modules.events.*;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.*;
 import club.sk1er.hytilities.handlers.chat.modules.triggers.*;
-import club.sk1er.hytilities.tweaker.asm.GuiScreenTransformer;
+import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -98,7 +98,7 @@ public class ChatHandler {
     /**
      * Allow modifying sent messages, or cancelling them altogether.
      *
-     * Is not unused - is used in ASM ({@link GuiScreenTransformer}).
+     * Is not unused - is used in ASM ({@link EntityPlayerSPTransformer}).
      *
      * @param message a message that the user has sent
      * @return the modified message, or {@code null} if the message should be cancelled

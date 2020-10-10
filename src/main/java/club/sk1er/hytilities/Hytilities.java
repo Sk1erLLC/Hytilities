@@ -35,6 +35,7 @@ import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
 import club.sk1er.hytilities.handlers.lobby.mysterybox.MysteryBoxStar;
 import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
 import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
 import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.modcore.ModCoreInstaller;
@@ -165,6 +166,10 @@ public class Hytilities {
         return languageHandler;
     }
 
+    /**
+     * Used in {@link EntityPlayerSPTransformer}
+     */
+    @SuppressWarnings("unused")
     public ChatHandler getChatHandler() {
         return chatHandler;
     }
