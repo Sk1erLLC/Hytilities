@@ -93,11 +93,11 @@ public class MysteryBoxStar {
         if (matcher.matches()) {
             int stars = matcher.group("stars").length();
             // yellow stars for regular boxes
-            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(stars + "✰", x, y, -14080);
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(stars + "\u2730", x, y, -14080);
         } else {
             // not a regular box, so assume it is a special box. e.g. holiday boxes
             // orange stars for special boxes
-            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("✰", x, y, -34304);
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("\u2730", x, y, -34304);
         }
     }
 }
