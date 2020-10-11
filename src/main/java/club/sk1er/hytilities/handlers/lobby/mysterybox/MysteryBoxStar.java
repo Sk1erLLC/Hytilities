@@ -24,12 +24,10 @@ import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -92,8 +90,7 @@ public class MysteryBoxStar {
             int stars = matcher.group("stars").length();
             // yellow stars for regular boxes
             Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(stars + "\u2730", x, y, -14080);
-        }
-        else{
+        } else {
             // for boxes with vip/mvp+ access
             String line1 = tooltip.get(tooltip.size() - 5);
             Matcher matcher1 = mysteryBoxStarPattern.matcher(line1);
