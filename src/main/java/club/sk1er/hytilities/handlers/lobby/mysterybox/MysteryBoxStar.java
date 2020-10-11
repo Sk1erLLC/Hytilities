@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 
 public class MysteryBoxStar {
 
-    private final Pattern mysteryBoxStarPattern = Pattern.compile("^\\u00a75\\u00a7o\\u00a77\\u00a77Quality: \\u00a7e(?<stars>\\u2730{1,5}).*");
+    private final Pattern mysteryBoxStarPattern = Pattern.compile("\\u00a75\\u00a7o\\u00a77\\u00a77Quality: \\u00a7e(?<stars>\\u2730+).*");
 
     @SubscribeEvent
     public void onDrawScreenPre(GuiScreenEvent.DrawScreenEvent.Pre event) {
@@ -76,11 +76,6 @@ public class MysteryBoxStar {
     }
 
     public void drawStars(ItemStack item, int x, int y) {
-        // avoid rendering star when no mystery boxes are present
-        if (item.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)) {
-            return;
-        }
-
         // avoid rendering star on bags of experience
         if (item.getItem() == Items.dye) {
             return;
@@ -91,14 +86,22 @@ public class MysteryBoxStar {
         if (tooltip.size() < 4) {
             return;
         }
-
         String line = tooltip.get(tooltip.size() - 4);
         Matcher matcher = mysteryBoxStarPattern.matcher(line);
         if (matcher.matches()) {
             int stars = matcher.group("stars").length();
             // yellow stars for regular boxes
             Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(stars + "\u2730", x, y, -14080);
-        } else {
+        }
+        else{
+            // for boxes with vip/mvp+ access
+            String line1 = tooltip.get(tooltip.size() - 5);
+            Matcher matcher1 = mysteryBoxStarPattern.matcher(line1);
+            if (matcher1.matches()) {
+                int stars = matcher1.group("stars").length();
+                Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(stars + "\u2730", x, y, -14080);
+                return;
+            }
             // not a regular box, so assume it is a special box. e.g. holiday boxes
             // orange stars for special boxes
             Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("\u2730", x, y, -34304);
