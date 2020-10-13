@@ -31,6 +31,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -74,6 +76,11 @@ public class MysteryBoxStar {
     }
 
     public void drawStars(ItemStack item, int x, int y) {
+        // avoid rendering star when no mystery boxes are present
+        if (item.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)) {
+            return;
+        }
+
         // avoid rendering star on bags of experience
         if (item.getItem() == Items.dye) {
             return;
