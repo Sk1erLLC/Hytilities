@@ -189,6 +189,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hidePlayerRanksInTab;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Bold Friend Names In Tab",
+        description = "Bold the names of friends in tab.",
+        category = "General", subcategory = "General"
+    )
+    public static boolean boldFriendNamesInTab;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Cleaner Tab in Skyblock",
         description = "Doesn't render player heads or ping for tab entries that aren't players in Skyblock.",
         category = "General", subcategory = "General"
