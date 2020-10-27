@@ -20,7 +20,6 @@ package club.sk1er.hytilities.util.locraw;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
-import club.sk1er.hytilities.handlers.chat.ChatSendModule;
 import club.sk1er.hytilities.handlers.game.GameType;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import com.google.gson.Gson;
@@ -57,8 +56,8 @@ public class LocrawUtil implements ChatReceiveModule {
         tick = 0;
     }
 
-    public String onMessageSend(@NotNull String message){
-        if (message.startsWith("/locraw") && !this.listening){
+    public String onMessageSend(@NotNull String message) {
+        if (message.startsWith("/locraw") && !this.listening) {
             this.playerSentCommand = true;
         }
         return message;
@@ -78,7 +77,7 @@ public class LocrawUtil implements ChatReceiveModule {
                     this.locrawInformation.setGameType(GameType.getFromLocraw(locrawInformation.getRawGameType()));
 
                     // Stop listening for locraw and cancel the message.
-                    if (!this.playerSentCommand){
+                    if (!this.playerSentCommand) {
                         event.setCanceled(true);
                     }
                     this.playerSentCommand = false;
