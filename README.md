@@ -82,7 +82,7 @@ Apply and save your changes.
 ![Apply](.github/apply.png)
 ![Save Changes](.github/save_changes.png)
 
-You should now be able to run hytilities in the dev workspace. 
+You should now be able to run Hytilities in the dev workspace. 
 
 ![Run](.github/run.png)
 
