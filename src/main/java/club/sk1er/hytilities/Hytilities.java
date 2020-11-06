@@ -22,9 +22,9 @@ import club.sk1er.hytilities.command.HytilitiesCommand;
 import club.sk1er.hytilities.command.SilentRemoveCommand;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.handlers.chat.autoqueue.AutoQueue;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
+import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
@@ -32,8 +32,10 @@ import club.sk1er.hytilities.handlers.language.LanguageHandler;
 import club.sk1er.hytilities.handlers.lobby.LobbyChecker;
 import club.sk1er.hytilities.handlers.lobby.bossbar.LobbyBossbar;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
+import club.sk1er.hytilities.handlers.lobby.mysterybox.MysteryBoxStar;
 import club.sk1er.hytilities.handlers.lobby.npc.NPCHider;
 import club.sk1er.hytilities.handlers.silent.SilentRemoval;
+import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
 import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.modcore.ModCoreInstaller;
@@ -63,21 +65,21 @@ public class Hytilities {
 
     private final HytilitiesConfig config = new HytilitiesConfig();
 
-    private LanguageHandler languageHandler;
-    private HardcoreStatus hardcoreStatus;
-    private SilentRemoval silentRemoval;
-    private CommandQueue commandQueue;
-    private LobbyChecker lobbyChecker;
-    private LocrawUtil locrawUtil;
-    private AutoQueue autoQueue;
-    private ChatHandler chatHandler;
+    private final LanguageHandler languageHandler = new LanguageHandler();
+    private final HardcoreStatus hardcoreStatus = new HardcoreStatus();
+    private final SilentRemoval silentRemoval = new SilentRemoval();
+    private final CommandQueue commandQueue = new CommandQueue();
+    private final LobbyChecker lobbyChecker = new LobbyChecker();
+    private final ChatHandler chatHandler = new ChatHandler();
+    private final LocrawUtil locrawUtil = new LocrawUtil();
+    private final AutoQueue autoQueue = new AutoQueue();
 
     private boolean loadedCall;
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         ModCoreInstaller.initializeModCore(Minecraft.getMinecraft().mcDataDir);
-        config.preload();
+        this.config.preload();
 
         ClientCommandHandler.instance.registerCommand(new HytilitiesCommand());
         ClientCommandHandler.instance.registerCommand(new SilentRemoveCommand());
@@ -93,26 +95,25 @@ public class Hytilities {
 
     private void registerHandlers() {
         // general stuff
-        MinecraftForge.EVENT_BUS.register(locrawUtil = new LocrawUtil());
-        MinecraftForge.EVENT_BUS.register(autoQueue = new AutoQueue());
-        MinecraftForge.EVENT_BUS.register(commandQueue = new CommandQueue());
+        MinecraftForge.EVENT_BUS.register(autoQueue);
+        MinecraftForge.EVENT_BUS.register(locrawUtil);
+        MinecraftForge.EVENT_BUS.register(commandQueue);
+        MinecraftForge.EVENT_BUS.register(languageHandler);
         MinecraftForge.EVENT_BUS.register(new AutoStart());
 
         // chat
-        MinecraftForge.EVENT_BUS.register(silentRemoval = new SilentRemoval());
-        MinecraftForge.EVENT_BUS.register(hardcoreStatus = new HardcoreStatus());
-        MinecraftForge.EVENT_BUS.register(chatHandler = new ChatHandler());
+        MinecraftForge.EVENT_BUS.register(chatHandler);
+        MinecraftForge.EVENT_BUS.register(silentRemoval);
+        MinecraftForge.EVENT_BUS.register(hardcoreStatus);
         MinecraftForge.EVENT_BUS.register(new AchievementEvent());
         MinecraftForge.EVENT_BUS.register(new LevelupEvent());
 
         // lobby
-        MinecraftForge.EVENT_BUS.register(lobbyChecker = new LobbyChecker());
+        MinecraftForge.EVENT_BUS.register(lobbyChecker);
         MinecraftForge.EVENT_BUS.register(new NPCHider());
         MinecraftForge.EVENT_BUS.register(new LobbyBossbar());
         MinecraftForge.EVENT_BUS.register(new LimboLimiter());
-
-        // language
-        MinecraftForge.EVENT_BUS.register(languageHandler = new LanguageHandler());
+        MinecraftForge.EVENT_BUS.register(new MysteryBoxStar());
     }
 
     public void sendMessage(String message) {
@@ -163,6 +164,10 @@ public class Hytilities {
         return languageHandler;
     }
 
+    /**
+     * Used in {@link EntityPlayerSPTransformer}
+     */
+    @SuppressWarnings("unused")
     public ChatHandler getChatHandler() {
         return chatHandler;
     }

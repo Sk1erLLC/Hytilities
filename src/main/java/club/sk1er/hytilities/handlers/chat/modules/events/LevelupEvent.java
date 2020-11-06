@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.events;
+package club.sk1er.hytilities.handlers.chat.modules.events;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -27,12 +27,14 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 
 public class LevelupEvent implements ChatReceiveModule {
+
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         Matcher matcher = getLanguage().hypixelLevelUpRegex.matcher(unformattedText.trim());
@@ -46,14 +48,17 @@ public class LevelupEvent implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
-        return true;
+    public boolean isEnabled() {
+        return HytilitiesConfig.broadcastLevelup;
+    }
+
+    @Override
+    public int getPriority() {
+        return -3;
     }
 
     @SubscribeEvent
     public void levelUpEvent(HypixelLevelupEvent event) {
-        if (HytilitiesConfig.broadcastLevelup) {
-            Hytilities.INSTANCE.getCommandQueue().queue("/gchat Levelup! I am now Hypixel Level: " + event.getLevel() + "!");
-        }
+        Hytilities.INSTANCE.getCommandQueue().queue("/gchat Levelup! I am now Hypixel Level: " + event.getLevel() + "!");
     }
 }

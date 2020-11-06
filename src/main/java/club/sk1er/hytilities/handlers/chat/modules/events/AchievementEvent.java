@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.events;
+package club.sk1er.hytilities.handlers.chat.modules.events;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
@@ -26,6 +26,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class AchievementEvent implements ChatReceiveModule {
     private final List<String> achievementsGotten = new ArrayList<>();
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
+    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
 
         Matcher matcher = getLanguage().achievementRegex.matcher(unformattedText);
@@ -53,14 +54,18 @@ public class AchievementEvent implements ChatReceiveModule {
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
-        return true;
+    public boolean isEnabled() {
+        return HytilitiesConfig.broadcastAchievements;
+    }
+
+    @Override
+    public int getPriority() {
+        return -3;
     }
 
     @SubscribeEvent
     public void onAchievementGet(HypixelAchievementEvent event) {
-        if (HytilitiesConfig.broadcastAchievements) {
-            Hytilities.INSTANCE.getCommandQueue().queue("/gchat Achievement unlocked! I unlocked the " + event.getAchievement() + " achievement!");
-        }
+        Hytilities.INSTANCE.getCommandQueue().queue("/gchat Achievement unlocked! I unlocked the " + event.getAchievement() + " achievement!");
     }
+
 }

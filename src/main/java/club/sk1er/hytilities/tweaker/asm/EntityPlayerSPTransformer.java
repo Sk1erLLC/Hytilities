@@ -20,8 +20,8 @@ package club.sk1er.hytilities.tweaker.asm;
 
 import club.sk1er.hytilities.tweaker.transformer.HytilitiesTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -30,51 +30,35 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import java.util.ListIterator;
-
-public class LayerArmorBaseTransformer implements HytilitiesTransformer {
-
+public class EntityPlayerSPTransformer implements HytilitiesTransformer {
     @Override
     public String[] getClassName() {
-        return new String[]{"net.minecraft.client.renderer.entity.layers.LayerArmorBase"};
+        return new String[]{"net.minecraft.client.entity.EntityPlayerSP"};
     }
 
     @Override
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
             String methodName = mapMethodName(classNode, method);
-
-            if (methodName.equals("renderLayer") || methodName.equals("func_177182_a")) {
-                ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-
-                while (iterator.hasNext()) {
-                    AbstractInsnNode next = iterator.next();
-
-                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESPECIAL) {
-                        String methodInsnName = mapMethodNameFromNode(next);
-                        if (methodInsnName.equals("isSlotForLeggings") || methodInsnName.equals("func_177180_b")) {
-                            method.instructions.insertBefore(next.getPrevious().getPrevious(), checkRender());
-                            break;
-                        }
-                    }
-
-                }
+            if (methodName.equals("sendChatMessage") || methodName.equals("func_71165_d")) {
+                method.instructions.insert(handleSentMessage());
+                break;
             }
         }
     }
 
-    private InsnList checkRender() {
+    private InsnList handleSentMessage() {
         InsnList list = new InsnList();
-        list.add(new VarInsnNode(Opcodes.ALOAD, 10));
-        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
-            "club/sk1er/hytilities/tweaker/asm/hooks/LayerArmorBaseHook",
-            "shouldRenderArmour",
-            "(Lnet/minecraft/item/ItemStack;)Z",
-            false));
-        final LabelNode ifeq = new LabelNode();
-        list.add(new JumpInsnNode(Opcodes.IFNE, ifeq));
+        list.add(new FieldInsnNode(Opcodes.GETSTATIC, "club/sk1er/hytilities/Hytilities", "INSTANCE", "Lclub/sk1er/hytilities/Hytilities;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "club/sk1er/hytilities/Hytilities", "getChatHandler", "()Lclub/sk1er/hytilities/handlers/chat/ChatHandler;", false));
+        list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "club/sk1er/hytilities/handlers/chat/ChatHandler", "handleSentMessage", "(Ljava/lang/String;)Ljava/lang/String;", false));
+        list.add(new InsnNode(Opcodes.DUP));
+        list.add(new VarInsnNode(Opcodes.ASTORE, 1));
+        LabelNode label = new LabelNode();
+        list.add(new JumpInsnNode(Opcodes.IFNONNULL, label));
         list.add(new InsnNode(Opcodes.RETURN));
-        list.add(ifeq);
+        list.add(label);
         return list;
     }
 }

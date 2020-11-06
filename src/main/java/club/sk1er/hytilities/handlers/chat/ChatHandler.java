@@ -19,57 +19,63 @@
 package club.sk1er.hytilities.handlers.chat;
 
 import club.sk1er.hytilities.Hytilities;
-import club.sk1er.hytilities.handlers.chat.adblock.AdBlocker;
-import club.sk1er.hytilities.handlers.chat.cleaner.ChatCleaner;
-import club.sk1er.hytilities.handlers.chat.connected.ConnectedMessage;
-import club.sk1er.hytilities.handlers.chat.events.AchievementEvent;
-import club.sk1er.hytilities.handlers.chat.events.LevelupEvent;
-import club.sk1er.hytilities.handlers.chat.guild.GuildWelcomer;
-import club.sk1er.hytilities.handlers.chat.restyler.ChatRestyler;
-import club.sk1er.hytilities.handlers.chat.shoutblocker.ShoutBlocker;
-import club.sk1er.hytilities.handlers.chat.swapper.AutoChatSwapper;
-import club.sk1er.hytilities.handlers.chat.watchdog.ThankWatchdog;
-import club.sk1er.hytilities.handlers.chat.whitechat.WhiteChat;
+import club.sk1er.hytilities.handlers.chat.modules.blockers.AdBlocker;
+import club.sk1er.hytilities.handlers.chat.modules.blockers.ChatCleaner;
+import club.sk1er.hytilities.handlers.chat.modules.blockers.ConnectedMessage;
+import club.sk1er.hytilities.handlers.chat.modules.blockers.ShoutBlocker;
+import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
+import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler;
+import club.sk1er.hytilities.handlers.chat.modules.modifiers.GameStartCompactor;
+import club.sk1er.hytilities.handlers.chat.modules.modifiers.WhiteChat;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatSwapper;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.GuildWelcomer;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.ThankWatchdog;
+import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatHandler {
+
     private final List<ChatReceiveModule> receiveModules = new ArrayList<>();
     private final List<ChatSendModule> sendModules = new ArrayList<>();
 
     public ChatHandler() {
-        this.registerReceiveModule(new AdBlocker());
-        this.registerReceiveModule(new ChatCleaner());
-        this.registerReceiveModule(new ChatRestyler());
-        this.registerReceiveModule(new WhiteChat());
-        this.registerReceiveModule(new LevelupEvent());
-        this.registerReceiveModule(new AchievementEvent());
-        this.registerReceiveModule(new AutoChatSwapper());
-        this.registerReceiveModule(new ConnectedMessage());
-        this.registerReceiveModule(new ThankWatchdog());
-        this.registerReceiveModule(new GuildWelcomer());
-        this.registerSendAndReceiveModule(new ShoutBlocker());
+        this.registerModule(new AdBlocker());
+        this.registerModule(new WhiteChat());
+        this.registerModule(new ChatCleaner());
+        this.registerModule(new LevelupEvent());
+        this.registerModule(new GuildWelcomer());
+        this.registerModule(new ThankWatchdog());
+        this.registerModule(new AutoChatSwapper());
+        this.registerModule(new AchievementEvent());
+        this.registerModule(new ConnectedMessage());
+        this.registerModule(new GameStartCompactor());
+        this.registerModule(new DefaultChatRestyler());
 
-        // reinitializing these seems to break them
-        this.registerReceiveModule(Hytilities.INSTANCE.getAutoQueue());
-        this.registerReceiveModule(Hytilities.INSTANCE.getLocrawUtil());
+        this.registerDualModule(new ShoutBlocker());
+
+        this.sendModules.sort(Comparator.comparingInt(ChatModule::getPriority));
     }
 
-    private void registerReceiveModule(ChatReceiveModule chatModule) {
+    private void registerModule(ChatReceiveModule chatModule) {
         this.receiveModules.add(chatModule);
     }
 
-    private void registerSendModule(ChatSendModule chatModule) {
+    private void registerModule(ChatSendModule chatModule) {
         this.sendModules.add(chatModule);
     }
 
-    private <T extends ChatSendModule & ChatReceiveModule> void registerSendAndReceiveModule(T chatModule) {
-        this.registerReceiveModule(chatModule);
-        this.registerSendModule(chatModule);
+    private <T extends ChatReceiveModule & ChatSendModule> void registerDualModule(T chatModule) {
+        this.registerModule((ChatReceiveModule) chatModule);
+        this.registerModule((ChatSendModule) chatModule);
     }
 
     @SubscribeEvent
@@ -78,21 +84,46 @@ public class ChatHandler {
             return;
         }
 
+        // These don't cast to ChatReceiveModule for god knows why, so we can't include them in receiveModules.
+        // Therefore, we manually trigger them here.
+        Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
+        Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
+
         for (ChatReceiveModule module : this.receiveModules) {
-            if (module.isReceiveModuleEnabled()) {
-                module.onChatEvent(event);
+            if (module.isEnabled()) {
+                module.onMessageReceived(event);
+                if (event.isCanceled()) {
+                    return;
+                }
             }
         }
     }
 
-    public boolean shouldSendMessage(String message) {
+    /**
+     * Allow modifying sent messages, or cancelling them altogether.
+     * <p>
+     * Used in {@link EntityPlayerSPTransformer}.
+     *
+     * @param message a message that the user has sent
+     * @return the modified message, or {@code null} if the message should be cancelled
+     */
+    @SuppressWarnings({"unused", "RedundantSuppression"})
+    @Nullable
+    public String handleSentMessage(@NotNull String message) {
         if (!MinecraftUtils.isHypixel()) {
-            return true;
+            return message;
         }
+        Hytilities.INSTANCE.getLocrawUtil().onMessageSend(message);
 
         for (ChatSendModule module : this.sendModules) {
-            if (module.isSendModuleEnabled() && !module.shouldSendMessage(message)) return false;
+            if (module.isEnabled()) {
+                message = module.onMessageSend(message);
+                if (message == null) {
+                    return null;
+                }
+            }
         }
-        return true;
+
+        return message;
     }
 }

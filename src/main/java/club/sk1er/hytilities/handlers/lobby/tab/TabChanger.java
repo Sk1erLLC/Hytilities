@@ -18,19 +18,23 @@
 
 package club.sk1er.hytilities.handlers.lobby.tab;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
+import club.sk1er.hytilities.handlers.game.GameType;
 import club.sk1er.hytilities.tweaker.asm.GuiPlayerTabOverlayTransformer;
+import club.sk1er.hytilities.util.locraw.LocrawInformation;
 import club.sk1er.mods.core.util.MinecraftUtils;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import org.objectweb.asm.tree.ClassNode;
+
+import java.util.regex.Pattern;
 
 /**
  * Used in {@link GuiPlayerTabOverlayTransformer#transform(ClassNode, String)}
  */
 @SuppressWarnings("unused")
-public class TabNameChanger {
-
+public class TabChanger {
     public static String modifyName(String name) {
-
         if (MinecraftUtils.isHypixel()) {
             if (HytilitiesConfig.hidePlayerRanksInTab && name.startsWith("[", 2)) {
                 // keep the name color if player rank is removed
@@ -49,5 +53,25 @@ public class TabNameChanger {
         }
 
         return name;
+    }
+
+    public static boolean shouldRenderPlayerHead(NetworkPlayerInfo networkPlayerInfo) {
+        return !MinecraftUtils.isHypixel() || !isSkyblockTabInformationEntry(networkPlayerInfo);
+    }
+
+    public static boolean hidePing(NetworkPlayerInfo networkPlayerInfo) {
+        return MinecraftUtils.isHypixel() && ((HytilitiesConfig.hidePingInTab && !Hytilities.INSTANCE.getLobbyChecker().playerIsInLobby()) || isSkyblockTabInformationEntry(networkPlayerInfo));
+    }
+
+    private static final Pattern validMinecraftUsername = Pattern.compile("[A-Za-z0-9_]{1,16}");
+    private static final Pattern skyblockTabInformationEntryGameProfileNameRegex = Pattern.compile("![A-D]-[a-v]");
+    private static boolean isSkyblockTabInformationEntry(NetworkPlayerInfo networkPlayerInfo) {
+        if (!HytilitiesConfig.cleanerSkyblockTabInfo) return false;
+        LocrawInformation locraw = Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
+        return
+            locraw != null &&
+            locraw.getGameType().equals(GameType.SKYBLOCK) &&
+            skyblockTabInformationEntryGameProfileNameRegex.matcher(networkPlayerInfo.getGameProfile().getName()).matches() &&
+            !validMinecraftUsername.matcher(networkPlayerInfo.getDisplayName().getUnformattedText()).matches();
     }
 }

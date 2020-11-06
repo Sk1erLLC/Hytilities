@@ -16,24 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.watchdog;
+package club.sk1er.hytilities.handlers.chat.modules.blockers;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class ThankWatchdog implements ChatReceiveModule {
+public class ConnectedMessage implements ChatReceiveModule {
 
     @Override
-    public void onChatEvent(ClientChatReceivedEvent event) {
-        if (event.message.getUnformattedText().equals("[WATCHDOG ANNOUNCEMENT]")) {
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("/achat Thanks Watchdog!");
+    public int getPriority() {
+        return -5;
+    }
+
+    @Override
+    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+        if (getLanguage().connectedServerConnectMessageRegex.matcher(event.message.getUnformattedText()).matches()) {
+            event.setCanceled(true);
         }
     }
 
     @Override
-    public boolean isReceiveModuleEnabled() {
-        return HytilitiesConfig.thankWatchdog;
+    public boolean isEnabled() {
+        return HytilitiesConfig.serverConnectedMessages;
     }
 }

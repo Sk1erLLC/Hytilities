@@ -119,6 +119,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean whitePrivateMessages;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Cleaner Game Start Counter",
+        description = "Compacts game start announcements.\n§eExample: The game starts in 20 seconds!",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean cleanerGameStartAnnouncements;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Game Status Restyle",
         description = "Replace common game status messages with a new style.\n§eExamples:\n§a§l+ §bSteve §e(§b1§e/§b12§e)\n§c§l- §bSteve §e(§b1§e/§b12§e)\n§e§l* §aGame starts in §b§l5 §aseconds.",
         category = "Chat", subcategory = "Restyler"
@@ -182,6 +189,20 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hidePlayerRanksInTab;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Cleaner Tab in Skyblock",
+        description = "Doesn't render player heads or ping for tab entries that aren't players in Skyblock.",
+        category = "General", subcategory = "General"
+    )
+    public static boolean cleanerSkyblockTabInfo;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Hide Ping In Tab",
+        description = "Prevent ping from showing up in tab while playing games, since the value is misleading. Ping will remain visible in lobbies.",
+        category = "General", subcategory = "General"
+    )
+    public static boolean hidePingInTab;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Limbo Limiter",
         description = "While in Limbo, limit your framerate to 15 to reduce the load of the game on your computer.",
         category = "Lobby", subcategory = "General"
@@ -242,7 +263,7 @@ public class HytilitiesConfig extends Vigilant {
         type = PropertyType.SLIDER, name = "Auto Queue Delay",
         description = "Delays the execution of Auto Queue. (The measurement is in seconds)",
         category = "General", subcategory = "Queue",
-        max = 100
+        max = 10
     )
     public static int autoQueueDelay;
 
@@ -287,6 +308,20 @@ public class HytilitiesConfig extends Vigilant {
         category = "Chat", subcategory = "Shout"
     )
     public static boolean preventShoutingOnCooldown;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Mystery Box Star",
+        description = "Shows what star a mystery box is in the Mystery Box Vault, Orange stars are special boxes.",
+        category = "Lobby", subcategory = "GUI"
+    )
+    public static boolean mysteryBoxStar;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "Remove Curse of Spam Messages",
+        description = "Hides the constant spam of kali's curse of spam.\n§eExample: §eKALI HAS STRIKEN YOU WITH THE CURSE OF SPAM",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean curseOfSpam;
 
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
