@@ -56,7 +56,8 @@ public class LocrawUtil implements ChatReceiveModule {
         tick = 0;
     }
 
-    public String onMessageSend(@NotNull String message) {
+    public String onMessageSend(String message) {
+        if (message == null) return null;
         if (message.startsWith("/locraw") && !this.listening) {
             this.playerSentCommand = true;
         }
