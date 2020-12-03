@@ -21,11 +21,12 @@ package club.sk1er.hytilities;
 import club.sk1er.hytilities.command.HousingVisitCommand;
 import club.sk1er.hytilities.command.HytilitiesCommand;
 import club.sk1er.hytilities.command.SilentRemoveCommand;
+import club.sk1er.hytilities.command.SkyblockVisitCommand;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
@@ -87,6 +88,8 @@ public class Hytilities {
         commandRegister.registerCommand(new HytilitiesCommand());
         commandRegister.registerCommand(new HousingVisitCommand());
         commandRegister.registerCommand(new SilentRemoveCommand());
+        commandRegister.registerCommand(new SkyblockVisitCommand());
+
 
         registerHandlers();
     }
@@ -96,7 +99,9 @@ public class Hytilities {
         this.loadedCall = true;
     }
 
+
     private void registerHandlers() {
+
         final EventBus eventBus = MinecraftForge.EVENT_BUS;
 
         // general stuff
