@@ -69,18 +69,53 @@ public class TabChanger {
                     // Divides the display name up into parts based on the spaces
                     String[] segments = name.split(" ");
 
-                    // If the first term does not contains "[", then return that term without the color code
-                    // If the first term contains "[", then return the second term
-                    // For example:
-                    // §7Steve, §6[GUILD] -> §7Steve -> Steve (First term does not contain "[")
-                    // §b[MVP§c+§b], Steve -> Steve (First term contains "[")
-                    assert segments[0].length() > 2; // First segment should be more than 2 letters long because of color codes
-                    String username = !segments[0].contains("[") ? segments[0].substring(2) : segments[1];
+                    /*
+                     * Uses regex on the first word in the display name to determine which part of the name is the username
+                     * Regex will match the username if:
+                     * 1. The name contains [ and ] (with any number of characters separating them)
+                     *    If this is true, that means that the first word in the name is probably a prefix
+                     *    such as §a[VIP] or §b[MVP§c+§b]
+                     * 2. The name is a team identifier in the format §(hex character)§l(any character)
+                     *    This form looks like a colored and bold single character
+                     *    In games like Bedwars, players will have this to represent their team
+                     *    For example, a player on the red team might show as "§4§lR §r§4Steve" which looks like "R Steve"
+                     * If the string matches either of the cases, then we should use the second word instead
+                     * Examples:
+                     * "§7Steve §6[GUILD]" -> First term is c§7Steve - Does not match regex
+                     * "§b[MVP§c+§b] Steve" -> First term is §b[MVP§c+§b] - Matches regex because it contains [ and ]
+                     * "§4§lR §r§4Steve" -> First term is §4§lR - Matches regex because it contains the team identifier
+                     */
+                    String username;
+                    if (segments[0].matches("\\[.*]|§[0-9a-f]§l.")) {
+                        // If the first term is a prefix they should have more than one part to their username
+                        assert segments.length > 1;
+                        // Define their username to be the second term (i.e. the term after the prefix)
+                        username = segments[1];
+                    } else {
+                        // First term is not a prefix, that term is probably the prefix
+                        username = segments[0];
+                    }
+
+                    /*
+                     * The username may still contain color codes
+                     * This will eliminate all the color codes by cutting off all characters belonging to color codes
+                     */
+                    if (username.contains("§")) {
+                        username = username.substring(username.lastIndexOf("§") + 2);
+                    }
 
                     // If user is a friend
                     if (friends.contains(username)) {
-                        // Makes the name bold
-                        name = name.substring(0, 2) + "\u00a7l" + name.substring(2);
+                        // For every word of the username, insert §l (the bold color code) after the last color code
+                        StringBuilder sb = new StringBuilder(segments.length * 4);
+                        for (String s : segments) {
+                            int position = s.contains("§") ? s.lastIndexOf("§") + 2 : 0;
+                            sb.append(s.substring(0, position))
+                                .append("§l")
+                                .append(s.substring(position))
+                                .append(" ");
+                        }
+                        name = sb.toString();
 
                         // MVP+ and MVP++ Players have extra color codes in their names which remove the bold
                         if (name.contains("+")) {
