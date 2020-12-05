@@ -78,14 +78,14 @@ public class DefaultChatRestyler implements ChatReceiveModule {
             Matcher guildMatcher = language.chatRestylerGuildPatternRegex.matcher(message);
             Matcher friendMatcher = language.chatRestylerFriendPatternRegex.matcher(message);
             if (partyMatcher.find()) {
-                event.message = colorMessage(message.replaceAll(language.chatRestylerPartyPatternRegex.pattern(),
-                    partyMatcher.group(1) + "P " + partyMatcher.group(3)));
+                event.message = replace(event.message, language.chatRestylerPartyPatternRegex.pattern(),
+                    partyMatcher.group(1) + "P " + partyMatcher.group(3));
             } else if (guildMatcher.find()) {
-                event.message = colorMessage(message.replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
-                    guildMatcher.group(1) + "G >"));
+                event.message = replace(event.message, language.chatRestylerGuildPatternRegex.pattern(),
+                    guildMatcher.group(1) + "G >");
             } else if (friendMatcher.find()) {
-                event.message = colorMessage(message.replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
-                    friendMatcher.group(1) + "F >"));
+                event.message = replace(event.message, language.chatRestylerFriendPatternRegex.pattern(),
+                    friendMatcher.group(1) + "F >");
             }
         }
 
@@ -93,10 +93,10 @@ public class DefaultChatRestyler implements ChatReceiveModule {
         // changed in the future and they need to be padded.
         if (HytilitiesConfig.padPlayerCount) {
             Matcher mf = language.chatRestylerFormattedPaddingPatternRegex.matcher(message);
-//            Matcher mu = unformattedPaddingPattern.matcher(unformattedMessage);
+            // Matcher mu = unformattedPaddingPattern.matcher(unformattedMessage);
             if (mf.find(0)) { // this only matches a small part so we need find()
                 mf.replaceAll("(§r§b" + pad(mf.group(1)) + "§r§e/§r§b" + mf.group(2) + "§r§e)");
-//                uf.replaceAll("(" + pad(mu.group(1)) + "/" + mu.group(2) + ")");
+                // uf.replaceAll("(" + pad(mu.group(1)) + "/" + mu.group(2) + ")");
 
                 joinMatcher = language.chatRestylerGameJoinStyleRegex.matcher(message); // recalculate since we padded
                 event.message = new ChatComponentText(message);

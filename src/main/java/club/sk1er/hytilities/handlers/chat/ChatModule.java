@@ -28,6 +28,9 @@ import net.minecraft.util.IChatComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * This interface handles shared methods between {@link ChatReceiveModule} and {@link ChatSendModule}.
  * It has things like priority and enabled checks, as well as default utility methods for classes
@@ -82,6 +85,32 @@ interface ChatModule {
     @NotNull
     default IChatComponent colorMessage(@NotNull String message) {
         return new ChatComponentText(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    /**
+     * Replaces a part of the original chat message.
+     * Maintains the ChatStyle. e.g. click and hover events
+     *
+     * @param original    the original chat message from ClientChatReceivedEvent
+     * @param regex       the regular expression that matches the text to be replaced
+     * @param replacement the new text that will replace the regular expression
+     * @return            the modified chat component
+     */
+    @NotNull
+    default IChatComponent replace(IChatComponent original, String regex, String replacement) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher("");
+        IChatComponent editedMessage = new ChatComponentText("");
+        for (IChatComponent sibling : original.getSiblings()) {
+            String message = sibling.getFormattedText();
+            matcher.reset(message);
+            if (matcher.find()) {
+                editedMessage.appendSibling(new ChatComponentText(message.replaceAll(pattern.pattern(), replacement)));
+            } else {
+                editedMessage.appendSibling(sibling);
+            }
+        }
+        return editedMessage;
     }
 
     /**
