@@ -98,6 +98,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean connectionStatus;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Remove Guild MOTD",
+        description = "Remove the guild Message Of The Day.",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean guildMotd;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Remove Chat Emojis",
         description = "Remove MVP++ chat emojis.\n§eExample: §c§lOOF",
         category = "Chat", subcategory = "Toggles"
@@ -329,6 +336,13 @@ public class HytilitiesConfig extends Vigilant {
         category = "Chat", subcategory = "Toggles"
     )
     public static boolean curseOfSpam;
+
+    @Property(
+        type = PropertyType.SWITCH, name = "AutoComplete /play commands",
+        description = "Allows tab completion of /play commands",
+        category = "Chat", subcategory = "AutoComplete"
+    )
+    public static boolean autocompletePlayCommands;
 
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
