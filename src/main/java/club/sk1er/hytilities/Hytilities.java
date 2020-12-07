@@ -28,6 +28,7 @@ import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
+import club.sk1er.hytilities.handlers.game.pit.PitLagReducer;
 import club.sk1er.hytilities.handlers.general.AutoStart;
 import club.sk1er.hytilities.handlers.general.CommandQueue;
 import club.sk1er.hytilities.handlers.language.LanguageHandler;
@@ -121,6 +122,9 @@ public class Hytilities {
         eventBus.register(new LobbyBossbar());
         eventBus.register(new LimboLimiter());
         eventBus.register(new MysteryBoxStar());
+
+        // specific games
+        eventBus.register(new PitLagReducer());
     }
 
     public void sendMessage(String message) {
