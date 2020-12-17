@@ -40,7 +40,6 @@ public class LobbyChecker {
         this.tick++;
         if (this.tick == 50) {
             this.lobbyStatus = this.lobbyPattern.matcher(Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation().getServerId()).matches();
-            System.out.println(this.lobbyStatus);
         }
 
     }
