@@ -55,10 +55,10 @@ public class SkyblockVisitCommand extends HousingVisitCommand {
                 Hytilities.INSTANCE.getCommandQueue().queue("/play sb"); // handled by LimboPlayCommandHelper
                 MinecraftForge.EVENT_BUS.register(this);
             } else {
-                Hytilities.INSTANCE.sendMessage("&cInvalid playername!");
+                Hytilities.sendMessage("&cInvalid playername!");
             }
         } else {
-            Hytilities.INSTANCE.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
+            Hytilities.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
         }
     }
 

@@ -43,7 +43,7 @@ public class ChatCleaner implements ChatReceiveModule {
     }
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final LanguageData language = getLanguage();
         final LocrawInformation locrawInformation = Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
         String message = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
@@ -51,8 +51,7 @@ public class ChatCleaner implements ChatReceiveModule {
         if (HytilitiesConfig.lobbyStatus) {
             for (String messages : language.chatCleanerJoinMessageTypes) {
                 if (message.contains(messages)) {
-                    event.setCanceled(true);
-                    return;
+                    return true;
                 }
             }
         }
@@ -62,7 +61,7 @@ public class ChatCleaner implements ChatReceiveModule {
 
             if (matcher.find(0)) {
                 event.message = new ChatComponentText(event.message.getFormattedText().replaceAll(language.chatCleanerMvpEmotesRegex.pattern(), ""));
-                return;
+                return false;
             }
         }
 
@@ -74,7 +73,7 @@ public class ChatCleaner implements ChatReceiveModule {
                 if (lineWidth > chatWidth) {
                     message = Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(message, chatWidth);
                     event.message = new ChatComponentText(message);
-                    return;
+                    return false;
                 }
             }
         }
@@ -87,51 +86,45 @@ public class ChatCleaner implements ChatReceiveModule {
                 boolean playerBox = !player.contains(Minecraft.getMinecraft().thePlayer.getName());
 
                 if (!playerBox || !player.startsWith("You")) {
-                    event.setCanceled(true);
-                    return;
+                    return true;
                 }
             } else if (message.startsWith("[Mystery Box]")) {
-                event.setCanceled(true);
-                return;
+                return true;
             }
         }
 
         if (HytilitiesConfig.gameAnnouncements) {
             if (language.chatCleanerGameAnnouncementRegex.matcher(message).matches()) {
-                event.setCanceled(true);
-                return;
+                return true;
             }
         }
 
         if (HytilitiesConfig.hypeLimitReminder && message.startsWith(language.chatCleanerHypeLimit)) {
-            event.setCanceled(true);
-            return;
+            return true;
         }
 
         if (HytilitiesConfig.soulWellAnnouncer) {
             if (language.chatCleanerSoulWellFindRegex.matcher(message).matches()) {
-                event.setCanceled(true);
-                return;
+                return true;
             }
         }
 
         if (locrawInformation != null) {
             if (HytilitiesConfig.bedwarsAdvertisements && locrawInformation.getGameType() == GameType.BED_WARS) {
                 if (language.chatCleanerBedwarsPartyAdvertisementRegex.matcher(message).find()) {
-                    event.setCanceled(true);
-                    return;
+                    return true;
                 }
             }
         }
 
         if (HytilitiesConfig.connectionStatus && language.chatCleanerConnectionStatusRegex.matcher(message).matches()) {
-            event.setCanceled(true);
+            return true;
         }
 
-        if (HytilitiesConfig.curseOfSpam) {
-            if (message.equals("KALI HAS STRIKEN YOU WITH THE CURSE OF SPAM")) {
-                event.setCanceled(true);
-            }
+        if (HytilitiesConfig.curseOfSpam && message.equals("KALI HAS STRIKEN YOU WITH THE CURSE OF SPAM")) {
+            return true;
         }
+
+        return false;
     }
 }

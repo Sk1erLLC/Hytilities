@@ -16,27 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.modules.blockers;
+package club.sk1er.hytilities.handlers.chat;
 
-import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ConnectedMessage implements ChatReceiveModule {
+/**
+ * Module to simplify the reading of send chat messages and using them if modifying
+ * or cancelling them is not necessary.
+ */
+public abstract class SendingReaderModule implements ChatSendModule {
 
-    @Override
-    public int getPriority() {
-        return -5;
+    @Nullable
+    @Override public String onMessageSend(@NotNull final String message) {
+        readMessage(message);
+        return message;
     }
 
-    @Override
-    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
-        return getLanguage().connectedServerConnectMessageRegex.matcher(event.message.getUnformattedText()).matches();
-    }
+    /**
+     * Place your code here that reads the message and acts on it.
+     *
+     * @param message a chat message being sent
+     */
+    public abstract void readMessage(final String message);
 
-    @Override
-    public boolean isEnabled() {
-        return HytilitiesConfig.serverConnectedMessages;
-    }
 }

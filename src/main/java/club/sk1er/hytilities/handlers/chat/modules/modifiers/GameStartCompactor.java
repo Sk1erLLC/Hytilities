@@ -44,7 +44,7 @@ public class GameStartCompactor implements ChatReceiveModule {
     private IChatComponent lastMessage = null;
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final Matcher gameStartMatcher = getLanguage().chatRestylerGameStartCounterStyleRegex.matcher(event.message.getUnformattedText());
         final Matcher chatRestylerMatcher = getLanguage().chatRestylerGameStartCounterOutputStyleRegex.matcher(event.message.getFormattedText());
         if (gameStartMatcher.matches() || (HytilitiesConfig.gameStatusRestyle && chatRestylerMatcher.matches())) {
@@ -65,6 +65,7 @@ public class GameStartCompactor implements ChatReceiveModule {
 
             lastMessage = event.message.createCopy();
         }
+        return false;
     }
 
     @Override

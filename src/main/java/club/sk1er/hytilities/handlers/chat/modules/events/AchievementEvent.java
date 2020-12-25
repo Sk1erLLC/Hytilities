@@ -28,9 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
@@ -39,7 +37,7 @@ public class AchievementEvent implements ChatReceiveModule {
     private final Set<String> achievementsGotten = new HashSet<>();
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
         final Matcher matcher = getLanguage().achievementRegex.matcher(unformattedText);
         if (matcher.matches()) {
@@ -51,6 +49,7 @@ public class AchievementEvent implements ChatReceiveModule {
                 achievementsGotten.add(achievement);
             }
         }
+        return false;
     }
 
     @Override

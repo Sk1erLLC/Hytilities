@@ -59,7 +59,7 @@ public class DefaultChatRestyler implements ChatReceiveModule {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final String message = event.message.getFormattedText().trim();
         final String unformattedMessage = event.message.getUnformattedText().trim();
 
@@ -148,7 +148,7 @@ public class DefaultChatRestyler implements ChatReceiveModule {
                     } else {
                         event.message = colorMessage(message.substring(0, message.length() - 3) + " &e(&b" + pad(String.valueOf(--playerCount)) + "&e/&b" + maxPlayerCount + "&e)!");
                     }
-                    return;
+                    return false;
                 }
             }
             if (HytilitiesConfig.playerCountBeforePlayerName) {
@@ -157,5 +157,6 @@ public class DefaultChatRestyler implements ChatReceiveModule {
                 }
             }
         }
+        return false;
     }
 }

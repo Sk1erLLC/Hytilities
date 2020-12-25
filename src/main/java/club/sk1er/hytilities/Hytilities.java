@@ -18,11 +18,7 @@
 
 package club.sk1er.hytilities;
 
-import club.sk1er.hytilities.command.HousingVisitCommand;
-import club.sk1er.hytilities.command.HytilitiesCommand;
-import club.sk1er.hytilities.command.PlayCommand;
-import club.sk1er.hytilities.command.SilentRemoveCommand;
-import club.sk1er.hytilities.command.SkyblockVisitCommand;
+import club.sk1er.hytilities.command.*;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
@@ -50,12 +46,12 @@ import club.sk1er.modcore.ModCoreInstaller;
 import club.sk1er.mods.core.universal.ChatColor;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
@@ -94,14 +90,22 @@ public class Hytilities {
         ModCoreInstaller.initializeModCore(Minecraft.getMinecraft().mcDataDir);
         this.config.preload();
 
-        final ClientCommandHandler commandRegister = ClientCommandHandler.instance;
-        commandRegister.registerCommand(new PlayCommand());
-        commandRegister.registerCommand(new HytilitiesCommand());
-        commandRegister.registerCommand(new HousingVisitCommand());
-        commandRegister.registerCommand(new SilentRemoveCommand());
-        commandRegister.registerCommand(new SkyblockVisitCommand());
+        registerCommands(
+            new PlayCommand(),
+            new QuickWDRCommand(),
+            new HytilitiesCommand(),
+            new HousingVisitCommand(),
+            new SilentRemoveCommand(),
+            new SkyblockVisitCommand()
+        );
 
         registerHandlers();
+    }
+
+    private static void registerCommands(final ICommand... commands) {
+        for (final ICommand command : commands) {
+            ClientCommandHandler.instance.registerCommand(command);
+        }
     }
 
     @Mod.EventHandler
@@ -110,37 +114,43 @@ public class Hytilities {
     }
 
     private void registerHandlers() {
-        final EventBus eventBus = MinecraftForge.EVENT_BUS;
+        registerEvents(
+            // general stuff
+            autoQueue,
+            locrawUtil,
+            commandQueue,
+            languageHandler,
+            new AutoStart(),
 
-        // general stuff
-        eventBus.register(autoQueue);
-        eventBus.register(locrawUtil);
-        eventBus.register(commandQueue);
-        eventBus.register(languageHandler);
-        eventBus.register(new AutoStart());
+            // chat
+            chatHandler,
+            silentRemoval,
+            hardcoreStatus,
+            new AchievementEvent(),
+            new LevelupEvent(),
 
-        // chat
-        eventBus.register(chatHandler);
-        eventBus.register(silentRemoval);
-        eventBus.register(hardcoreStatus);
-        eventBus.register(new AchievementEvent());
-        eventBus.register(new LevelupEvent());
+            // lobby
+            lobbyChecker,
+            new NPCHider(),
+            new LobbyBossbar(),
+            new LimboLimiter(),
+            new LimboTitleFix(),
+            new MysteryBoxStar(),
 
-        // lobby
-        eventBus.register(lobbyChecker);
-        eventBus.register(new NPCHider());
-        eventBus.register(new LobbyBossbar());
-        eventBus.register(new LimboLimiter());
-        eventBus.register(new LimboTitleFix());
-        eventBus.register(new MysteryBoxStar());
-
-        // specific games
-        eventBus.register(new PitLagReducer());
-        eventBus.register(new HousingMusic());
-        eventBus.register(new GameCountdown());
+            // specific games
+            new PitLagReducer(),
+            new HousingMusic(),
+            new GameCountdown()
+        );
     }
 
-    public void sendMessage(String message) {
+    private static void registerEvents(final Object... events) {
+        for (final Object event : events) {
+            MinecraftForge.EVENT_BUS.register(event);
+        }
+    }
+
+    public static void sendMessage(String message) {
         MinecraftUtils.sendMessage(ChatColor.GOLD + "[Hytilities] ", ChatColor.translateAlternateColorCodes('&', message));
     }
 

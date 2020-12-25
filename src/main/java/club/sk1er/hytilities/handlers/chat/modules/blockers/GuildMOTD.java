@@ -62,19 +62,18 @@ public class GuildMOTD implements ChatReceiveModule {
      * <p>§b-------------------------------------------</p>
      */
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         if (canCheckMOTD) {
             // MOTD line breaker is already trimmed to chat width.
+            // After reading the first line, cancel any subsequent chat lines until the last line is read.
             if (event.message.getFormattedText().startsWith("\u00a7b------")) {
                 // Received the first or last line of MOTD.
                 isMOTD = !isMOTD;
                 // Hide the MOTD line breaker.
-                event.setCanceled(true);
-            } else if (isMOTD) {
-                // After reading the first line, cancel any subsequent chat lines until the last line is read.
-                event.setCanceled(true);
-            }
+                return true;
+            } else return isMOTD;
         }
+        return false;
     }
 
     @Override

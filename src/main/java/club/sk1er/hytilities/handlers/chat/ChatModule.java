@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see ChatHandler
  */
-interface ChatModule {
+public interface ChatModule {
 
     // TODO: A lot of the priority numbers were chosen mostly at random, with only some thought put into them. Someone should go through them and really make sure that each one has a good priority.
 
@@ -96,7 +96,7 @@ interface ChatModule {
      * Get the player's server location.
      */
     @Nullable
-    default LocrawInformation getLowcraw() {
+    default LocrawInformation getLocraw() {
         return Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation();
     }
 

@@ -34,14 +34,14 @@ public class WhiteChat implements ChatReceiveModule {
     }
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         if (HytilitiesConfig.whitePrivateMessages) {
             final Matcher matcher = getLanguage().privateMessageWhiteChatRegex.matcher(event.message.getFormattedText());
             if (matcher.find(0)) {
                 event.message = new ChatComponentText(matcher.group("type") + " " + matcher.group("prefix") + ": " + matcher.group("message").replace("§7", "§f"));
             }
 
-            return;
+            return false;
         }
 
         if (HytilitiesConfig.whiteChat) {
@@ -50,5 +50,6 @@ public class WhiteChat implements ChatReceiveModule {
                 event.message = new ChatComponentText(matcher.group("prefix") + ": " + matcher.group("message"));
             }
         }
+        return false;
     }
 }

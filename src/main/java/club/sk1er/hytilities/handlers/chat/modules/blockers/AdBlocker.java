@@ -56,24 +56,23 @@ public class AdBlocker implements ChatReceiveModule {
     private final List<String> begging = Arrays.asList("give", "please", "pls", "plz", "gift");
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final String message = event.message.getUnformattedText().toLowerCase(Locale.ENGLISH);
         if (commonAdvertisements.matcher(message).find(0)) {
-            event.setCanceled(true);
-            return;
+            return true;
         }
 
         for (String begs : begging) {
             if (message.contains(begs)) {
                 for (String rank : ranks) {
                     if (message.contains(rank)) {
-                        event.setCanceled(true);
-                        break;
+                        return true;
                     }
                 }
                 break;
             }
         }
+        return false;
     }
 
     @Override

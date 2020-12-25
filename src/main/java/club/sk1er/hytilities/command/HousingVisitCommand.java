@@ -74,10 +74,10 @@ public class HousingVisitCommand extends CommandBase {
                     MinecraftForge.EVENT_BUS.register(this);
                 }
             } else {
-                Hytilities.INSTANCE.sendMessage("&cInvalid username!");
+                Hytilities.sendMessage("&cInvalid username!");
             }
         } else {
-            Hytilities.INSTANCE.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
+            Hytilities.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
         }
     }
 

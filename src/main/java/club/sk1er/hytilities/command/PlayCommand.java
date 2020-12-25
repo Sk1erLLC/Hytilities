@@ -21,8 +21,6 @@ package club.sk1er.hytilities.command;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.modcore.ModCoreInstaller;
-import club.sk1er.mods.core.ModCore;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import club.sk1er.mods.core.util.Multithreading;
 import club.sk1er.mods.core.util.WebUtil;
@@ -80,7 +78,7 @@ public class PlayCommand extends CommandBase {
 
         if (args.length != 1) {
             if (autocompletePlayCommands) {
-                Hytilities.INSTANCE.sendMessage("&cSpecify a game");
+                Hytilities.sendMessage("&cSpecify a game");
             }
 
             return;
@@ -94,7 +92,7 @@ public class PlayCommand extends CommandBase {
             } else if (games.containsValue(args[0].toLowerCase())) {
                 command = args[0];
             } else {
-                Hytilities.INSTANCE.sendMessage("&cInvalid game: \"" + args[0] + "\"");
+                Hytilities.sendMessage("&cInvalid game: \"" + args[0] + "\"");
                 return;
             }
         }

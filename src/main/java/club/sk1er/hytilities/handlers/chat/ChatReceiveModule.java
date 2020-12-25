@@ -39,11 +39,12 @@ public interface ChatReceiveModule extends ChatModule {
     /**
      * Place your code here. Called when a Forge {@link ClientChatReceivedEvent} is received.
      * <p>
-     * If the event is cancelled, {@link ChatModule}s after that event will not execute. Therefore,
+     * If {@code true} is returned, {@link ChatModule}s after that event will not execute. Therefore,
      * {@link ClientChatReceivedEvent#isCanceled()}} checks are unnecessary.
      *
      * @param event a {@link ClientChatReceivedEvent}
+     * @return {@code true} if the event should be cancelled, otherwise {@code false}
      */
-    void onMessageReceived(@NotNull ClientChatReceivedEvent event);
+    boolean onMessageReceived(@NotNull ClientChatReceivedEvent event);
 
 }

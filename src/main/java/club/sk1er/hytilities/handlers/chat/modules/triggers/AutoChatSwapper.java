@@ -40,7 +40,7 @@ public class AutoChatSwapper implements ChatReceiveModule {
     }
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final Matcher statusMatcher = getLanguage().autoChatSwapperPartyStatusRegex.matcher(event.message.getUnformattedText());
         if (statusMatcher.matches()) {
             MinecraftForge.EVENT_BUS.register(new ChatChannelMessagePreventer());
@@ -57,6 +57,7 @@ public class AutoChatSwapper implements ChatReceiveModule {
                     break;
             }
         }
+        return false;
     }
 
     @Override

@@ -34,15 +34,16 @@ import java.util.regex.Matcher;
 public class LevelupEvent implements ChatReceiveModule {
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
-        final String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
-        final Matcher matcher = getLanguage().hypixelLevelUpRegex.matcher(unformattedText.trim());
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+        final Matcher matcher = getLanguage().hypixelLevelUpRegex.matcher(
+            EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText()).trim());
         if (matcher.find()) {
             final String level = matcher.group("level");
             if (StringUtils.isNumeric(level)) {
                 MinecraftForge.EVENT_BUS.post(new HypixelLevelupEvent(Integer.parseInt(level)));
             }
         }
+        return false;
     }
 
     @Override

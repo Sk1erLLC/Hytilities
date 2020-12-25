@@ -32,10 +32,11 @@ public class ThankWatchdog implements ChatReceiveModule {
     }
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         if (event.message.getUnformattedText().equals("[WATCHDOG ANNOUNCEMENT]")) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/achat Thanks Watchdog!");
         }
+        return false;
     }
 
     @Override

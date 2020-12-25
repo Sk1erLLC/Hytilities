@@ -47,7 +47,7 @@ public class HytilitiesCommand extends CommandBase {
         if (args.length == 0) {
             ModCore.getInstance().getGuiHandler().open(Hytilities.INSTANCE.getConfig().gui());
         } else {
-            Hytilities.INSTANCE.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
+            Hytilities.sendMessage("&cIncorrect arguments. Command usage is: " + getCommandUsage(sender));
         }
     }
 

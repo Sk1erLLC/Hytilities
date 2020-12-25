@@ -34,12 +34,13 @@ public class GuildWelcomer implements ChatReceiveModule {
     }
 
     @Override
-    public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
+    public boolean onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final String text = event.message.getUnformattedText();
         final Matcher matcher = getLanguage().guildPlayerJoinRegex.matcher(text);
         if (matcher.matches()) {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/gc Welcome to the guild " + matcher.group("player") + "!");
         }
+        return false;
     }
 
     @Override

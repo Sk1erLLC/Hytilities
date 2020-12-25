@@ -30,10 +30,9 @@ import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.GameStartCompactor;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.LimboPlayCommandHelper;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.WhiteChat;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatSwapper;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.GuildWelcomer;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.ThankWatchdog;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.*;
 import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
+import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -49,55 +48,61 @@ public class ChatHandler {
     private final List<ChatReceiveModule> receiveModules = new ArrayList<>();
     private final List<ChatSendModule> sendModules = new ArrayList<>();
 
+    /**
+     * Please order the modules in size-increasing order, and in
+     * case of a tie, use alphabetical order.
+     */
     public ChatHandler() {
-        this.registerModule(new AdBlocker());
-        this.registerModule(new GuildMOTD());
-        this.registerModule(new WhiteChat());
-        this.registerModule(new ChatCleaner());
-        this.registerModule(new LevelupEvent());
-        this.registerModule(new GuildWelcomer());
-        this.registerModule(new ThankWatchdog());
-        this.registerModule(new AutoChatSwapper());
-        this.registerModule(new AchievementEvent());
-        this.registerModule(new ConnectedMessage());
-        this.registerModule(new GameStartCompactor());
-        this.registerModule(new DefaultChatRestyler());
-        this.registerModule(new LimboPlayCommandHelper());
+        registerModules(
+            new AdBlocker(),
+            new AutoQueue(),
+            new GuildMOTD(),
+            new WhiteChat(),
+            new LocrawUtil(),
+            new ChatCleaner(),
+            new LevelupEvent(),
+            new ShoutBlocker(),
+            new GuildWelcomer(),
+            new ThankWatchdog(),
+            new AutoChatSwapper(),
+            new AchievementEvent(),
+            new ConnectedMessage(),
+            new GameStartCompactor(),
+            new ChatReportConfirmer(),
+            new DefaultChatRestyler(),
+            new LimboPlayCommandHelper()
+        );
 
-        this.registerDualModule(new ShoutBlocker());
-
-        this.sendModules.sort(Comparator.comparingInt(ChatModule::getPriority));
+        sendModules.sort(Comparator.comparingInt(ChatModule::getPriority));
+        receiveModules.sort(Comparator.comparingInt(ChatModule::getPriority));
     }
 
-    private void registerModule(ChatReceiveModule chatModule) {
-        this.receiveModules.add(chatModule);
-    }
-
-    private void registerModule(ChatSendModule chatModule) {
-        this.sendModules.add(chatModule);
-    }
-
-    private <T extends ChatReceiveModule & ChatSendModule> void registerDualModule(T chatModule) {
-        this.registerModule((ChatReceiveModule) chatModule);
-        this.registerModule((ChatSendModule) chatModule);
+    private void registerModules(final ChatModule... modules) {
+        for (final ChatModule module: modules) {
+            if (module instanceof ChatSendModule) {
+                this.sendModules.add((ChatSendModule) module);
+            }
+            if (module instanceof ChatReceiveModule) {
+                this.receiveModules.add((ChatReceiveModule) module);
+            }
+        }
     }
 
     @SubscribeEvent
     public void handleChat(ClientChatReceivedEvent event) {
-        if (!MinecraftUtils.isHypixel()) {
-            return;
-        }
+        if (MinecraftUtils.isHypixel()) {
 
-        // These don't cast to ChatReceiveModule for god knows why, so we can't include them in receiveModules.
-        // Therefore, we manually trigger them here.
-        Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
-        Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
+            // These don't cast to ChatReceiveModule for god knows why, so we can't include them in receiveModules.
+            // Therefore, we manually trigger them here.
+//            Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
+//            Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
 
-        for (ChatReceiveModule module : this.receiveModules) {
-            if (module.isEnabled()) {
-                module.onMessageReceived(event);
-                if (event.isCanceled()) {
-                    return;
+            for (ChatReceiveModule module : this.receiveModules) {
+                if (module.isEnabled()) {
+                    if (module.onMessageReceived(event)) {
+                        event.setCanceled(true);
+                        return;
+                    }
                 }
             }
         }
@@ -114,21 +119,18 @@ public class ChatHandler {
     @SuppressWarnings({"unused", "RedundantSuppression"})
     @Nullable
     public String handleSentMessage(@NotNull String message) {
-        if (!MinecraftUtils.isHypixel()) {
-            return message;
-        }
+        if (MinecraftUtils.isHypixel()) {
+//            Hytilities.INSTANCE.getLocrawUtil().onMessageSend(message);
 
-        Hytilities.INSTANCE.getLocrawUtil().onMessageSend(message);
-
-        for (ChatSendModule module : this.sendModules) {
-            if (module.isEnabled()) {
-                message = module.onMessageSend(message);
-                if (message == null) {
-                    return null;
+            for (ChatSendModule module : this.sendModules) {
+                if (module.isEnabled()) {
+                    message = module.onMessageSend(message);
+                    if (message == null) {
+                        return null;
+                    }
                 }
             }
         }
-
         return message;
     }
 }
