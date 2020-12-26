@@ -140,6 +140,13 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean cleanerGameStartAnnouncements;
 
     @Property(
+        type = PropertyType.SWITCH, name = "Autoconfirm Chat Reports",
+        description = "Automatically confirm chat reports, and remove the confirmation message.",
+        category = "Chat", subcategory = "Toggles"
+    )
+    public static boolean autoconfirmChatreports;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Game Status Restyle",
         description = "Replace common game status messages with a new style.\n§eExamples:\n§a§l+ §bSteve §e(§b1§e/§b12§e)\n§c§l- §bSteve §e(§b1§e/§b12§e)\n§e§l* §aGame starts in §b§l5 §aseconds.",
         category = "Chat", subcategory = "Restyler"
