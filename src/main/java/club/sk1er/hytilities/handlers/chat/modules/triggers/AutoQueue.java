@@ -53,8 +53,7 @@ public class AutoQueue implements ChatReceiveModule {
             final String message = ChatColor.stripColor(event.message.getUnformattedText());
             if (message.startsWith(language.autoQueuePrefix)) {
                 for (IChatComponent component : event.message.getSiblings()) {
-                    final String compMsg = ChatColor.stripColor(component.getUnformattedText().trim());
-                    if (compMsg.equals(language.autoQueueClick)) {
+                    if (ChatColor.stripColor(component.getUnformattedText().trim()).equals(language.autoQueueClick)) {
                         this.command = component.getChatStyle().getChatClickEvent().getValue();
                     }
                 }
