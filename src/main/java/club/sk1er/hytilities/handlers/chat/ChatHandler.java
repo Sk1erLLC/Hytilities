@@ -18,7 +18,6 @@
 
 package club.sk1er.hytilities.handlers.chat;
 
-import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.AdBlocker;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.ChatCleaner;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.ConnectedMessage;
@@ -30,7 +29,11 @@ import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.GameStartCompactor;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.LimboPlayCommandHelper;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.WhiteChat;
-import club.sk1er.hytilities.handlers.chat.modules.triggers.*;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatSwapper;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.ChatReportConfirmer;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.GuildWelcomer;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.ThankWatchdog;
 import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
 import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.mods.core.util.MinecraftUtils;

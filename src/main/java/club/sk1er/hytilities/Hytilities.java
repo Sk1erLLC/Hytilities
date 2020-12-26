@@ -18,7 +18,12 @@
 
 package club.sk1er.hytilities;
 
-import club.sk1er.hytilities.command.*;
+import club.sk1er.hytilities.command.HousingVisitCommand;
+import club.sk1er.hytilities.command.HytilitiesCommand;
+import club.sk1er.hytilities.command.PlayCommand;
+import club.sk1er.hytilities.command.QuickWDRCommand;
+import club.sk1er.hytilities.command.SilentRemoveCommand;
+import club.sk1er.hytilities.command.SkyblockVisitCommand;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatHandler;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
