@@ -34,7 +34,6 @@ public class QuestBlocker implements ChatReceiveModule {
     public void onMessageReceived(@NotNull final ClientChatReceivedEvent event) {
         final String message = event.message.getUnformattedText();
         if (message.startsWith("§aAutomatically activated:")) {
-            Hytilities.INSTANCE.sendMessage("Blocked " + message);
             event.setCanceled(true);
         }
     }
