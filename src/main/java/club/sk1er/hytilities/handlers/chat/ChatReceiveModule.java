@@ -18,6 +18,8 @@
 
 package club.sk1er.hytilities.handlers.chat;
 
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
+import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * ChatModules essentially behave like small listener classes, except instead of going directly to Forge,
  * the {@link ChatHandler} handles them and passes them to Forge, taking account of things like priority and cancelled events.
  * <p>
- * Must be registered in {@link ChatHandler#ChatHandler()} to be executed.
+ * Must be registered in {@link ChatHandler#ChatHandler} to be executed.
  *
  * @see ChatModule
  * @see ChatHandler

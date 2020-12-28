@@ -78,15 +78,15 @@ public class Hytilities {
     private final HytilitiesConfig config = new HytilitiesConfig();
     private final Logger logger = LogManager.getLogger("Hytilities");
 
-    private final LanguageHandler languageHandler = new LanguageHandler();
-    private final SkyblockChecker skyblockChecker = new SkyblockChecker();
-    private final HardcoreStatus hardcoreStatus = new HardcoreStatus();
-    private final SilentRemoval silentRemoval = new SilentRemoval();
+    private final AutoQueue autoQueue = new AutoQueue();
+    private final LocrawUtil locrawUtil = new LocrawUtil();
     private final CommandQueue commandQueue = new CommandQueue();
     private final LobbyChecker lobbyChecker = new LobbyChecker();
-    private final ChatHandler chatHandler = new ChatHandler();
-    private final LocrawUtil locrawUtil = new LocrawUtil();
-    private final AutoQueue autoQueue = new AutoQueue();
+    private final SilentRemoval silentRemoval = new SilentRemoval();
+    private final HardcoreStatus hardcoreStatus = new HardcoreStatus();
+    private final SkyblockChecker skyblockChecker = new SkyblockChecker();
+    private final LanguageHandler languageHandler = new LanguageHandler();
+    private final ChatHandler chatHandler = new ChatHandler(locrawUtil, autoQueue);
 
     private boolean loadedCall;
 

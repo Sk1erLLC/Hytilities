@@ -18,6 +18,7 @@
 
 package club.sk1er.hytilities.handlers.chat;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.AdBlocker;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.ChatCleaner;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.ConnectedMessage;
@@ -39,29 +40,29 @@ import club.sk1er.hytilities.util.locraw.LocrawUtil;
 import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class ChatHandler {
 
-    private final List<ChatReceiveModule> receiveModules = new ArrayList<>();
-    private final List<ChatSendModule> sendModules = new ArrayList<>();
+    private final List<ChatModule> modules;
 
     /**
      * Please order the modules in size-increasing order, and in
      * case of a tie, use alphabetical order.
+     *
+     * @param specialModules because {@link Hytilities#INSTANCE} isn't available at Hytilities clinit.
      */
-    public ChatHandler() {
-        registerModules(
+    public ChatHandler(final ChatModule... specialModules) {
+        modules = Arrays.asList(ArrayUtils.addAll(specialModules,
             new AdBlocker(),
-            new AutoQueue(),
             new GuildMOTD(),
             new WhiteChat(),
-            new LocrawUtil(),
             new ChatCleaner(),
             new LevelupEvent(),
             new ShoutBlocker(),
@@ -74,38 +75,20 @@ public class ChatHandler {
             new ChatReportConfirmer(),
             new DefaultChatRestyler(),
             new LimboPlayCommandHelper()
-        );
+        ));
 
-        sendModules.sort(Comparator.comparingInt(ChatModule::getPriority));
-        receiveModules.sort(Comparator.comparingInt(ChatModule::getPriority));
+        modules.sort(Comparator.comparingInt(ChatModule::getPriority));
     }
 
-    private void registerModules(final ChatModule... modules) {
-        for (final ChatModule module: modules) {
-            if (module instanceof ChatSendModule) {
-                this.sendModules.add((ChatSendModule) module);
-            }
-            if (module instanceof ChatReceiveModule) {
-                this.receiveModules.add((ChatReceiveModule) module);
-            }
-        }
-    }
 
     @SubscribeEvent
-    public void handleChat(ClientChatReceivedEvent event) {
+    public void handleChat(final ClientChatReceivedEvent event) {
         if (MinecraftUtils.isHypixel()) {
-
-            // These don't cast to ChatReceiveModule for god knows why, so we can't include them in receiveModules.
-            // Therefore, we manually trigger them here.
-//            Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
-//            Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
-
-            for (ChatReceiveModule module : this.receiveModules) {
-                if (module.isEnabled()) {
-                    if (module.onMessageReceived(event)) {
-                        event.setCanceled(true);
-                        return;
-                    }
+            for (final ChatModule module : this.modules) {
+                if (module.isEnabled() && module instanceof ChatReceiveModule &&
+                    ((ChatReceiveModule) module).onMessageReceived(event)) {
+                    event.setCanceled(true);
+                    return;
                 }
             }
         }
@@ -123,17 +106,14 @@ public class ChatHandler {
     @Nullable
     public String handleSentMessage(@NotNull String message) {
         if (MinecraftUtils.isHypixel()) {
-//            Hytilities.INSTANCE.getLocrawUtil().onMessageSend(message);
-
-            for (ChatSendModule module : this.sendModules) {
-                if (module.isEnabled()) {
-                    message = module.onMessageSend(message);
-                    if (message == null) {
-                        return null;
-                    }
+            for (final ChatModule module : this.modules) {
+                if (module.isEnabled() && module instanceof ChatSendModule) {
+                    message = ((ChatSendModule) module).onMessageSend(message);
+                    if (message == null) return null;
                 }
             }
         }
+
         return message;
     }
 }

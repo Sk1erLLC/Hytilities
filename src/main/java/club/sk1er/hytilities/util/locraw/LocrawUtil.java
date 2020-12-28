@@ -33,13 +33,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class LocrawUtil extends SendingReaderModule implements ChatReceiveModule {
 
-    // these have to be static so they are shared between instances,
-    // since casting it to ChatSend/ReceiveModule creates a new instance (???)
     private static final Gson gson = new Gson();
-    private static LocrawInformation locrawInformation;
-    private static boolean listening;
-    private static int tick;
-    private static boolean playerSentCommand = false;
+    private LocrawInformation locrawInformation;
+    private boolean listening;
+    private int tick;
+    private boolean playerSentCommand = false;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -79,13 +77,13 @@ public class LocrawUtil extends SendingReaderModule implements ChatReceiveModule
                     // is just a way around that to make it properly work :)
                     locrawInformation.setGameType(GameType.getFromLocraw(locrawInformation.getRawGameType()));
 
+                    listening = false;
                     // Stop listening for locraw and cancel the message.
                     if (!playerSentCommand) {
                         return true;
                     }
 
                     playerSentCommand = false;
-                    listening = false;
                 }
             }
         } catch (Exception ignored) {}
@@ -97,7 +95,7 @@ public class LocrawUtil extends SendingReaderModule implements ChatReceiveModule
         return listening;
     }
 
-    public static LocrawInformation getLocrawInformation() {
+    public LocrawInformation getLocrawInformation() {
         return locrawInformation;
     }
 }
