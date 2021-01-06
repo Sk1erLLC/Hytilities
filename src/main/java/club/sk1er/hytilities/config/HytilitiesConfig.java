@@ -323,6 +323,13 @@ public class HytilitiesConfig extends Vigilant {
     )
     public static boolean curseOfSpam;
 
+    @Property(
+        type = PropertyType.SWITCH, name = "Double Click for Action (BedWars)",
+        description = "Requires you to double click for an action to happen in a BedWars Menu.",
+        category = "Game", subcategory = "Toggles"
+    )
+    public static boolean doubleClickBedwars;
+
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
         initialize();
