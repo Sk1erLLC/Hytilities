@@ -18,12 +18,7 @@
 
 package club.sk1er.hytilities.tweaker;
 
-import club.sk1er.hytilities.tweaker.asm.EntityPlayerSPTransformer;
-import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
-import club.sk1er.hytilities.tweaker.asm.GuiPlayerTabOverlayTransformer;
-import club.sk1er.hytilities.tweaker.asm.LayerArmorBaseTransformer;
-import club.sk1er.hytilities.tweaker.asm.MinecraftTransformer;
-import club.sk1er.hytilities.tweaker.asm.GuiChatTransformer;
+import club.sk1er.hytilities.tweaker.asm.*;
 import club.sk1er.hytilities.tweaker.transformer.HytilitiesTransformer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -48,6 +43,7 @@ public class ClassTransformer implements IClassTransformer {
         registerTransformer(new LayerArmorBaseTransformer());
         registerTransformer(new GuiIngameForgeTransformer());
         registerTransformer(new EntityPlayerSPTransformer());
+        registerTransformer(new GuiScreenTransformer());
         registerTransformer(new GuiChatTransformer());
     }
 
