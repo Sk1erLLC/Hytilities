@@ -19,7 +19,7 @@ public class GuiScreenTransformer implements HytilitiesTransformer  {
             InsnList instructions = method.instructions;
             ListIterator<AbstractInsnNode> iterator = instructions.iterator();
 
-            if (methodName.equals("mouseClicked")) {
+            if (methodName.equals("mouseClicked") || methodName.equals("func_73864_a")) {
                 while (iterator.hasNext()) {
                     AbstractInsnNode node = iterator.next();
 
