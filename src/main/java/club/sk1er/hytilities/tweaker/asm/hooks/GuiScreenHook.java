@@ -4,8 +4,9 @@ import club.sk1er.hytilities.config.HytilitiesConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 
+@SuppressWarnings("unused")
 public class GuiScreenHook {
-    private static int clickCount = 0;
+    public static int clickCount = 0;
 
     public static boolean mouseClicked(GuiScreen screen) {
         if (!(screen instanceof GuiChest) || !HytilitiesConfig.doubleClickBedwars) return false;

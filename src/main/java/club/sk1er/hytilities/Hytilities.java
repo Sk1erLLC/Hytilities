@@ -29,6 +29,7 @@ import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoQueue;
 import club.sk1er.hytilities.handlers.game.GameCountdown;
+import club.sk1er.hytilities.handlers.game.bedwars.DoubleClickBedwarsHandler;
 import club.sk1er.hytilities.handlers.game.hardcore.HardcoreStatus;
 import club.sk1er.hytilities.handlers.game.housing.HousingMusic;
 import club.sk1er.hytilities.handlers.game.pit.PitLagReducer;
@@ -138,6 +139,7 @@ public class Hytilities {
         eventBus.register(new PitLagReducer());
         eventBus.register(new HousingMusic());
         eventBus.register(new GameCountdown());
+        eventBus.register(new DoubleClickBedwarsHandler());
     }
 
     public void sendMessage(String message) {
