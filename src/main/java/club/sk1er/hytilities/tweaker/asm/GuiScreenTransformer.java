@@ -15,13 +15,12 @@ public class GuiScreenTransformer implements HytilitiesTransformer  {
     @Override
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            String methodName = mapMethodName(classNode, method);
-            InsnList instructions = method.instructions;
-            ListIterator<AbstractInsnNode> iterator = instructions.iterator();
-
+            final String methodName = mapMethodName(classNode, method);
             if (methodName.equals("mouseClicked") || methodName.equals("func_73864_a")) {
+                final InsnList instructions = method.instructions;
+                final ListIterator<AbstractInsnNode> iterator = instructions.iterator();
                 while (iterator.hasNext()) {
-                    AbstractInsnNode node = iterator.next();
+                    final AbstractInsnNode node = iterator.next();
 
                     if (node instanceof TypeInsnNode && node.getOpcode() == Opcodes.NEW) {
                         instructions.insertBefore(node, addScreenHook());
@@ -33,10 +32,10 @@ public class GuiScreenTransformer implements HytilitiesTransformer  {
     }
 
     public InsnList addScreenHook() {
-        InsnList list = new InsnList();
+        final InsnList list = new InsnList();
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
         list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, getHooksPackage() + "GuiChestHook", "mouseClicked", "(Lnet/minecraft/client/gui/GuiScreen;)V", false));
-        LabelNode node = new LabelNode();
+        final LabelNode node = new LabelNode();
         list.add(new JumpInsnNode(Opcodes.IFEQ, node));
         list.add(new InsnNode(Opcodes.RETURN));
         list.add(node);

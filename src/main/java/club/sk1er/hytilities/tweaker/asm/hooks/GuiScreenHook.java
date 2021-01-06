@@ -11,7 +11,7 @@ public class GuiScreenHook {
     public static boolean mouseClicked(GuiScreen screen) {
         if (!(screen instanceof GuiChest) || !HytilitiesConfig.doubleClickBedwars) return false;
 
-        String name = ((GuiChest) screen).lowerChestInventory.getDisplayName().getUnformattedText();
+        final String name = ((GuiChest) screen).lowerChestInventory.getDisplayName().getUnformattedText();
 
         if (name.equals("Upgrades & Traps") || name.equals("Quick Buy")) {
             clickCount += 1;
