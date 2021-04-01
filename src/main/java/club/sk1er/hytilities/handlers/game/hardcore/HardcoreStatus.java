@@ -22,20 +22,11 @@ import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.events.TitleEvent;
 import club.sk1er.hytilities.tweaker.asm.GuiIngameForgeTransformer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.objectweb.asm.tree.ClassNode;
 
 public class HardcoreStatus {
-
-    private boolean danger;
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        if (this.danger) {
-            this.danger = false;
-        }
-    }
 
     @SubscribeEvent
     public void onTitle(TitleEvent event) {
@@ -45,15 +36,7 @@ public class HardcoreStatus {
             unformattedTitle.equals("Your Wither died!") ||
             unformattedTitle.equals("BED DESTROYED!")) &&
             HytilitiesConfig.hardcoreHearts) {
-            danger = true;
+            Minecraft.getMinecraft().theWorld.getWorldInfo().setHardcore(true);
         }
-    }
-
-    /**
-     * Used in {@link GuiIngameForgeTransformer#transform(ClassNode, String)}
-     */
-    @SuppressWarnings("unused")
-    public boolean shouldChangeStyle() {
-        return this.danger && HytilitiesConfig.hardcoreHearts;
     }
 }

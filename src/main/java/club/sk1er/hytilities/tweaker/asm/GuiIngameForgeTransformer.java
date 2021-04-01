@@ -42,23 +42,7 @@ public class GuiIngameForgeTransformer implements HytilitiesTransformer {
     @Override
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            if (method.name.equals("renderHealth")) {
-                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-                while (iterator.hasNext()) {
-                    final AbstractInsnNode next = iterator.next();
-                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKEVIRTUAL) {
-                        final String methodName = mapMethodNameFromNode(next);
-                        if (methodName.equals("isHardcoreModeEnabled") || methodName.equals("func_76093_s")) {
-                            for (int i = 0; i < 7; i++) {
-                                method.instructions.remove(next.getNext());
-                            }
-
-                            method.instructions.insert(next, forceHardcore());
-                            break;
-                        }
-                    }
-                }
-            } else if (method.name.equals("renderTitle")) {
+            if (method.name.equals("renderTitle")) {
                 method.instructions.insertBefore(method.instructions.getFirst(), titleEvent());
             }
         }
@@ -75,23 +59,4 @@ public class GuiIngameForgeTransformer implements HytilitiesTransformer {
         return list;
     }
 
-    // && !Hytilities.INSTANCE.getHardcoreStatus().shouldChangeStyle()
-    private InsnList forceHardcore() {
-        InsnList list = new InsnList();
-        LabelNode ifne = new LabelNode();
-        list.add(new JumpInsnNode(Opcodes.IFNE, ifne));
-        list.add(new FieldInsnNode(Opcodes.GETSTATIC, "club/sk1er/hytilities/Hytilities", "INSTANCE", "Lclub/sk1er/hytilities/Hytilities;"));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "club/sk1er/hytilities/Hytilities", "getHardcoreStatus", "()Lclub/sk1er/hytilities/handlers/game/hardcore/HardcoreStatus;", false));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "club/sk1er/hytilities/handlers/game/hardcore/HardcoreStatus", "shouldChangeStyle", "()Z", false));
-        LabelNode ifeq = new LabelNode();
-        list.add(new JumpInsnNode(Opcodes.IFEQ, ifeq));
-        list.add(ifne);
-        list.add(new InsnNode(Opcodes.ICONST_5));
-        LabelNode gotoInsn = new LabelNode();
-        list.add(new JumpInsnNode(Opcodes.GOTO, gotoInsn));
-        list.add(ifeq);
-        list.add(new InsnNode(Opcodes.ICONST_0));
-        list.add(gotoInsn);
-        return list;
-    }
 }
