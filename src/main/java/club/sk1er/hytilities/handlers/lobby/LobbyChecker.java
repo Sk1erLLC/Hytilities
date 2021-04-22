@@ -37,8 +37,7 @@ public class LobbyChecker {
         if (event.phase != TickEvent.Phase.START || Minecraft.getMinecraft().thePlayer == null || !MinecraftUtils.isHypixel() || this.tick >= 52 || Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation() == null) {
             return;
         }
-        this.tick++;
-        if (this.tick == 50) {
+        if (++this.tick == 50) {
             this.lobbyStatus = this.lobbyPattern.matcher(Hytilities.INSTANCE.getLocrawUtil().getLocrawInformation().getServerId()).matches();
         }
 
