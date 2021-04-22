@@ -55,6 +55,7 @@ public class LocrawUtil implements ChatReceiveModule {
         tick = 0;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public String onMessageSend(@NotNull String message) {
         if (message.startsWith("/locraw") && !this.listening && this.tick >= 22) {
             this.playerSentCommand = true;

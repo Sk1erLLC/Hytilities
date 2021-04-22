@@ -40,6 +40,7 @@ import java.util.stream.Stream;
 
 public class PlayCommand extends CommandBase {
     private Map<String, String> games = new HashMap<>();
+    private String[] gameCache = null;
 
     public PlayCommand() {
         this.getNames();
@@ -115,6 +116,7 @@ public class PlayCommand extends CommandBase {
     }
 
     private String[] getListOfGames() {
-        return Stream.concat(games.keySet().stream(), games.values().stream()).distinct().toArray(String[]::new);
+        if (this.gameCache != null) return this.gameCache;
+        return this.gameCache = Stream.concat(games.keySet().stream(), games.values().stream()).distinct().toArray(String[]::new);
     }
 }

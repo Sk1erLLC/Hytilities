@@ -18,16 +18,20 @@
 
 package club.sk1er.hytilities.handlers.chat.modules.modifiers;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class DefaultChatRestyler implements ChatReceiveModule {
@@ -62,6 +66,7 @@ public class DefaultChatRestyler implements ChatReceiveModule {
     public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
         final String message = event.message.getFormattedText().trim();
         final String unformattedMessage = event.message.getUnformattedText().trim();
+        final List<IChatComponent> siblings = event.message.getSiblings();
 
         final LanguageData language = getLanguage();
         Matcher joinMatcher = language.chatRestylerGameJoinStyleRegex.matcher(message);
@@ -157,5 +162,7 @@ public class DefaultChatRestyler implements ChatReceiveModule {
                 }
             }
         }
+
+        Hytilities.INSTANCE.getChatHandler().fixStyling(event.message, siblings);
     }
 }
