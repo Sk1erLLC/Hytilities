@@ -31,6 +31,7 @@ import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.GameStartCompactor;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.WhiteChat;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatReportConfirm;
 import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoChatSwapper;
 import club.sk1er.hytilities.handlers.chat.modules.triggers.GuildWelcomer;
 import club.sk1er.hytilities.handlers.chat.modules.triggers.ThankWatchdog;
@@ -60,6 +61,7 @@ public class ChatHandler {
         this.registerModule(new LevelupEvent());
         this.registerModule(new GuildWelcomer());
         this.registerModule(new ThankWatchdog());
+        this.registerModule(new AutoChatReportConfirm());
         this.registerModule(new AutoChatSwapper());
         this.registerModule(new AchievementEvent());
         this.registerModule(new ConnectedMessage());
