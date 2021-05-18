@@ -24,10 +24,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 
-import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SkyblockChecker {
 

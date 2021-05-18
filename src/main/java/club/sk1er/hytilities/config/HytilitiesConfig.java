@@ -379,6 +379,11 @@ public class HytilitiesConfig extends Vigilant {
     )
     public static boolean giftBlocker;
 
+    @Property(
+        type = PropertyType.TEXT, name = "API Key", category = "General", subcategory = "API", hidden = true
+    )
+    public static String apiKey;
+
     public HytilitiesConfig() {
         super(new File("./config/hytilities.toml"));
         initialize();

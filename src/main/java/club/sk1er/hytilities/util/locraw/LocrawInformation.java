@@ -21,6 +21,7 @@ package club.sk1er.hytilities.util.locraw;
 import club.sk1er.hytilities.handlers.game.GameType;
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings("unused")
 public class LocrawInformation {
 
     @SerializedName("server")

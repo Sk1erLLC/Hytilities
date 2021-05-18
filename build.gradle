@@ -10,13 +10,11 @@ buildscript {
             url = "https://jitpack.io/"
         }
 
-        flatDir dirs: 'libs'
     }
     dependencies {
-        classpath "com.github.asbyth:ForgeGradle:86b2392"
+        classpath "com.github.asbyth:ForgeGradle:b13624b272"
     }
 }
-
 apply plugin: "net.minecraftforge.gradle.forge"
 
 version = modVersion

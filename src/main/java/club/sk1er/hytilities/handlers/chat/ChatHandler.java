@@ -19,13 +19,8 @@
 package club.sk1er.hytilities.handlers.chat;
 
 import club.sk1er.hytilities.Hytilities;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.AdBlocker;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.ChatCleaner;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.ConnectedMessage;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.GuildMOTD;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.QuestBlocker;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.ShoutBlocker;
-import club.sk1er.hytilities.handlers.chat.modules.blockers.GiftBlocker;
+import club.sk1er.hytilities.handlers.chat.modules.blockers.*;
+import club.sk1er.hytilities.handlers.chat.modules.events.APIKeyEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler;
@@ -65,8 +60,9 @@ public class ChatHandler {
         this.registerModule(new ConnectedMessage());
         this.registerModule(new GameStartCompactor());
         this.registerModule(new DefaultChatRestyler());
-        this.registerModule(new QuestBlocker());
         this.registerModule(new GiftBlocker());
+        this.registerModule(new QuestBlocker());
+        this.registerModule(new APIKeyEvent());
 
         this.registerDualModule(new ShoutBlocker());
 
@@ -137,8 +133,8 @@ public class ChatHandler {
     }
 
     /**
-     * Fixes styling when overwriting a message.
-     * Store the component siblings before applying any changes to the original component.
+     * Fixes styling when modifying a message's events.
+     * TODO: Improve documentation.
      *
      * @param component The message being modified & restored
      * @param siblings  The message's chat component siblings
