@@ -20,11 +20,12 @@ package club.sk1er.hytilities.command;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.util.APIUtils;
 import club.sk1er.hytilities.util.guild.GexpUtils;
 import club.sk1er.mods.core.ModCore;
 import club.sk1er.mods.core.gui.notification.Notifications;
+import club.sk1er.mods.core.util.MinecraftUtils;
 import club.sk1er.mods.core.util.Multithreading;
+import club.sk1er.mods.core.util.WebUtil;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
@@ -55,28 +56,34 @@ public class HytilitiesCommand extends CommandBase {
         } else {
             switch (args[0].toLowerCase()) {
                 case "setkey": {
+                    if (!MinecraftUtils.isHypixel()) {
+                        Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "You are not running this on Hypixel. Please use rerun the command on Hypixel.");
+                        return;
+                    }
                     Multithreading.runAsync(() -> {
-                        if (args.length == 1 & APIUtils.getJSONResponse("https://api.hypixel.net/key?key=" + args[1]).get("success").getAsBoolean()) {
+                        if (args.length <= 1 || !WebUtil.fetchJSON("https://api.hypixel.net/key?key=" + args[1]).optBoolean("success")) {
+                            Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "Invalid API key.");
+                        } else {
                             HytilitiesConfig.apiKey = args[1];
                             Hytilities.INSTANCE.getConfig().markDirty();
                             Hytilities.INSTANCE.getConfig().writeData();
                             Hytilities.INSTANCE.sendMessage(EnumChatFormatting.GREEN + "Successfully saved the API key.");
-                        } else {
-                            Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "Invalid API key.");
                         }
                     });
                     break;
                 }
                 case "gexp": {
-                    if (HytilitiesConfig.apiKey.equals("")) {
+                    if (HytilitiesConfig.apiKey.isEmpty()) {
                         Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "You need to provide a valid API key to run this command! Type /api new to autoset a key.");
                     } else {
+                        Multithreading.runAsync((() -> {
+                            if (args.length <= 1) {
+                                Notifications.INSTANCE.pushNotification("Hytilities", "You currently have " + GexpUtils.instance.getGEXP() + " guild EXP.");
+                            } else {
+                                Notifications.INSTANCE.pushNotification("Hytilities", args[1] + " currently has " + GexpUtils.instance.getGEXP(args[1]) + " guild EXP.");
+                            }
+                        }));
 
-                        if (args.length <= 1) {
-                            Notifications.INSTANCE.pushNotification("Hytilities", "You currently have " + GexpUtils.instance.getGEXP() + " guild EXP.");
-                        } else {
-                            Notifications.INSTANCE.pushNotification("Hytilities", args[1] + " currently has " + GexpUtils.instance.getGEXP(args[1]) + " guild EXP.");
-                        }
                     }
                     break;
                 }

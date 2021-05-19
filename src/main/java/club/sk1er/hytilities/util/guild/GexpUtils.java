@@ -19,7 +19,8 @@
 package club.sk1er.hytilities.util.guild;
 
 import club.sk1er.hytilities.config.HytilitiesConfig;
-import club.sk1er.hytilities.util.APIUtils;
+import club.sk1er.mods.core.util.JsonHolder;
+import club.sk1er.mods.core.util.WebUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,9 +31,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class GexpUtils {
-    JsonObject apiObj;
+    JsonHolder apiObj;
     public JsonArray guildMembers;
-    long lastRequest = System.currentTimeMillis();
     public static GexpUtils instance = new GexpUtils();
 
     private static String getCurrentESTTime() {
@@ -44,20 +44,19 @@ public class GexpUtils {
     public String getGEXP() {
         String gexp = null;
         try {
-            apiObj = APIUtils.getJSONResponse("https://api.hypixel.net/guild?key=" + HytilitiesConfig.apiKey + ";player=" + Minecraft.getMinecraft().getSession().getPlayerID()); //Hypixel API only supports short uuids
+            apiObj = WebUtil.fetchJSON("https://api.hypixel.net/guild?key=" + HytilitiesConfig.apiKey + ";player=" + Minecraft.getMinecraft().getSession().getPlayerID()); //Hypixel API only supports short uuids
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         try {
-            guildMembers = apiObj.get("guild").getAsJsonObject().get("members").getAsJsonArray();
+            guildMembers = apiObj.optJSONObject("guild").optJSONArray("members");
             for (JsonElement e : guildMembers) {
                 if (e.getAsJsonObject().get("uuid").getAsString().equalsIgnoreCase(Minecraft.getMinecraft().getSession().getPlayerID())) {
                     gexp = e.getAsJsonObject().get("expHistory").getAsJsonObject().get(getCurrentESTTime()).getAsString();
                     break;
                 }
             }
-            lastRequest = System.currentTimeMillis();
             return gexp;
         } catch(Exception e) {
             e.printStackTrace();
@@ -69,14 +68,14 @@ public class GexpUtils {
         String gexp = null;
         String uuid;
         try {
-            apiObj = APIUtils.getJSONResponse("https://api.hypixel.net/guild?key=" + HytilitiesConfig.apiKey + ";player=" + APIUtils.getUUID(username));
-            uuid = APIUtils.getUUID(username);
+            uuid = getUUID(username);
+            apiObj = WebUtil.fetchJSON("https://api.hypixel.net/guild?key=" + HytilitiesConfig.apiKey + ";player=" + uuid);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         try {
-            guildMembers = apiObj.get("guild").getAsJsonObject().get("members").getAsJsonArray();
+            guildMembers = apiObj.optJSONObject("guild").optJSONArray("members");
             for (JsonElement e : guildMembers) {
                 if (e.getAsJsonObject().get("uuid").getAsString().equalsIgnoreCase(uuid)) {
                     gexp = e.getAsJsonObject().get("expHistory").getAsJsonObject().get(getCurrentESTTime()).getAsString();
@@ -88,6 +87,17 @@ public class GexpUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Taken from Danker's Skyblock Mod under GPL 3.0 license
+     * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
+     *
+     * @author bowser0000
+     */
+    private static String getUUID(String username) {
+        JsonObject uuidResponse = WebUtil.fetchJSON("https://api.mojang.com/users/profiles/minecraft/" + username).getObject();
+        return uuidResponse.get("id").getAsString();
     }
 
 }

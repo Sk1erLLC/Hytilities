@@ -380,7 +380,10 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean giftBlocker;
 
     @Property(
-        type = PropertyType.TEXT, name = "API Key", category = "General", subcategory = "API", hidden = true
+        type = PropertyType.TEXT, name = "API Key",
+        description = "The API Key.",
+        category = "General", subcategory = "API",
+        hidden = true
     )
     public static String apiKey;
 

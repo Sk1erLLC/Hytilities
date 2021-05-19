@@ -9,7 +9,7 @@ buildscript {
             name = "jitpack"
             url = "https://jitpack.io/"
         }
-
+        flatDir dirs: 'libs'
     }
     dependencies {
         classpath "com.github.asbyth:ForgeGradle:b13624b272"

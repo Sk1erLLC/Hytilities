@@ -20,7 +20,7 @@ package club.sk1er.hytilities.handlers.chat;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.handlers.chat.modules.blockers.*;
-import club.sk1er.hytilities.handlers.chat.modules.events.APIKeyEvent;
+import club.sk1er.hytilities.handlers.chat.modules.triggers.AutoAPIKey;
 import club.sk1er.hytilities.handlers.chat.modules.events.AchievementEvent;
 import club.sk1er.hytilities.handlers.chat.modules.events.LevelupEvent;
 import club.sk1er.hytilities.handlers.chat.modules.modifiers.DefaultChatRestyler;
@@ -62,7 +62,7 @@ public class ChatHandler {
         this.registerModule(new DefaultChatRestyler());
         this.registerModule(new GiftBlocker());
         this.registerModule(new QuestBlocker());
-        this.registerModule(new APIKeyEvent());
+        this.registerModule(new AutoAPIKey());
 
         this.registerDualModule(new ShoutBlocker());
 
@@ -133,7 +133,8 @@ public class ChatHandler {
     }
 
     /**
-     * Fixes styling when modifying a message's events.
+     * Fixes styling when overwriting a message.
+     * Store the component siblings before applying any changes to the original component.
      * TODO: Improve documentation.
      *
      * @param component The message being modified & restored

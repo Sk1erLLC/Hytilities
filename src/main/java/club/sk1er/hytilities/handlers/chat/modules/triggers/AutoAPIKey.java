@@ -16,34 +16,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package club.sk1er.hytilities.handlers.chat.modules.events;
+package club.sk1er.hytilities.handlers.chat.modules.triggers;
 
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
-import club.sk1er.hytilities.util.APIUtils;
 import club.sk1er.mods.core.util.Multithreading;
+import club.sk1er.mods.core.util.WebUtil;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class APIKeyEvent implements ChatReceiveModule {
+public class AutoAPIKey implements ChatReceiveModule {
 
+    /**
+     * Adapted from Moulberry's NotEnoughUpdates, under the Attribution-NonCommercial 3.0 license.
+     * https://github.com/Moulberry/NotEnoughUpdates
+     */
     @Override
     public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
-        /*/
-            Adapted from Moulberry's NotEnoughUpdates, under the Attribution-NonCommercial 3.0 license.
-            https://github.com/Moulberry/NotEnoughUpdates
-         */
         final String unformattedText = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
         if (unformattedText.startsWith("Your new API key is ")) {
             String tempApiKey = unformattedText.substring("Your new API key is ".length());
             AtomicBoolean shouldReturn = new AtomicBoolean(false);
             Multithreading.runAsync(() -> {
-                if (!APIUtils.getJSONResponse("https://api.hypixel.net/key?key=" + tempApiKey).get("success").getAsBoolean()) {
-                    Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "The API Key was... invalid? Make sure you're running this command on Hypixel.");
+                if (!WebUtil.fetchJSON("https://api.hypixel.net/key?key=" + tempApiKey).optBoolean("success", false)) {
+                    Hytilities.INSTANCE.sendMessage(EnumChatFormatting.RED + "The API Key was invalid. Try rerunning the command.");
                     shouldReturn.set(true);
                 }
             });
