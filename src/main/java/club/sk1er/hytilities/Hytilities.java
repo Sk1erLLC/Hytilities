@@ -63,7 +63,8 @@ import org.objectweb.asm.tree.ClassNode;
 @Mod(
     modid = Hytilities.MOD_ID,
     name = Hytilities.MOD_NAME,
-    version = Hytilities.VERSION
+    version = Hytilities.VERSION,
+    clientSideOnly = true
 )
 public class Hytilities {
 
