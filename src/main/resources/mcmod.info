@@ -1,18 +1,21 @@
-[
-  {
-    "modid": "hytilities",
-    "name": "Hytilities",
-    "description": "Hypixel-focused Quality of Life mod.",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
-    "url": "https://github.com/Sk1erLLC/hytilities",
-    "updateUrl": "https://sk1er.club/mods/hytilities",
-    "authorList": [
-      "Sk1erLLC"
-    ],
-    "credits": "",
-    "logoFile": "",
-    "screenshots": [],
-    "dependencies": []
-  }
-]
+{
+  "modListVersion": 2,
+  "modList": [
+    {
+      "modid": "hytilities",
+      "name": "Hytilities",
+      "description": "Hypixel-focused Quality of Life mod.",
+      "version": "${version}",
+      "mcversion": "${mcversion}",
+      "url": "https://github.com/Sk1erLLC/hytilities",
+      "updateUrl": "https://sk1er.club/mods/hytilities",
+      "authorList": [
+        "Sk1erLLC"
+      ],
+      "credits": "",
+      "logoFile": "",
+      "screenshots": [],
+      "dependencies": ["mod_MinecraftForge"]
+    }
+  ]
+}
