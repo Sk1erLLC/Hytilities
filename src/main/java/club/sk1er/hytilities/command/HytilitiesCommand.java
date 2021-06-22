@@ -18,6 +18,7 @@
 
 package club.sk1er.hytilities.command;
 
+import com.google.common.collect.ImmutableList;
 import club.sk1er.hytilities.Hytilities;
 import club.sk1er.mods.core.ModCore;
 import net.minecraft.command.CommandBase;
@@ -34,7 +35,7 @@ public class HytilitiesCommand extends CommandBase {
 
     @Override
     public List<String> getCommandAliases() {
-        return Collections.singletonList("hytils");
+        return Collections.unmodifiableList(ImmutableList.of("hytils"));
     }
 
     @Override
