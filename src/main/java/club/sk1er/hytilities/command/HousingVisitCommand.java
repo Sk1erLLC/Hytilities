@@ -52,7 +52,7 @@ public class HousingVisitCommand extends CommandBase {
 
     @Override
     public List<String> getCommandAliases() {
-        return Collections.singletonList("hvisit");
+        return Collections.unmodifiableList(ImmutableList.of("hvisit"));
     }
 
     @Override
