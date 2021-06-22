@@ -23,7 +23,7 @@ version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
-sourceCompatibility = targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 compileJava.options.encoding = 'UTF-8'
 
 minecraft {
