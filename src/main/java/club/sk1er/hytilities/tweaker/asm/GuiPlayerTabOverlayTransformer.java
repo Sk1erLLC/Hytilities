@@ -67,13 +67,16 @@ public class GuiPlayerTabOverlayTransformer implements HytilitiesTransformer {
                         if (next.getOpcode() == Opcodes.INVOKESTATIC) {
                             final String methodInsnName = mapMethodNameFromNode(next);
 
+                            InsnList list = new InsnList();
+                            list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                            list.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                "club/sk1er/hytilities/handlers/lobby/tab/TabChanger",
+                                "modifyName",
+                                "(Ljava/lang/String;Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;",
+                                false));
                             // trim the player name to remove player ranks and guild tags
                             if (methodInsnName.equals("formatPlayerName") || methodInsnName.equals("func_96667_a")) {
-                                method.instructions.insert(next, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                    "club/sk1er/hytilities/handlers/lobby/tab/TabChanger",
-                                    "modifyName",
-                                    "(Ljava/lang/String;)Ljava/lang/String;",
-                                    false));
+                                method.instructions.insert(next, list);
                                 break;
                             }
                         }

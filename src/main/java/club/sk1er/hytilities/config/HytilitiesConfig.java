@@ -210,6 +210,14 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hidePlayerRanksInTab;
 
     @Property(
+        type = PropertyType.SELECTOR, name = "Highlight Friends In Tab",
+        description = "Add a star to the names of your Hypixel friends in tab.",
+        options = {"Off", "Left of Name", "Right of Name"},
+        category = "General", subcategory = "General"
+    )
+    public static int highlightFriendsInTab;
+
+    @Property(
         type = PropertyType.SWITCH, name = "Cleaner Tab in Skyblock",
         description = "Doesn't render player heads or ping for tab entries that aren't players in Skyblock.",
         category = "General", subcategory = "General"
