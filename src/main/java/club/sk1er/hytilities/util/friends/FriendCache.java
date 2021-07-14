@@ -18,6 +18,7 @@
 
 package club.sk1er.hytilities.util.friends;
 
+import club.sk1er.hytilities.Hytilities;
 import club.sk1er.mods.core.util.JsonHolder;
 import club.sk1er.mods.core.util.Multithreading;
 import net.minecraft.client.Minecraft;
@@ -28,8 +29,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FriendCache {
     /**
@@ -46,7 +47,7 @@ public class FriendCache {
     /**
      * The list of friend usernames, or null if usernames have not been cached yet
      */
-    private List<String> friends = null;
+    private Set<String> friends = null;
 
     /**
      * Downloads friend information from https://api.sk1er.club/friends/playerUUID.
@@ -54,10 +55,11 @@ public class FriendCache {
      *
      * @return A list of usernames that the player is friends on Hypixel with, or null if the request failed
      */
-    private List<String> downloadFriendDataFromApi() {
+    private Set<String> downloadFriendDataFromApi() {
+        String apiEndpoint = "https://api.sk1er.club/friends/" + Minecraft.getMinecraft().getSession().getPlayerID();
         try {
             // Set URL to be https://api.sk1er.club/friends/playerUUID
-            URL url = new URL("https://api.sk1er.club/friends/" + Minecraft.getMinecraft().getSession().getPlayerID());
+            URL url = new URL(apiEndpoint);
 
             // Open connection with URL
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -75,7 +77,7 @@ public class FriendCache {
                 // Convert output format into a list of names
                 // TODO: Error handling if JSON data is in bad format
                 JsonHolder holder = new JsonHolder(IOUtils.toString(is, Charset.defaultCharset()));
-                List<String> friends = new ArrayList<>();
+                Set<String> friends = new HashSet<>();
                 for (String key : holder.getKeys()) {
                     JsonHolder friend = holder.optJSONObject(key);
                     friends.add(friend.optString("name"));
@@ -85,7 +87,7 @@ public class FriendCache {
                 return friends;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Hytilities.INSTANCE.getLogger().error("Failed retrieving friend list from {}", apiEndpoint, e);
 
             // If connection fails, return null
             return null;
@@ -106,21 +108,21 @@ public class FriendCache {
      *
      * @return The list of friend usernames if they have been cached, or null otherwise.
      */
-    public List<String> getFriendUsernames() {
+    public Set<String> getFriendUsernames() {
         if (friends != null) {
             return friends;
         } else if (!currentlyDownloadingFriendData && !hasRequestFailed) {
             // Start thread to download friend data
-            Multithreading.runAsync(new Thread(() -> {
+            Multithreading.runAsync(() -> {
                 currentlyDownloadingFriendData = true;
-                List<String> result = downloadFriendDataFromApi();
+                Set<String> result = downloadFriendDataFromApi();
                 if (result != null) {
                     friends = result;
                 } else {
                     hasRequestFailed = true;
                 }
                 currentlyDownloadingFriendData = false;
-            }));
+            });
         }
         return null;
     }

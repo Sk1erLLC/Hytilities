@@ -25,7 +25,7 @@ import club.sk1er.mods.core.util.MinecraftUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import org.objectweb.asm.tree.ClassNode;
 
-import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -134,7 +134,7 @@ public class TabChanger {
             }
 
             if (HytilitiesConfig.boldFriendNamesInTab) {
-                List<String> friendList = Hytilities.INSTANCE.getFriendCache().getFriendUsernames();
+                Set<String> friendList = Hytilities.INSTANCE.getFriendCache().getFriendUsernames();
                 // friendList will be null if the friend list has not been cached
                 if (friendList != null) {
                     String username = getUsernameFromDisplayName(originalName);
