@@ -31,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class FriendCache {
     /**
@@ -45,17 +46,17 @@ public class FriendCache {
     private boolean hasRequestFailed = false;
 
     /**
-     * The list of friend usernames, or null if usernames have not been cached yet
+     * The list of friend UUIDs, or null if usernames have not been cached yet
      */
-    private Set<String> friends = null;
+    private Set<UUID> friends = null;
 
     /**
      * Downloads friend information from https://api.sk1er.club/friends/playerUUID.
      * This method should be run in a separate thread in case the HTTP request takes too long.
      *
-     * @return A list of usernames that the player is friends on Hypixel with, or null if the request failed
+     * @return A list of UUIDs that the player is friends on Hypixel with, or null if the request failed
      */
-    private Set<String> downloadFriendDataFromApi() {
+    private Set<UUID> downloadFriendDataFromApi() {
         String apiEndpoint = "https://api.sk1er.club/friends/" + Minecraft.getMinecraft().getSession().getPlayerID();
         try {
             // Set URL to be https://api.sk1er.club/friends/playerUUID
@@ -77,10 +78,14 @@ public class FriendCache {
                 // Convert output format into a list of names
                 // TODO: Error handling if JSON data is in bad format
                 JsonHolder holder = new JsonHolder(IOUtils.toString(is, Charset.defaultCharset()));
-                Set<String> friends = new HashSet<>();
+                Set<UUID> friends = new HashSet<>();
+                // Note that the keys are the UUIDs
                 for (String key : holder.getKeys()) {
-                    JsonHolder friend = holder.optJSONObject(key);
-                    friends.add(friend.optString("name"));
+                    // Key needs to have hyphens inserted, see https://stackoverflow.com/a/19399768
+                    String keyWithHyphens = key.replaceFirst(
+                        "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                        "$1-$2-$3-$4-$5");
+                    friends.add(UUID.fromString(keyWithHyphens));
                 }
 
                 // Return the list of friends
@@ -96,8 +101,8 @@ public class FriendCache {
 
     /**
      * <p>
-     * Gets the list of friend usernames if they have been cached.
-     * Starts a thread to download the usernames and returns null if they have not been cached.
+     * Gets the list of friend UUIDs if they have been cached.
+     * Starts a thread to download the UUIDs and returns null if they have not been cached.
      * </p>
      *
      * <p>
@@ -106,16 +111,16 @@ public class FriendCache {
      * may exist.
      * </p>
      *
-     * @return The list of friend usernames if they have been cached, or null otherwise.
+     * @return The list of friend UUIDs if they have been cached, or null otherwise.
      */
-    public Set<String> getFriendUsernames() {
+    public Set<UUID> getFriendUUIDs() {
         if (friends != null) {
             return friends;
         } else if (!currentlyDownloadingFriendData && !hasRequestFailed) {
             // Start thread to download friend data
             Multithreading.runAsync(() -> {
                 currentlyDownloadingFriendData = true;
-                Set<String> result = downloadFriendDataFromApi();
+                Set<UUID> result = downloadFriendDataFromApi();
                 if (result != null) {
                     friends = result;
                 } else {
