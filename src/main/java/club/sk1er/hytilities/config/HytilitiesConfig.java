@@ -210,11 +210,11 @@ public class HytilitiesConfig extends Vigilant {
     public static boolean hidePlayerRanksInTab;
 
     @Property(
-        type = PropertyType.SWITCH, name = "Bold Friend Names In Tab",
-        description = "Bold the names of your Hypixel friends in tab.",
+        type = PropertyType.SWITCH, name = "Show Friend Names In Tab",
+        description = "Add a star to the names of your Hypixel friends in tab.",
         category = "General", subcategory = "General"
     )
-    public static boolean boldFriendNamesInTab;
+    public static boolean showFriendNamesInTab;
 
     @Property(
         type = PropertyType.SWITCH, name = "Cleaner Tab in Skyblock",

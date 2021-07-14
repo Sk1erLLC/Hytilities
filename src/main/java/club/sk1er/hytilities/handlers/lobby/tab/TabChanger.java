@@ -82,36 +82,14 @@ public class TabChanger {
     }
 
     /**
-     * Applies the bold effect to a display name.
-     * For example, the input "§b[MVP§c+§b] Steve §6[GUILD]" will return "§b§l[MVP§c§l+§b§l] Steve §6§l[GUILD]"
+     * Adds a star to the display name of a player in Tab
+     * For example, the input "§b[MVP§c+§b] Steve §6[GUILD]" will return "§9✯ §r§b[MVP§c+§b] Steve §6[GUILD]"
      *
      * @param displayName The name of the player as appears in tab menu
-     * @return The displayName that was given as input but with a bold effect applied to it.
+     * @return The displayName that was given as input but with a star added
      */
-    private static String applyBoldEffect(String displayName) {
-        /*
-         * The goal of this method is to insert the bold format text §l after each set of color codes.
-         * It is important that the bold color codes appear after the set of color codes rather than before because
-         * color codes will clear the bold formatting from the text. (This is also the same reason that doing something
-         * simple like `displayName = displayName.replaceAll("§r", "§r§l");` won't work.)
-         *
-         * Afterwards, we need to apply a bold format code to the start of the string if it doesn't start with a format
-         * code so that the start of the string will be formatted.
-         *
-         * Examples:
-         * §7Steve -> §7§lSteve
-         * §b[MVP§c+§b] Steve §6[GUILD] -> §b§l[MVP§c§l+§b§l] Steve §6§l[GUILD]
-         * Steve §6[GUILD] -> Steve §6§l[GUILD] -> §lSteve §6§l[GUILD]
-         */
-
-        displayName = displayName.replaceAll("(§.)+", "$1§l");
-
-        // Apply bold format code to start of displayName if it doesn't start with a format code
-        if (!displayName.startsWith("§")) {
-            displayName = "§l" + displayName;
-        }
-
-        return displayName;
+    private static String addStarToName(String displayName) {
+        return "§9✯ §r" + displayName;
     }
 
     public static String modifyName(String name) {
@@ -133,13 +111,13 @@ public class TabChanger {
                 name = name.substring(0, name.lastIndexOf("[") - 3);
             }
 
-            if (HytilitiesConfig.boldFriendNamesInTab) {
+            if (HytilitiesConfig.showFriendNamesInTab) {
                 Set<String> friendList = Hytilities.INSTANCE.getFriendCache().getFriendUsernames();
                 // friendList will be null if the friend list has not been cached
                 if (friendList != null) {
                     String username = getUsernameFromDisplayName(originalName);
                     if (friendList.contains(username)) {
-                        name = applyBoldEffect(name);
+                        name = addStarToName(name);
                     }
                 }
             }
