@@ -82,14 +82,25 @@ public class TabChanger {
     }
 
     /**
-     * Adds a star to the display name of a player in Tab
-     * For example, the input "§b[MVP§c+§b] Steve §6[GUILD]" will return "§9✯ §r§b[MVP§c+§b] Steve §6[GUILD]"
+     * Adds a star to the display name of a player in Tab.
+     * If the star is added before or after the name is determined by the config value of highlightFriendsInTab
+     * For example, the input "§b[MVP§c+§b] Steve §6[GUILD]" will return "§9✯ §r§b[MVP§c+§b] Steve §6[GUILD]" if
+     * highlightFriendsInTab is set to "Left of Name"
      *
      * @param displayName The name of the player as appears in tab menu
      * @return The displayName that was given as input but with a star added
      */
     private static String addStarToName(String displayName) {
-        return "§9✯ §r" + displayName;
+        switch (HytilitiesConfig.highlightFriendsInTab) {
+            case 1:
+                return "§9✯ §r" + displayName;
+            case 2:
+                return displayName + "§r §9✯";
+            default:
+                Hytilities.INSTANCE.getLogger()
+                    .warn("Method TabChanger#addStarToName called when showFriendNamesInTab was not enabled");
+                return "§9✯ §r" + displayName;
+        }
     }
 
     public static String modifyName(String name) {
@@ -111,7 +122,7 @@ public class TabChanger {
                 name = name.substring(0, name.lastIndexOf("[") - 3);
             }
 
-            if (HytilitiesConfig.showFriendNamesInTab) {
+            if (HytilitiesConfig.highlightFriendsInTab != 0) {
                 Set<String> friendList = Hytilities.INSTANCE.getFriendCache().getFriendUsernames();
                 // friendList will be null if the friend list has not been cached
                 if (friendList != null) {
