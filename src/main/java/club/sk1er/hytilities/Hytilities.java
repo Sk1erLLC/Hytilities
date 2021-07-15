@@ -206,5 +206,7 @@ public class Hytilities {
         return skyblockChecker;
     }
 
-    public FriendCache getFriendCache() { return friendCache; }
+    public FriendCache getFriendCache() {
+        return friendCache;
+    }
 }

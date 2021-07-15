@@ -212,8 +212,8 @@ public class HytilitiesConfig extends Vigilant {
     @Property(
         type = PropertyType.SELECTOR, name = "Highlight Friends In Tab",
         description = "Add a star to the names of your Hypixel friends in tab.",
-        options = {"Off", "Left of Name", "Right of Name"},
-        category = "General", subcategory = "General"
+        category = "General", subcategory = "General",
+        options = {"Off", "Left of Name", "Right of Name"}
     )
     public static int highlightFriendsInTab;
 
