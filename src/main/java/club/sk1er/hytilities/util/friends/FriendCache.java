@@ -19,8 +19,8 @@
 package club.sk1er.hytilities.util.friends;
 
 import club.sk1er.hytilities.Hytilities;
-import club.sk1er.mods.core.util.JsonHolder;
-import club.sk1er.mods.core.util.Multithreading;
+import gg.essential.api.utils.Multithreading;
+import gg.essential.api.utils.JsonHolder;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.IOUtils;
 
