@@ -41,17 +41,13 @@ public class WhitePrivateMessages implements ChatReceiveModule {
         if (HytilitiesConfig.whitePrivateMessages) {
             final Matcher matcher = getLanguage().privateMessageWhiteChatRegex.matcher(message);
             if (matcher.find(0)) {
-                IChatComponent copy = event.message.createCopy();
                 boolean foundStart = false;
-                boolean didModify = false;
-                for (IChatComponent sibling : copy.getSiblings()) {
+                for (IChatComponent sibling : event.message.getSiblings()) {
                     if (sibling.getFormattedText().equals("§7: §r")) foundStart = true;
                     if (foundStart && sibling.getChatStyle().getColor() == EnumChatFormatting.GRAY) {
                         sibling.getChatStyle().setColor(EnumChatFormatting.WHITE);
-                        didModify = true;
                     }
                 }
-                if (didModify) event.message = copy;
             }
         }
     }

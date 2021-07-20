@@ -41,17 +41,13 @@ public class WhiteChat implements ChatReceiveModule {
         if (HytilitiesConfig.whiteChat) {
             final Matcher matcher = getLanguage().whiteChatNonMessageRegex.matcher(message);
             if (matcher.find(0)) {
-                IChatComponent copy = event.message.createCopy();
                 boolean foundStart = false;
-                boolean didModify = false;
-                for (IChatComponent sibling : copy.getSiblings()) {
+                for (IChatComponent sibling : event.message.getSiblings()) {
                     if (sibling.getFormattedText().startsWith("§7: ")) foundStart = true;
                     if (foundStart && sibling.getChatStyle().getColor() == EnumChatFormatting.GRAY) {
                         sibling.getChatStyle().setColor(EnumChatFormatting.WHITE);
-                        didModify = true;
                     }
                 }
-                if (didModify) event.message = copy;
             }
         }
     }
