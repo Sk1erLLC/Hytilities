@@ -84,43 +84,17 @@ public class DefaultChatRestyler implements ChatReceiveModule {
             Matcher friendMatcher = language.chatRestylerFriendPatternRegex.matcher(message);
             Matcher officerMatcher = language.chatRestylerOfficerPatternRegex.matcher(message);
             if (partyMatcher.find()) {
-                ChatComponentText copy = (ChatComponentText) new ChatComponentText(event.message.getUnformattedTextForChat()).setChatStyle(event.message.getChatStyle());
-                for (IChatComponent sibling : event.message.getSiblings()) {
-                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerPartyPatternRegex.pattern(),
-                        partyMatcher.group(1) + "P " + partyMatcher.group(3))).setChatStyle(sibling.getChatStyle()));
-                }
-                event.message = copy;
+                event.message = shortenChannelName(event.message, language.chatRestylerPartyPatternRegex.pattern(),
+                    partyMatcher.group(1) + "P " + partyMatcher.group(3), false);
             } else if (guildMatcher.find()) {
-                String originalText = event.message.getUnformattedTextForChat();
-                if (!originalText.contains("\u00a7")) {
-                    originalText = (event.message.getChatStyle().getFormattingCode() + originalText + EnumChatFormatting.RESET).replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
-                        guildMatcher.group(1) + "G >");
-                }
-                ChatComponentText copy = (ChatComponentText) new ChatComponentText(originalText).setChatStyle(event.message.getChatStyle());
-                for (IChatComponent sibling : event.message.getSiblings()) {
-                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
-                        guildMatcher.group(1) + "G >")).setChatStyle(sibling.getChatStyle()));
-                }
-                event.message = copy;
+                event.message = shortenChannelName(event.message, language.chatRestylerGuildPatternRegex.pattern(),
+                    guildMatcher.group(1) + "G >", true);
             } else if (friendMatcher.find()) {
-                String originalText = event.message.getUnformattedTextForChat();
-                if (!originalText.contains("\u00a7")) {
-                    originalText = (event.message.getChatStyle().getFormattingCode() + originalText + EnumChatFormatting.RESET).replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
-                        friendMatcher.group(1) + "F >");
-                }
-                ChatComponentText copy = (ChatComponentText) new ChatComponentText(originalText).setChatStyle(event.message.getChatStyle());
-                for (IChatComponent sibling : event.message.getSiblings()) {
-                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
-                        friendMatcher.group(1) + "F >")).setChatStyle(sibling.getChatStyle()));
-                }
-                event.message = copy;
+                event.message = shortenChannelName(event.message, language.chatRestylerFriendPatternRegex.pattern(),
+                    friendMatcher.group(1) + "F >", true);
             } else if (officerMatcher.find()) {
-                ChatComponentText copy = (ChatComponentText) new ChatComponentText(event.message.getUnformattedTextForChat()).setChatStyle(event.message.getChatStyle());
-                for (IChatComponent sibling : event.message.getSiblings()) {
-                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerOfficerPatternRegex.pattern(),
-                        officerMatcher.group(1) + "O >")).setChatStyle(sibling.getChatStyle()));
-                }
-                event.message = copy;
+                event.message = shortenChannelName(event.message, language.chatRestylerOfficerPatternRegex.pattern(),
+                    officerMatcher.group(1) + "O >", false);
             }
         }
 
@@ -194,5 +168,26 @@ public class DefaultChatRestyler implements ChatReceiveModule {
         }
 
         Hytilities.INSTANCE.getChatHandler().fixStyling(event.message, siblings);
+    }
+
+    /**
+     * Handles the replacement of channel names
+     * Loops through all siblings to find a replacement
+     *
+     * @param message The message being modified
+     * @param pattern The regular expression to check the message and it's components against
+     * @param replacement The text that replaces what is matched by the regular expression
+     * @param checkParentComponent Whether or not to check the parent chat component
+     */
+    private ChatComponentText shortenChannelName(IChatComponent message, String pattern, String replacement, boolean checkParentComponent) {
+        String originalText = message.getUnformattedTextForChat();
+        if (checkParentComponent && !originalText.contains("\u00a7")) {
+            originalText = (message.getChatStyle().getFormattingCode() + originalText + EnumChatFormatting.RESET).replaceAll(pattern, replacement);
+        }
+        ChatComponentText copy = (ChatComponentText) new ChatComponentText(originalText).setChatStyle(message.getChatStyle());
+        for (IChatComponent sibling : message.getSiblings()) {
+            copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(pattern, replacement)).setChatStyle(sibling.getChatStyle()));
+        }
+        return copy;
     }
 }
