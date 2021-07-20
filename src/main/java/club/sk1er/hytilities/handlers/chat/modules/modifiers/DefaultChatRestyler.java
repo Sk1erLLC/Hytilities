@@ -24,6 +24,7 @@ import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import club.sk1er.hytilities.handlers.lobby.limbo.LimboLimiter;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -83,17 +84,43 @@ public class DefaultChatRestyler implements ChatReceiveModule {
             Matcher friendMatcher = language.chatRestylerFriendPatternRegex.matcher(message);
             Matcher officerMatcher = language.chatRestylerOfficerPatternRegex.matcher(message);
             if (partyMatcher.find()) {
-                event.message = new ChatComponentText(message.replaceAll(language.chatRestylerPartyPatternRegex.pattern(),
-                    partyMatcher.group(1) + "P " + partyMatcher.group(3)));
+                ChatComponentText copy = (ChatComponentText) new ChatComponentText(event.message.getUnformattedTextForChat()).setChatStyle(event.message.getChatStyle());
+                for (IChatComponent sibling : event.message.getSiblings()) {
+                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerPartyPatternRegex.pattern(),
+                        partyMatcher.group(1) + "P " + partyMatcher.group(3))).setChatStyle(sibling.getChatStyle()));
+                }
+                event.message = copy;
             } else if (guildMatcher.find()) {
-                event.message = new ChatComponentText(message.replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
-                    guildMatcher.group(1) + "G >"));
+                String originalText = event.message.getUnformattedTextForChat();
+                if (!originalText.contains("\u00a7")) {
+                    originalText = (event.message.getChatStyle().getFormattingCode() + originalText + EnumChatFormatting.RESET).replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
+                        guildMatcher.group(1) + "G >");
+                }
+                ChatComponentText copy = (ChatComponentText) new ChatComponentText(originalText).setChatStyle(event.message.getChatStyle());
+                for (IChatComponent sibling : event.message.getSiblings()) {
+                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerGuildPatternRegex.pattern(),
+                        guildMatcher.group(1) + "G >")).setChatStyle(sibling.getChatStyle()));
+                }
+                event.message = copy;
             } else if (friendMatcher.find()) {
-                event.message = new ChatComponentText(message.replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
-                    friendMatcher.group(1) + "F >"));
+                String originalText = event.message.getUnformattedTextForChat();
+                if (!originalText.contains("\u00a7")) {
+                    originalText = (event.message.getChatStyle().getFormattingCode() + originalText + EnumChatFormatting.RESET).replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
+                        friendMatcher.group(1) + "F >");
+                }
+                ChatComponentText copy = (ChatComponentText) new ChatComponentText(originalText).setChatStyle(event.message.getChatStyle());
+                for (IChatComponent sibling : event.message.getSiblings()) {
+                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerFriendPatternRegex.pattern(),
+                        friendMatcher.group(1) + "F >")).setChatStyle(sibling.getChatStyle()));
+                }
+                event.message = copy;
             } else if (officerMatcher.find()) {
-                event.message = new ChatComponentText(message.replaceAll(language.chatRestylerOfficerPatternRegex.pattern(),
-                    officerMatcher.group(1) + "O >"));
+                ChatComponentText copy = (ChatComponentText) new ChatComponentText(event.message.getUnformattedTextForChat()).setChatStyle(event.message.getChatStyle());
+                for (IChatComponent sibling : event.message.getSiblings()) {
+                    copy.appendSibling(new ChatComponentText(sibling.getUnformattedTextForChat().replaceAll(language.chatRestylerOfficerPatternRegex.pattern(),
+                        officerMatcher.group(1) + "O >")).setChatStyle(sibling.getChatStyle()));
+                }
+                event.message = copy;
             }
         }
 
