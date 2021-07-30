@@ -22,6 +22,8 @@ import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import club.sk1er.hytilities.handlers.language.LanguageData;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +35,17 @@ public class MvpEmotesRemover implements ChatReceiveModule {
         final LanguageData language = getLanguage();
         Matcher matcher = language.chatCleanerMvpEmotesRegex.matcher(event.message.getFormattedText());
         if (matcher.find(0)) {
-            event.message = new ChatComponentText(event.message.getFormattedText().replaceAll(
-                language.chatCleanerMvpEmotesRegex.pattern(), "")
-            );
+            IChatComponent message = event.message;
+            String cleaned = event.message.getFormattedText().replaceAll(
+                language.chatCleanerMvpEmotesRegex.pattern(), "");
+            ChatComponentText copy = (ChatComponentText) new ChatComponentText(message.getUnformattedTextForChat()).setChatStyle(message.getChatStyle());
+            for (IChatComponent sibling : message.getSiblings()) {
+                if (cleaned.contains(sibling.getUnformattedTextForChat())) {
+                    cleaned = cleaned.replaceFirst(sibling.getUnformattedTextForChat(), "");
+                    copy.appendSibling(sibling);
+                }
+            }
+            event.message = copy;
         }
     }
 
