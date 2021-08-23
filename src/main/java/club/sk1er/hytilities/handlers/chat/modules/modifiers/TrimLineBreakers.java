@@ -22,6 +22,7 @@ import club.sk1er.hytilities.config.HytilitiesConfig;
 import club.sk1er.hytilities.handlers.chat.ChatReceiveModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,11 +46,16 @@ public class TrimLineBreakers implements ChatReceiveModule {
         String message = event.message.getFormattedText();
         Matcher regex = lineBreakerPattern.matcher(message);
         if (regex.find()) {
-            String linebreak = regex.group();
-            int chatWidth = mc.ingameGUI.getChatGUI().getChatWidth();
-            String newLineBreaker = mc.fontRendererObj.trimStringToWidth(linebreak, chatWidth);
-            message = regex.replaceAll(newLineBreaker);
-            event.message = new ChatComponentText(message);
+            ChatComponentText trimmedComponent = new ChatComponentText(this.trimLineBreaker(message));
+            trimmedComponent.setChatStyle(event.message.getChatStyle().createShallowCopy());
+
+            for (IChatComponent sibling : event.message.getSiblings()) {
+                ChatComponentText trimmedSibling = new ChatComponentText(this.trimLineBreaker(sibling.getFormattedText()));
+                trimmedSibling.setChatStyle(sibling.getChatStyle().createShallowCopy());
+                trimmedComponent.appendSibling(trimmedSibling);
+            }
+
+            event.message = trimmedComponent;
         }
     }
 
@@ -61,5 +67,16 @@ public class TrimLineBreakers implements ChatReceiveModule {
     @Override
     public int getPriority() {
         return -1;
+    }
+
+    private String trimLineBreaker(String text) {
+        Matcher regex = lineBreakerPattern.matcher(text);
+        if (regex.find()) {
+            String linebreak = regex.group();
+            int chatWidth = mc.ingameGUI.getChatGUI().getChatWidth();
+            String newLineBreaker = mc.fontRendererObj.trimStringToWidth(linebreak, chatWidth);
+            text = regex.replaceAll(newLineBreaker);
+        }
+        return text;
     }
 }
