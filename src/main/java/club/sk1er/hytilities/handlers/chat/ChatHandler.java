@@ -97,11 +97,6 @@ public class ChatHandler {
             return;
         }
 
-        // These don't cast to ChatReceiveModule for god knows why, so we can't include them in receiveModules.
-        // Therefore, we manually trigger them here.
-        Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
-        Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
-
         for (ChatReceiveModule module : this.receiveModules) {
             if (module.isEnabled()) {
                 module.onMessageReceived(event);
@@ -111,6 +106,19 @@ public class ChatHandler {
             }
         }
     }
+    
+    @SubscribeEvent(receiveCanceled = true)
+    public void handleCancelledChat(ClientChatReceivedEvent event) {
+        if (!EssentialAPI.getMinecraftUtil().isHypixel()) {
+            return;
+        }
+        // This is included here, in case a mod decides to cancel a message which the Locraw Manager
+        // and AutoQueue depends on.
+        Hytilities.INSTANCE.getLocrawUtil().onMessageReceived(event);
+        Hytilities.INSTANCE.getAutoQueue().onMessageReceived(event);
+    }
+    
+    
 
     /**
      * Allow modifying sent messages, or cancelling them altogether.
