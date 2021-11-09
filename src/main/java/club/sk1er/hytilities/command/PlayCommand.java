@@ -80,7 +80,7 @@ public class PlayCommand extends CommandBase {
 
         if (args.length != 1) {
             if (autocompletePlayCommands) {
-                Hytilities.INSTANCE.sendMessage("&cSpecify a game");
+                Hytilities.INSTANCE.sendMessage("&cPlease specify a game!");
             }
 
             return;

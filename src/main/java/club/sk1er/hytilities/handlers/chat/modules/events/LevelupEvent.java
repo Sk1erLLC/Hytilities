@@ -57,6 +57,6 @@ public class LevelupEvent implements ChatReceiveModule {
 
     @SubscribeEvent
     public void levelUpEvent(HypixelLevelupEvent event) {
-        Hytilities.INSTANCE.getCommandQueue().queue("/gchat Levelup! I am now Hypixel Level: " + event.getLevel() + "!");
+        Hytilities.INSTANCE.getCommandQueue().queue("/gc Levelup! I am now Hypixel Level: " + event.getLevel() + "!");
     }
 }

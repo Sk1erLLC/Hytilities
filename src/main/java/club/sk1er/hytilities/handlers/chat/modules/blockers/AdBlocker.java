@@ -52,9 +52,10 @@ public class AdBlocker implements ChatReceiveModule {
     private final Pattern commonAdvertisements = Pattern.compile("/?(((party join|join party)|p join|(guild join)|(join guild)|g join) \\w{1,16})|(twitch.tv)|(youtube.com|youtu.be)|(/(visit|ah) \\w{1,16}|(visit /\\w{1,16})|(/gift))",
         Pattern.CASE_INSENSITIVE);
 
-    // common phrases used in messages where people beg for a rank gift
+    // Common phrases used in messages where people beg for a rank gift
+    // Anything related to "free ranks" should also be blocked.
     private final List<String> ranks = Arrays.asList("mvp", "vip");
-    private final List<String> begging = Arrays.asList("give", "please", "pls", "plz", "gift");
+    private final List<String> begging = Arrays.asList("give", "please", "pls", "plz", "gift", "free rank");
 
     @Override
     public void onMessageReceived(@NotNull ClientChatReceivedEvent event) {
